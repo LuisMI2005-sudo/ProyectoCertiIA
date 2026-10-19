@@ -15,13 +15,13 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 2 | `src/git-controller/` | Completada | 35 |
 | Fase 3 | `src/analyzer/` | Completada | 44 |
 | Fase 4 | `src/test-runner/` | Pendiente | — |
-| Fase 5 | `src/mcp-server/` | Pendiente | — |
+| Fase 5 | `src/mcp-server/` | Completada | 3 |
 | Fase 6 | `src/agent/` | Pendiente | — |
-| **Total implementado** | **Fases 1–3** | **3 suites verificadas** | **109** |
+| **Total implementado** | **Fases 1–3 y 5** | **4 suites verificadas** | **112** |
 
-**Última validación integral, al cierre de la Fase 3:**
+**Validación integral, tras la Fase 5:**
 
-- **109 pruebas unitarias y de integración en verde, con 0 fallos.**
+- **112 pruebas unitarias y de integración en verde, con 0 fallos.**
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -135,9 +135,16 @@ El bloqueo coordina escritores que respetan el protocolo; no impide modificacion
 
 El analizador aplica límites de archivos, programa, nodos AST, texto, diagnósticos y referencias. Su ejecución es en proceso: estos límites no constituyen un timeout estricto de CPU ni un sandbox del sistema operativo. Detalles de configuración y semántica: [documentación técnica del analizador](src/analyzer/README.md).
 
+### Fase 5: Servidor Model Context Protocol (`src/mcp-server/`)
+
+- Publica mediante stdio las diez herramientas disponibles del analizador y controlador Git, con contratos Zod y respuestas `Result<T>` serializadas para clientes MCP.
+- Expone `devguardian://analysis/{analysisId}` para recuperar análisis almacenados sin enumerar datos ni rutas absolutas.
+- `run_tests` y `compare_test_runs` quedan fuera hasta la Fase 4; por seguridad, `git_commit_fix` no confirma reparaciones sin evidencia real de pruebas.
+- Tres pruebas MCP cliente-servidor validan descubrimiento, validación, análisis y recursos. Detalles: [documentación del servidor MCP](src/mcp-server/README.md).
+
 ## 5. Contratos de Herramientas MCP Implementadas (Hasta Fase 3)
 
-Las siguientes **10 herramientas están operativas como handlers de los módulos de dominio**. Todavía no están publicadas mediante transporte MCP: su registro en el servidor corresponde a la Fase 5. Las otras dos herramientas previstas, `run_tests` y `compare_test_runs`, tienen contrato pero implementación pendiente.
+Las siguientes **10 herramientas están operativas como handlers de dominio y están publicadas mediante transporte MCP**. Las otras dos herramientas previstas, `run_tests` y `compare_test_runs`, tienen contrato pero implementación pendiente de la Fase 4.
 
 Todas las salidas exitosas de la tabla corresponden a `data` dentro de `Result<T>`. Los fallos usan `{ ok: false, error: { code, message, retryable, details? } }`. `?` indica un parámetro opcional; los IDs son UUID, las huellas de archivo/diff son SHA-256 hexadecimales y todas las rutas de herramientas son relativas al workspace configurado.
 
@@ -187,7 +194,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 109 pruebas aprobadas en tres suites Jest. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 112 pruebas aprobadas en cuatro suites Jest. |
 
 Para reproducir la validación completa:
 

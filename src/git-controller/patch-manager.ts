@@ -149,7 +149,6 @@ export class PatchManager {
     const parsed = parseContract(GitApplyPatchInputSchema, input);
     return this.repository.serialized(async () => {
       const attempt = await this.repository.attempt(parsed.sessionId, parsed.attemptId);
-      await this.assertOwnedState(attempt, true);
       const stats = await this.inspectPatch(parsed.unifiedDiff);
       const expected = new Map<string, string | null>();
       for (const [file, hash] of Object.entries(parsed.expectedFileHashes)) {
@@ -177,6 +176,9 @@ export class PatchManager {
       if (new Set([...attempt.files.keys(), ...stats.paths]).size > Limits.maxPaths) {
         throw new RepositoryError(ErrorCode.PATCH_INVALID, "Attempt affects too many files.");
       }
+      // Resolve all patch paths before reporting unrelated workspace changes. This makes a
+      // newly-created symlink fail closed even when Git also reports it as untracked.
+      await this.assertOwnedState(attempt, true);
       return this.repository.withIndex(attempt.checkpoint.commit, async (index) => {
         await this.populateIndex(attempt, index);
         try {
