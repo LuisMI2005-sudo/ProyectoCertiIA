@@ -1,6 +1,8 @@
+import type { HookManager } from "../hooks/registry.js";
 import type { RepairSession, VerificationStore } from "../shared/contracts.js";
 
 export interface RepositoryOptions {
+  readonly hookManager?: HookManager;
   readonly workspaceRoot: string;
   readonly verificationStore: VerificationStore;
   readonly gitTimeoutMs?: number;

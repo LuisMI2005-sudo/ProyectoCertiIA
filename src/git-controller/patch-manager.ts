@@ -151,6 +151,10 @@ export class PatchManager {
       const attempt = await this.repository.attempt(parsed.sessionId, parsed.attemptId);
       await this.assertOwnedState(attempt, true);
       const stats = await this.inspectPatch(parsed.unifiedDiff);
+      await this.repository.options.hookManager?.assertAllowed("pre:apply_patch", {
+        files: stats.paths, unifiedDiff: parsed.unifiedDiff,
+        workspaceStateHash: await this.repository.workspaceStateHashUnlocked()
+      });
       const expected = new Map<string, string | null>();
       for (const [file, hash] of Object.entries(parsed.expectedFileHashes)) {
         const normalized = validateWorkspaceRelativePath(file);
@@ -285,6 +289,16 @@ export class PatchManager {
         if (diff.diffHash !== parsed.expectedDiffHash || diff.changedFiles.length === 0) {
           throw new RepositoryError(ErrorCode.PATCH_CONFLICT, "Diff hash mismatch or empty patch.");
         }
+        if (this.repository.options.hookManager) {
+          let evidence: VerificationEvidence | undefined;
+          try { evidence = await this.repository.options.verificationStore.getEvidence(parsed.verificationRunId); } catch { /* Hook records missing evidence. */ }
+          await this.repository.options.hookManager.assertAllowed("pre:git_commit", {
+            files: diff.changedFiles, unifiedDiff: diff.diff,
+            branch: this.repository.session(attempt.sessionId).branch,
+            workspaceStateHash: await this.repository.workspaceStateHashUnlocked(),
+            ...(evidence ? { evidence } : {})
+          });
+        }
         await this.validateEvidence(attempt, parsed.verificationRunId);
         await this.assertOwnedState(attempt, true);
         const tree = (await this.repository.command(["write-tree"], index.indexPath)).trim();
@@ -327,6 +341,9 @@ export class PatchManager {
           }
           attempt.state = "committed";
           session.activeAttemptId = null;
+          await this.repository.options.hookManager?.notify("post:commit", {
+            files: diff.changedFiles, branch: session.branch, timestamp: new Date().toISOString()
+          });
           return parseContract(GitCommitFixOutputSchema, { commit, branch: session.branch, files: diff.changedFiles });
         } catch (error: unknown) {
           if (error instanceof DevGuardianError) throw error;
