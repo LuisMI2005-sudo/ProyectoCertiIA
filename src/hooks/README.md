@@ -24,6 +24,8 @@ El frontend separado podrá consultar logs/estadísticas/configuración mediante
 | `pre:git_commit` | PatchManager, antes de crear el commit |
 | `post:test_run` | Coordinador, tras finalizar pruebas |
 | `post:commit` | PatchManager, tras confirmar referencia e índice |
+| `pre:delegate` | AgentCoordinator, antes de crear el worker del especialista |
+| `post:delegate` | AgentCoordinator, después de registrar el resultado devuelto |
 | `db:before_save_run` | Coordinador, antes del callback de BD |
 | `db:after_save_run` | Coordinador, después de guardar |
 | `db:on_hook_decision` | Automático por cada decisión de los otros eventos |
@@ -82,4 +84,4 @@ console.log(hooks.getConfig());
 
 Este último ejemplo inspecciona decisiones; la suite demuestra las operaciones reales. Ejecutar `npm run check` y `npm test` para la validación completa.
 
-Estos hooks cubren el componente Hook de «Hook + subagente». El subagente y su conexión al orquestador son un requisito separado: este módulo no implementa un subagente ni un transporte API/MCP.
+La integración «Hook + subagente» está implementada en [`src/subagents/`](../subagents/README.md). Los eventos `pre:delegate` y `post:delegate` conservan metadatos de tarea, sesión y rol en el log y en su auditoría. El coordinador enlaza esos eventos con workers independientes y usa los hooks existentes de análisis, pruebas, parches y commits. El transporte API/MCP sigue siendo una integración posterior.

@@ -4,12 +4,27 @@
 
 El motor `src/hooks/` conecta guardrails reales al parcheador y al commit mediante `hookManager` opcional, con bloqueo previo a la mutación, aprobación registrada y auditoría consultable. Incluye protección de archivos/secretos, evidencia de pruebas para commits y validación de registros antes de persistir. La configuración se conserva en los logs y el adaptador de persistencia permite conectar una BD desde el backend separado del frontend.
 
-**Defensa:** [arquitectura, configuración, eventos y ejemplos reproducibles](src/hooks/README.md). La suite `tests/hooks/hooks.test.mjs` demuestra un parche **ACEPTADO**, parches **BLOQUEADOS** sin modificar archivos ni HEAD, y escrituras de BD válidas/corruptas. Son hooks del motor, independientes de los hooks nativos de Git. El requisito de subagente debe integrarse por separado.
+**Defensa:** [arquitectura, configuración, eventos y ejemplos reproducibles](src/hooks/README.md). La suite `tests/hooks/hooks.test.mjs` demuestra un parche **ACEPTADO**, parches **BLOQUEADOS** sin modificar archivos ni HEAD, y escrituras de BD válidas/corruptas. Son hooks del motor, independientes de los hooks nativos de Git. La delegación a subagentes está integrada mediante `pre:delegate` y `post:delegate`.
 
 ```sh
 npm run check
 npm test
 ```
+
+## Subagentes: «Hook + subagente»
+
+`src/subagents/` implementa delegación real mediante **un worker independiente por tarea**, contexto acotado, whitelist por rol, presupuesto y contratos de salida validados. El coordinador delega diagnóstico AST/lint y verificación con Test Runner; consume sus reportes para aplicar un parche propuesto, hacer commit con evidencia confiable o ejecutar rollback por regresión. El rol adicional `patch-safety` permite delegar un preflight de hooks sin conceder escritura Git.
+
+`DelegationStore` conserva quién delegó, objetivo, contexto, herramientas efectivas, identidad del worker, resultado y decisión tomada con ese resultado. Dispone de adaptador para BD y consultas para futuras APIs. Los especialistas son deterministas y no requieren un LLM; la generación de parches y el transporte MCP siguen siendo integraciones separadas.
+
+**Defensa:** [protocolo, aislamiento y demostración reproducible](src/subagents/README.md). Las 22 pruebas de `tests/subagents/subagents.test.mjs` incluyen commit y rollback en repositorios temporales con el analizador y Jest reales. Para producir logs visibles con configuración de hooks:
+
+```sh
+npm run build
+node scripts/demo-subagents.mjs
+```
+
+La demo guarda [éxito con commit](artifacts/subagents/success.json) y [regresión con rollback](artifacts/subagents/regression.json): revisar `delegationLogs`, `consumption`, `hookLogs` y los hashes de HEAD. Cada artefacto conserva las tres delegaciones y sus cinco llamadas reales a herramientas.
 
 [![CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml/badge.svg)](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml)
 
@@ -18,7 +33,7 @@ npm test
 
 DevGuardian es una plataforma para diagnosticar errores de software, generar parches en ramas de reparación y verificar sus resultados mediante pruebas antes de confirmar cambios. Su diseño utiliza **Model Context Protocol (MCP)** para conectar un agente de inteligencia artificial con herramientas locales de análisis de código, ejecución de pruebas y control de versiones, mediante entradas y respuestas estructuradas y validadas.
 
-El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. Las fases completadas proporcionan la base transversal, el controlador Git, el analizador y el ejecutor de pruebas con su evidencia de verificación. El servidor MCP y el agente aún están pendientes; por tanto, el ciclo autónomo completo todavía no está disponible.
+El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. Las fases completadas proporcionan la base transversal, el controlador Git, el analizador, el ejecutor de pruebas, hooks y la orquestación backend con subagentes aislados. El flujo coordinado ya ejecuta diagnóstico → baseline → parche propuesto → verificación → commit o rollback. El servidor MCP y el agente generativo conectado a un modelo siguen pendientes.
 
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
@@ -31,11 +46,12 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 5 | `src/mcp-server/` | Pendiente | — |
 | Fase 6 | `src/agent/` | Pendiente | — |
 | Hooks | `src/hooks/` | Implementado | 20 |
-| **Total implementado** | **Fases 1–4 + Hooks** | **5 suites** | **154** |
+| Subagentes | `src/subagents/` | Implementado | 22 |
+| **Total implementado** | **Fases 1–4 + Hooks + Subagentes** | **6 suites** | **176** |
 
 **Validación integral de las fases 1–4 con los smoke tests de CI:**
 
-- **154 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- **176 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -48,7 +64,7 @@ Las pruebas de Git realizan commits exclusivamente dentro de sus repositorios te
 
 El sistema separa cinco responsabilidades: servidor MCP, analizador, ejecutor de pruebas, controlador Git y agente. `shared/` reúne contratos, errores y seguridad comunes. Los módulos de dominio no dependen de una conexión con un modelo para ejecutar sus operaciones.
 
-El siguiente diagrama representa el **flujo objetivo**; el paso de ejecución/comparación de pruebas ya existe en `src/test-runner/`, y la orquestación del agente sobre el ciclo completo requiere las fases pendientes.
+El siguiente diagrama representa el **flujo objetivo** del agente conectado a MCP. La orquestación backend de diagnóstico, pruebas, parche propuesto y commit/rollback ya existe en `src/subagents/`; la generación de parches con un modelo y el transporte MCP requieren las fases pendientes.
 
 ```mermaid
 flowchart TD
@@ -228,7 +244,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 154 pruebas en cinco suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 176 pruebas en seis suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 
 Para reproducir la validación completa:
 
@@ -248,7 +264,7 @@ Los scripts `start:server` y `start:agent` ya están declarados, pero sus archiv
 El workflow [CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml), definido en [`.github/workflows/ci.yml`](.github/workflows/ci.yml), se ejecuta con cada push a `main` o `Dev` y cada pull request dirigido a esas ramas. Utiliza Ubuntu, Node.js 24.x, caché de npm y Python 3.11. Instala Node con `npm ci` y versiones fijadas de pytest y `pytest-json-report`, configura una identidad Git para los repositorios temporales y ejecuta:
 
 1. `npm run check`: TypeScript estricto sin emitir y ESLint.
-2. `npm test`: compilación y las cinco suites, incluidos los smoke tests con Jest y pytest reales. Estos invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
+2. `npm test`: compilación y las seis suites, incluidos los smoke tests con Jest y pytest reales y los flujos delegados de commit/rollback. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
 3. Una tabla de resultados en el resumen de Actions, que también informa fallos o pasos no ejecutados.
 
 El workflow solo dispone de `contents: read`, cancela ejecuciones anteriores de la misma rama y tiene un límite de 15 minutos. No incluye despliegues ni requiere secretos o archivos `.env`. `DEVGUARDIAN_REQUIRE_PYTEST=1` hace fallar la suite si falta pytest en CI.

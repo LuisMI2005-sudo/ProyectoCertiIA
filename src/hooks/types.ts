@@ -2,9 +2,11 @@ import type { VerificationEvidence } from "../shared/contracts.js";
 import type { JsonValue } from "../shared/errors.js";
 
 export type HookEvent = "pre:analyze" | "pre:apply_patch" | "pre:run_tests" | "pre:git_commit" |
-  "post:test_run" | "post:commit" | "db:before_save_run" | "db:after_save_run" | "db:on_hook_decision";
+  "post:test_run" | "post:commit" | "db:before_save_run" | "db:after_save_run" | "db:on_hook_decision" |
+  "pre:delegate" | "post:delegate";
 export type HookDecision = "allow" | "block" | "warn";
 export interface HookPayload {
+  readonly delegation?: { readonly taskId: string; readonly parentSessionId: string; readonly role: string; readonly subagentId?: string };
   readonly files?: readonly string[];
   readonly unifiedDiff?: string;
   readonly branch?: string;

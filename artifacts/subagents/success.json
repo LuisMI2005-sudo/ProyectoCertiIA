@@ -1,0 +1,2302 @@
+{
+  "scenario": "success",
+  "generatedAt": "2026-10-19T18:44:01.952Z",
+  "originalHead": "019cf3d347642d523dd5fdb61d9c615e07030974",
+  "currentHead": "f0538b462134c246dbc23e0bcd18acdde669cf6c",
+  "result": {
+    "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+    "status": "committed",
+    "diagnostic": {
+      "path": "src/bug.ts",
+      "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+      "findings": [
+        {
+          "path": "src/bug.ts",
+          "source": "typescript",
+          "code": "TS2322",
+          "severity": "error",
+          "message": "Type 'string' is not assignable to type 'number'.",
+          "range": {
+            "start": {
+              "line": 1,
+              "column": 54
+            },
+            "end": {
+              "line": 1,
+              "column": 67
+            }
+          }
+        }
+      ],
+      "snippet": {
+        "content": "export const add = (a: number, b: number): number => String(a - b);\n",
+        "startLine": 1,
+        "endLine": 1,
+        "fileHash": "00c0418ffe7b6efae40188b63a9d4d3b1257e072c28fd2def37866175d31f46f"
+      },
+      "rootCause": "Type 'string' is not assignable to type 'number'.",
+      "remediationCandidate": true,
+      "truncated": false
+    },
+    "verification": {
+      "verdict": "ready_to_commit",
+      "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+      "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+      "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+      "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
+    },
+    "commit": {
+      "commit": "f0538b462134c246dbc23e0bcd18acdde669cf6c",
+      "branch": "fix/demo-success",
+      "files": [
+        "src/bug.ts"
+      ]
+    },
+    "reason": "Delegated diagnosis and verification produced a verified commit."
+  },
+  "delegationSummary": {
+    "tasks": 3,
+    "completed": 3,
+    "rejected": 0,
+    "failed": 0,
+    "budgetExceeded": 0,
+    "toolCalls": 5
+  },
+  "delegationLogs": [
+    {
+      "delegationId": "dc5cdbdd-6358-4be2-9cef-f75c4e2f6d5b",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "diagnostic",
+        "objective": "Locate and prioritize static defects in one target file.",
+        "scopedContext": {
+          "path": "src/bug.ts"
+        },
+        "allowedTools": [
+          "analyze_code",
+          "read_file_context"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": null,
+      "phase": "delegated",
+      "consumption": null,
+      "timestamp": "2026-10-19T18:43:43.721Z"
+    },
+    {
+      "delegationId": "dc5cdbdd-6358-4be2-9cef-f75c4e2f6d5b",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "diagnostic",
+        "objective": "Locate and prioritize static defects in one target file.",
+        "scopedContext": {
+          "path": "src/bug.ts"
+        },
+        "allowedTools": [
+          "analyze_code",
+          "read_file_context"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+        "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207",
+        "role": "diagnostic",
+        "status": "completed",
+        "output": {
+          "path": "src/bug.ts",
+          "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+          "findings": [
+            {
+              "path": "src/bug.ts",
+              "source": "typescript",
+              "code": "TS2322",
+              "severity": "error",
+              "message": "Type 'string' is not assignable to type 'number'.",
+              "range": {
+                "start": {
+                  "line": 1,
+                  "column": 54
+                },
+                "end": {
+                  "line": 1,
+                  "column": 67
+                }
+              }
+            }
+          ],
+          "snippet": {
+            "content": "export const add = (a: number, b: number): number => String(a - b);\n",
+            "startLine": 1,
+            "endLine": 1,
+            "fileHash": "00c0418ffe7b6efae40188b63a9d4d3b1257e072c28fd2def37866175d31f46f"
+          },
+          "rootCause": "Type 'string' is not assignable to type 'number'.",
+          "remediationCandidate": true,
+          "truncated": false
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "ba622ce7-007b-4ea5-9cd2-774c6457ffbc",
+            "tool": "analyze_code",
+            "input": {
+              "paths": [
+                "src/bug.ts"
+              ],
+              "checks": [
+                "syntax",
+                "semantic",
+                "lint"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+              "analyzedFiles": [
+                "src/bug.ts"
+              ],
+              "truncated": false
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:44.243Z",
+            "finishedAt": "2026-10-19T18:43:45.422Z",
+            "durationMs": 1179.5639,
+            "dispatched": true
+          },
+          {
+            "callId": "776f1ce1-c4dc-4d31-a9f3-61f94fb9c09e",
+            "tool": "read_file_context",
+            "input": {
+              "path": "src/bug.ts",
+              "startLine": 1,
+              "endLine": 2
+            },
+            "status": "completed",
+            "output": {
+              "path": "src/bug.ts",
+              "startLine": 1,
+              "endLine": 1,
+              "fileHash": "00c0418ffe7b6efae40188b63a9d4d3b1257e072c28fd2def37866175d31f46f",
+              "truncated": false
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:45.438Z",
+            "finishedAt": "2026-10-19T18:43:45.453Z",
+            "durationMs": 14.796800000000076,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:43.728Z",
+        "finishedAt": "2026-10-19T18:43:45.469Z",
+        "durationMs": 1740.5356000000002,
+        "workerThreadId": 1
+      },
+      "phase": "returned",
+      "consumption": null,
+      "timestamp": "2026-10-19T18:43:45.469Z"
+    },
+    {
+      "delegationId": "dc5cdbdd-6358-4be2-9cef-f75c4e2f6d5b",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "diagnostic",
+        "objective": "Locate and prioritize static defects in one target file.",
+        "scopedContext": {
+          "path": "src/bug.ts"
+        },
+        "allowedTools": [
+          "analyze_code",
+          "read_file_context"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+        "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207",
+        "role": "diagnostic",
+        "status": "completed",
+        "output": {
+          "path": "src/bug.ts",
+          "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+          "findings": [
+            {
+              "path": "src/bug.ts",
+              "source": "typescript",
+              "code": "TS2322",
+              "severity": "error",
+              "message": "Type 'string' is not assignable to type 'number'.",
+              "range": {
+                "start": {
+                  "line": 1,
+                  "column": 54
+                },
+                "end": {
+                  "line": 1,
+                  "column": 67
+                }
+              }
+            }
+          ],
+          "snippet": {
+            "content": "export const add = (a: number, b: number): number => String(a - b);\n",
+            "startLine": 1,
+            "endLine": 1,
+            "fileHash": "00c0418ffe7b6efae40188b63a9d4d3b1257e072c28fd2def37866175d31f46f"
+          },
+          "rootCause": "Type 'string' is not assignable to type 'number'.",
+          "remediationCandidate": true,
+          "truncated": false
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "ba622ce7-007b-4ea5-9cd2-774c6457ffbc",
+            "tool": "analyze_code",
+            "input": {
+              "paths": [
+                "src/bug.ts"
+              ],
+              "checks": [
+                "syntax",
+                "semantic",
+                "lint"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+              "analyzedFiles": [
+                "src/bug.ts"
+              ],
+              "truncated": false
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:44.243Z",
+            "finishedAt": "2026-10-19T18:43:45.422Z",
+            "durationMs": 1179.5639,
+            "dispatched": true
+          },
+          {
+            "callId": "776f1ce1-c4dc-4d31-a9f3-61f94fb9c09e",
+            "tool": "read_file_context",
+            "input": {
+              "path": "src/bug.ts",
+              "startLine": 1,
+              "endLine": 2
+            },
+            "status": "completed",
+            "output": {
+              "path": "src/bug.ts",
+              "startLine": 1,
+              "endLine": 1,
+              "fileHash": "00c0418ffe7b6efae40188b63a9d4d3b1257e072c28fd2def37866175d31f46f",
+              "truncated": false
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:45.438Z",
+            "finishedAt": "2026-10-19T18:43:45.453Z",
+            "durationMs": 14.796800000000076,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:43.728Z",
+        "finishedAt": "2026-10-19T18:43:45.469Z",
+        "durationMs": 1740.5356000000002,
+        "workerThreadId": 1
+      },
+      "phase": "consumed",
+      "consumption": {
+        "decision": "prepare_repair",
+        "reason": "Diagnosis fd0cbf49-d08d-41a5-84e1-cb226e55b058 authorizes patching src/bug.ts.",
+        "timestamp": "2026-10-19T18:43:45.470Z"
+      },
+      "timestamp": "2026-10-19T18:43:45.470Z"
+    },
+    {
+      "delegationId": "2f74dbb1-6242-4450-bf3e-af982ea16b0a",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Capture failing baseline before any patch is applied.",
+        "scopedContext": {
+          "mode": "baseline",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ]
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": null,
+      "phase": "delegated",
+      "consumption": null,
+      "timestamp": "2026-10-19T18:43:47.845Z"
+    },
+    {
+      "delegationId": "2f74dbb1-6242-4450-bf3e-af982ea16b0a",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Capture failing baseline before any patch is applied.",
+        "scopedContext": {
+          "mode": "baseline",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ]
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+        "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12",
+        "role": "verification",
+        "status": "completed",
+        "output": {
+          "verdict": "inconclusive",
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "candidateRunId": null,
+          "verificationId": null,
+          "reason": "Failing baseline captured before patching."
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "ad2c1a50-b0ea-4c63-aa79-5c044162176b",
+            "tool": "run_tests",
+            "input": {
+              "runner": "jest",
+              "targets": [
+                "tests/bug.test.cjs"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "runId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "status": "failed",
+              "summary": {
+                "total": 2,
+                "passed": 1,
+                "failed": 1,
+                "skipped": 0,
+                "todo": 0
+              },
+              "complete": true,
+              "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c",
+              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:48.310Z",
+            "finishedAt": "2026-10-19T18:43:49.724Z",
+            "durationMs": 1414.7286000000004,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:47.845Z",
+        "finishedAt": "2026-10-19T18:43:49.743Z",
+        "durationMs": 1897.6713,
+        "workerThreadId": 2
+      },
+      "phase": "returned",
+      "consumption": null,
+      "timestamp": "2026-10-19T18:43:49.743Z"
+    },
+    {
+      "delegationId": "2f74dbb1-6242-4450-bf3e-af982ea16b0a",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Capture failing baseline before any patch is applied.",
+        "scopedContext": {
+          "mode": "baseline",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ]
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+        "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12",
+        "role": "verification",
+        "status": "completed",
+        "output": {
+          "verdict": "inconclusive",
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "candidateRunId": null,
+          "verificationId": null,
+          "reason": "Failing baseline captured before patching."
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "ad2c1a50-b0ea-4c63-aa79-5c044162176b",
+            "tool": "run_tests",
+            "input": {
+              "runner": "jest",
+              "targets": [
+                "tests/bug.test.cjs"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "runId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "status": "failed",
+              "summary": {
+                "total": 2,
+                "passed": 1,
+                "failed": 1,
+                "skipped": 0,
+                "todo": 0
+              },
+              "complete": true,
+              "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c",
+              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:48.310Z",
+            "finishedAt": "2026-10-19T18:43:49.724Z",
+            "durationMs": 1414.7286000000004,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:47.845Z",
+        "finishedAt": "2026-10-19T18:43:49.743Z",
+        "durationMs": 1897.6713,
+        "workerThreadId": 2
+      },
+      "phase": "consumed",
+      "consumption": {
+        "decision": "apply_patch",
+        "reason": "Baseline f4ad31a4-6cb4-405b-84ab-556e10111d49 captures the failing checkpoint.",
+        "timestamp": "2026-10-19T18:43:50.043Z"
+      },
+      "timestamp": "2026-10-19T18:43:50.043Z"
+    },
+    {
+      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
+        "scopedContext": {
+          "mode": "candidate",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ],
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": null,
+      "phase": "delegated",
+      "consumption": null,
+      "timestamp": "2026-10-19T18:43:54.192Z"
+    },
+    {
+      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
+        "scopedContext": {
+          "mode": "candidate",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ],
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e",
+        "role": "verification",
+        "status": "completed",
+        "output": {
+          "verdict": "ready_to_commit",
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "4b3242dc-d8c5-4b68-a20c-d5e2da06780c",
+            "tool": "run_tests",
+            "input": {
+              "runner": "jest",
+              "targets": [
+                "tests/bug.test.cjs"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "runId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+              "status": "passed",
+              "summary": {
+                "total": 2,
+                "passed": 2,
+                "failed": 0,
+                "skipped": 0,
+                "todo": 0
+              },
+              "complete": true,
+              "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de",
+              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:54.703Z",
+            "finishedAt": "2026-10-19T18:43:56.192Z",
+            "durationMs": 1488.8174999999992,
+            "dispatched": true
+          },
+          {
+            "callId": "d71d3fc1-fc00-4032-b257-bfea13424127",
+            "tool": "compare_test_runs",
+            "input": {
+              "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec"
+            },
+            "status": "completed",
+            "output": {
+              "resolvedFailures": [
+                "tests/bug.test.cjs::repairs addition"
+              ],
+              "newFailures": [],
+              "missingTests": [],
+              "comparable": true,
+              "verdict": "success"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:56.203Z",
+            "finishedAt": "2026-10-19T18:43:56.207Z",
+            "durationMs": 4.113499999999476,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:54.193Z",
+        "finishedAt": "2026-10-19T18:43:56.215Z",
+        "durationMs": 2022.2253999999994,
+        "workerThreadId": 3
+      },
+      "phase": "returned",
+      "consumption": null,
+      "timestamp": "2026-10-19T18:43:56.216Z"
+    },
+    {
+      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
+        "scopedContext": {
+          "mode": "candidate",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ],
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e",
+        "role": "verification",
+        "status": "completed",
+        "output": {
+          "verdict": "ready_to_commit",
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "4b3242dc-d8c5-4b68-a20c-d5e2da06780c",
+            "tool": "run_tests",
+            "input": {
+              "runner": "jest",
+              "targets": [
+                "tests/bug.test.cjs"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "runId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+              "status": "passed",
+              "summary": {
+                "total": 2,
+                "passed": 2,
+                "failed": 0,
+                "skipped": 0,
+                "todo": 0
+              },
+              "complete": true,
+              "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de",
+              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:54.703Z",
+            "finishedAt": "2026-10-19T18:43:56.192Z",
+            "durationMs": 1488.8174999999992,
+            "dispatched": true
+          },
+          {
+            "callId": "d71d3fc1-fc00-4032-b257-bfea13424127",
+            "tool": "compare_test_runs",
+            "input": {
+              "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec"
+            },
+            "status": "completed",
+            "output": {
+              "resolvedFailures": [
+                "tests/bug.test.cjs::repairs addition"
+              ],
+              "newFailures": [],
+              "missingTests": [],
+              "comparable": true,
+              "verdict": "success"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:56.203Z",
+            "finishedAt": "2026-10-19T18:43:56.207Z",
+            "durationMs": 4.113499999999476,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:54.193Z",
+        "finishedAt": "2026-10-19T18:43:56.215Z",
+        "durationMs": 2022.2253999999994,
+        "workerThreadId": 3
+      },
+      "phase": "consumed",
+      "consumption": {
+        "decision": "commit_authorized",
+        "reason": "Use trusted evidence 97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec for Git commit.",
+        "timestamp": "2026-10-19T18:43:56.216Z"
+      },
+      "timestamp": "2026-10-19T18:43:56.216Z"
+    },
+    {
+      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
+      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "request": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "role": "verification",
+        "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
+        "scopedContext": {
+          "mode": "candidate",
+          "runner": "jest",
+          "targets": [
+            "tests/bug.test.cjs"
+          ],
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+        },
+        "allowedTools": [
+          "run_tests",
+          "compare_test_runs"
+        ],
+        "budget": {
+          "maxToolCalls": 6,
+          "timeoutMs": 60000
+        }
+      },
+      "result": {
+        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+        "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e",
+        "role": "verification",
+        "status": "completed",
+        "output": {
+          "verdict": "ready_to_commit",
+          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
+        },
+        "reason": null,
+        "toolCallsExecuted": [
+          {
+            "callId": "4b3242dc-d8c5-4b68-a20c-d5e2da06780c",
+            "tool": "run_tests",
+            "input": {
+              "runner": "jest",
+              "targets": [
+                "tests/bug.test.cjs"
+              ]
+            },
+            "status": "completed",
+            "output": {
+              "runId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+              "status": "passed",
+              "summary": {
+                "total": 2,
+                "passed": 2,
+                "failed": 0,
+                "skipped": 0,
+                "todo": 0
+              },
+              "complete": true,
+              "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de",
+              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:54.703Z",
+            "finishedAt": "2026-10-19T18:43:56.192Z",
+            "durationMs": 1488.8174999999992,
+            "dispatched": true
+          },
+          {
+            "callId": "d71d3fc1-fc00-4032-b257-bfea13424127",
+            "tool": "compare_test_runs",
+            "input": {
+              "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec"
+            },
+            "status": "completed",
+            "output": {
+              "resolvedFailures": [
+                "tests/bug.test.cjs::repairs addition"
+              ],
+              "newFailures": [],
+              "missingTests": [],
+              "comparable": true,
+              "verdict": "success"
+            },
+            "reason": null,
+            "startedAt": "2026-10-19T18:43:56.203Z",
+            "finishedAt": "2026-10-19T18:43:56.207Z",
+            "durationMs": 4.113499999999476,
+            "dispatched": true
+          }
+        ],
+        "startedAt": "2026-10-19T18:43:54.193Z",
+        "finishedAt": "2026-10-19T18:43:56.215Z",
+        "durationMs": 2022.2253999999994,
+        "workerThreadId": 3
+      },
+      "phase": "consumed",
+      "consumption": {
+        "decision": "committed",
+        "reason": "Committed f0538b462134c246dbc23e0bcd18acdde669cf6c after independent verification and commit hooks.",
+        "timestamp": "2026-10-19T18:44:01.843Z"
+      },
+      "timestamp": "2026-10-19T18:44:01.843Z"
+    }
+  ],
+  "hookConfig": {
+    "enabled": true,
+    "rules": {},
+    "protectedFiles": [
+      ".env",
+      ".env.*",
+      "**/.env",
+      "**/.env.*",
+      ".github/workflows/**",
+      "package-lock.json"
+    ],
+    "allowedBranches": [
+      "fix/*"
+    ],
+    "maxPatchCharacters": 1000000,
+    "maxFiles": 200
+  },
+  "hookLogs": [
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:43.726Z",
+      "durationMs": 0.3039000000003398,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "diagnostic"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:43.727Z",
+      "durationMs": 1.3083999999998923,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:analyze",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:44.245Z",
+      "durationMs": 0.15439999999989595,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:44.246Z",
+      "durationMs": 0.5003000000001521,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:45.469Z",
+      "durationMs": 0.14000000000032742,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "diagnostic",
+          "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:45.470Z",
+      "durationMs": 0.2348999999994703,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:47.845Z",
+      "durationMs": 0.11560000000008586,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:47.845Z",
+      "durationMs": 0.17669999999998254,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:run_tests",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:48.312Z",
+      "durationMs": 0.14030000000002474,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:48.312Z",
+      "durationMs": 0.0922999999993408,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:test_run",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:49.723Z",
+      "durationMs": 0.1257000000005064,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:49.723Z",
+      "durationMs": 0.16769999999996799,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:49.743Z",
+      "durationMs": 0.07380000000011933,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification",
+          "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:49.744Z",
+      "durationMs": 0.21680000000014843,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "protected-files-and-secrets",
+      "hookName": "ProtectedFilesAndSecretsGuardHook",
+      "event": "pre:apply_patch",
+      "decision": "allow",
+      "reason": "Files and added content satisfy guardrails.",
+      "timestamp": "2026-10-19T18:43:51.643Z",
+      "durationMs": 13.226200000000972,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:51.643Z",
+      "durationMs": 0.22769999999945867,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:54.193Z",
+      "durationMs": 0.10249999999905413,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:54.193Z",
+      "durationMs": 0.20420000000012806,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:run_tests",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:54.704Z",
+      "durationMs": 0.11329999999907159,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:54.704Z",
+      "durationMs": 0.16770000000178698,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:test_run",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:56.191Z",
+      "durationMs": 0.14240000000063446,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:56.191Z",
+      "durationMs": 0.1550999999999476,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:56.216Z",
+      "durationMs": 0.07710000000042783,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification",
+          "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:56.216Z",
+      "durationMs": 0.2309000000004744,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "protected-files-and-secrets",
+      "hookName": "ProtectedFilesAndSecretsGuardHook",
+      "event": "pre:git_commit",
+      "decision": "allow",
+      "reason": "Files and added content satisfy guardrails.",
+      "timestamp": "2026-10-19T18:43:59.777Z",
+      "durationMs": 3.0375999999996566,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:59.777Z",
+      "durationMs": 0.14589999999952852,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "verified-evidence-commit",
+      "hookName": "VerifiedEvidenceCommitHook",
+      "event": "pre:git_commit",
+      "decision": "allow",
+      "reason": "Complete green evidence verified without regressions or skipped tests.",
+      "timestamp": "2026-10-19T18:43:59.779Z",
+      "durationMs": 1.8355000000010477,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:43:59.779Z",
+      "durationMs": 0.08039999999891734,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:commit",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:44:01.834Z",
+      "durationMs": 0.1555999999982305,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "database-audit-trail",
+      "hookName": "DatabaseAuditTrailHook",
+      "event": "db:on_hook_decision",
+      "decision": "allow",
+      "reason": "Decision audit recorded.",
+      "timestamp": "2026-10-19T18:44:01.835Z",
+      "durationMs": 0.17640000000028522,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    }
+  ],
+  "hookAudits": [
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:43.726Z",
+      "durationMs": 0.3039000000003398,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "diagnostic"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:analyze",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:44.245Z",
+      "durationMs": 0.15439999999989595,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:45.469Z",
+      "durationMs": 0.14000000000032742,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "diagnostic",
+          "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:47.845Z",
+      "durationMs": 0.11560000000008586,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:run_tests",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:48.312Z",
+      "durationMs": 0.14030000000002474,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:test_run",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:49.723Z",
+      "durationMs": 0.1257000000005064,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:49.743Z",
+      "durationMs": 0.07380000000011933,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification",
+          "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "protected-files-and-secrets",
+      "hookName": "ProtectedFilesAndSecretsGuardHook",
+      "event": "pre:apply_patch",
+      "decision": "allow",
+      "reason": "Files and added content satisfy guardrails.",
+      "timestamp": "2026-10-19T18:43:51.643Z",
+      "durationMs": 13.226200000000972,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:54.193Z",
+      "durationMs": 0.10249999999905413,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "pre:run_tests",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:54.704Z",
+      "durationMs": 0.11329999999907159,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:test_run",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:56.191Z",
+      "durationMs": 0.14240000000063446,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:delegate",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:43:56.216Z",
+      "durationMs": 0.07710000000042783,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "delegation": {
+          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
+          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "role": "verification",
+          "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e"
+        },
+        "workspaceStateHash": null
+      }
+    },
+    {
+      "hookId": "protected-files-and-secrets",
+      "hookName": "ProtectedFilesAndSecretsGuardHook",
+      "event": "pre:git_commit",
+      "decision": "allow",
+      "reason": "Files and added content satisfy guardrails.",
+      "timestamp": "2026-10-19T18:43:59.777Z",
+      "durationMs": 3.0375999999996566,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "verified-evidence-commit",
+      "hookName": "VerifiedEvidenceCommitHook",
+      "event": "pre:git_commit",
+      "decision": "allow",
+      "reason": "Complete green evidence verified without regressions or skipped tests.",
+      "timestamp": "2026-10-19T18:43:59.779Z",
+      "durationMs": 1.8355000000010477,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+      }
+    },
+    {
+      "hookId": "hook-manager",
+      "hookName": "Lifecycle event",
+      "event": "post:commit",
+      "decision": "allow",
+      "reason": "No active rules for event.",
+      "timestamp": "2026-10-19T18:44:01.834Z",
+      "durationMs": 0.1555999999982305,
+      "metadata": {
+        "warning": false,
+        "config": {
+          "enabled": true,
+          "rules": {},
+          "protectedFiles": [
+            ".env",
+            ".env.*",
+            "**/.env",
+            "**/.env.*",
+            ".github/workflows/**",
+            "package-lock.json"
+          ],
+          "allowedBranches": [
+            "fix/*"
+          ],
+          "maxPatchCharacters": 1000000,
+          "maxFiles": 200
+        },
+        "workspaceStateHash": null
+      }
+    }
+  ]
+}
