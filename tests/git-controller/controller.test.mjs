@@ -62,7 +62,7 @@ beforeEach(async () => {
   await git('config', 'commit.gpgsign', 'false');
   await writeFile(path.join(root, 'calc.ts'), original);
   await writeFile(path.join(root, 'other.ts'), 'original unrelated\n');
-  await writeFile(path.join(root, '.gitignore'), 'coverage/\nignored.txt\nlinkdir/\n');
+  await writeFile(path.join(root, '.gitignore'), 'coverage/\nignored.txt\nlinkdir\n');
   await git('add', '.');
   await git('commit', '-m', 'Fixture baseline');
   base = (await git('rev-parse', 'HEAD')).trim();
@@ -313,6 +313,8 @@ describe('patches, diffs and safe rollback', () => {
     try {
       await writeFile(path.join(outside, 'target.ts'), original);
       await symlink(outside, path.join(root, 'linkdir'), process.platform === 'win32' ? 'junction' : 'dir');
+      // Ignore the link itself on POSIX too, so this exercises path security rather than the dirty-tree guard.
+      expect((await git('status', '--porcelain')).trim()).toBe('');
       const result = await apply(ids, patch.replaceAll('calc.ts', 'linkdir/target.ts'), { 'linkdir/target.ts': hash(original) });
       expect(result).toMatchObject({ ok: false, error: { code: 'SYMLINK_FORBIDDEN' } });
       expect(await readFile(path.join(outside, 'target.ts'), 'utf8')).toBe(original);
