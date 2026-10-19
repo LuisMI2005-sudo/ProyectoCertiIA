@@ -20,6 +20,10 @@ function asNumber(value: unknown): number | null {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
+function matchesCount(value: unknown, expected: number): boolean {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 && value === expected;
+}
+
 /** Converts a report path into a canonical workspace-relative POSIX path. */
 function relativePath(workspaceRoot: string, candidate: string): string {
   const relative = path.isAbsolute(candidate) ? path.relative(workspaceRoot, candidate) : candidate;
@@ -51,19 +55,22 @@ function parseJest(raw: string, workspaceRoot: string): ParsedReport {
   const suites = Array.isArray(report["testResults"]) ? report["testResults"] : null;
   if (!suites) throw new TestExecutionError("The Jest report is missing its test results.");
   let executionError = report["testExecError"] !== undefined && report["testExecError"] !== null;
+  let validStructure = true;
   const cases: TestCase[] = [];
   const identifiers = new Set<string>();
   for (const suite of suites) {
     const record = asRecord(suite);
-    if (!record) continue;
+    if (!record) { validStructure = false; continue; }
     const file = asString(record["name"]);
     if (file === null) throw new TestExecutionError("A Jest suite is missing its file name.");
     const suitePath = relativePath(workspaceRoot, file);
     const assertions = Array.isArray(record["assertionResults"]) ? record["assertionResults"] : [];
+    if (!Array.isArray(record["assertionResults"])) validStructure = false;
+    if (record["testExecError"] !== undefined && record["testExecError"] !== null) executionError = true;
     if (assertions.length === 0 && record["status"] === "failed") executionError = true;
     for (const assertion of assertions) {
       const test = asRecord(assertion);
-      if (!test) continue;
+      if (!test) { validStructure = false; continue; }
       const name = asString(test["fullName"]) ?? asString(test["title"]);
       if (name === null) throw new TestExecutionError("A Jest test is missing its name.");
       const id = bounded(`${suitePath}::${name}`, MAX_ID);
@@ -80,7 +87,7 @@ function parseJest(raw: string, workspaceRoot: string): ParsedReport {
       });
     }
   }
-  return { cases, complete: !executionError, executionError };
+  return { cases, complete: !executionError && validStructure && matchesCount(report["numTotalTests"], cases.length), executionError };
 }
 
 function mapPytestStatus(value: unknown): TestCase["status"] {
@@ -114,12 +121,16 @@ function parsePytest(raw: string, workspaceRoot: string): ParsedReport {
   const tests = Array.isArray(report["tests"]) ? report["tests"] : null;
   if (!tests) throw new TestExecutionError("The pytest report is missing its test results.");
   const collectors = Array.isArray(report["collectors"]) ? report["collectors"] : [];
-  const executionError = collectors.some((collector) => asRecord(collector)?.["result"] === "error");
+  const executionError = collectors.some((collector) => {
+    const entry = asRecord(collector);
+    return entry?.["result"] === "error" || entry?.["outcome"] === "failed" || entry?.["outcome"] === "error";
+  });
+  let validStructure = true;
   const cases: TestCase[] = [];
   const identifiers = new Set<string>();
   for (const entry of tests) {
     const test = asRecord(entry);
-    if (!test) continue;
+    if (!test) { validStructure = false; continue; }
     const nodeId = asString(test["nodeid"]);
     if (nodeId === null) throw new TestExecutionError("A pytest test is missing its node id.");
     const separator = nodeId.indexOf("::");
@@ -135,7 +146,17 @@ function parsePytest(raw: string, workspaceRoot: string): ParsedReport {
       failureMessage: status === "failed" ? pytestFailure(test) : null
     });
   }
-  return { cases, complete: !executionError, executionError };
+  const summary = asRecord(report["summary"]);
+  const total = summary?.["total"];
+  const collected = summary?.["collected"];
+  const deselected = summary?.["deselected"] ?? 0;
+  // pytest's collected count includes deselected tests; total represents selected tests.
+  const collectionMatches = collected === undefined || (typeof collected === "number" && Number.isSafeInteger(collected) &&
+    typeof deselected === "number" && Number.isSafeInteger(deselected) && deselected >= 0 && collected >= deselected &&
+    collected - deselected === cases.length);
+  const countsMatch = (total !== undefined || collected !== undefined) &&
+    (total === undefined || matchesCount(total, cases.length)) && collectionMatches;
+  return { cases, complete: !executionError && validStructure && countsMatch, executionError };
 }
 
 const JEST_ADAPTER: RunnerAdapter = {

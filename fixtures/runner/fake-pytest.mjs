@@ -32,10 +32,11 @@ if (mode === "timeout") {
     };
   });
   const report = {
-    summary: { passed: tests.filter((t) => t.outcome === "passed").length, failed: tests.filter((t) => t.outcome === "failed").length },
+    summary: { total: tests.length, collected: tests.length, passed: tests.filter((t) => t.outcome === "passed").length, failed: tests.filter((t) => t.outcome === "failed").length },
     collectors: mode === "collecterror" ? [{ nodeid: "", result: "error" }] : [],
     tests
   };
+  if (mode === "partial") report.tests = tests.slice(0, 1);
   if (mode !== "noreport" && reportFile) {
     mkdirSync(path.dirname(reportFile), { recursive: true });
     writeFileSync(reportFile, JSON.stringify(report));

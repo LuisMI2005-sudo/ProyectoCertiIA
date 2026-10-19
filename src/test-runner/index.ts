@@ -87,7 +87,10 @@ function compareRuns(baseline: RunTestsOutput, candidate: RunTestsOutput): Compa
     else unresolved += 1;
   }
   for (const [id, test] of candidateCases) {
-    if (test.status === "failed" && baselineCases.get(id)?.status !== "failed") newFailures.push(id);
+    const previous = baselineCases.get(id);
+    // Losing previously green coverage is a regression, including skipped/todo cases.
+    if ((test.status === "failed" && previous?.status !== "failed") ||
+        (previous?.status === "passed" && test.status !== "passed")) newFailures.push(id);
   }
   const sorted = (values: readonly string[]): string[] => [...values].sort();
   const verdict: CompareTestRunsOutput["verdict"] = !comparable ? "inconclusive"
@@ -199,7 +202,7 @@ export class TestRunner implements TestRunnerContract, VerificationStore {
   private classify(outcome: ProcessOutcome, report: ParsedReport | null, summary: TestSummary): RunTestsOutput["status"] {
     if (outcome.timedOut) return "timeout";
     if (outcome.cancelled) return "cancelled";
-    if (outcome.spawnError !== null || report === null || report.executionError) return "error";
+    if (outcome.spawnError !== null || report === null || report.executionError || !report.complete) return "error";
     if (outcome.exitCode === 0 && report.complete && summary.failed === 0 && summary.passed > 0) return "passed";
     return "failed";
   }

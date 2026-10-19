@@ -16,12 +16,13 @@ if (mode === "timeout") {
 } else {
   const testFile = path.join(cwd, "tests", "sample.test.mjs");
   const statusFor = (title) => {
+    if (mode.startsWith("resolved-") && title === "keeps existing behavior") return mode.slice("resolved-".length);
     if (mode === "mixed") return title === "adds numbers" ? "pending" : "todo";
     if (mode === "fail" && title === "adds numbers") return "failed";
     if (mode === "execerror") return "failed";
     return "passed";
   };
-  const titles = mode === "subset" ? ["keeps existing behavior"] : ["adds numbers", "keeps existing behavior"];
+  const titles = mode === "subset" || mode === "partial" ? ["keeps existing behavior"] : ["adds numbers", "keeps existing behavior"];
   const assertionResults = mode === "execerror" ? [] : titles.map((title) => {
     const status = statusFor(title);
     return {
@@ -31,7 +32,7 @@ if (mode === "timeout") {
     };
   });
   const report = {
-    numTotalTests: assertionResults.length,
+    numTotalTests: mode === "partial" ? 2 : assertionResults.length,
     numPassedTests: assertionResults.filter((test) => test.status === "passed").length,
     numFailedTests: assertionResults.filter((test) => test.status === "failed").length,
     success: !assertionResults.some((test) => test.status === "failed"),

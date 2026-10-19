@@ -42,17 +42,17 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 1 | `src/shared/` | Completada | 30 |
 | Fase 2 | `src/git-controller/` | Completada | 35 |
 | Fase 3 | `src/analyzer/` | Completada | 44 |
-| Fase 4 | `src/test-runner/` | Completada | 25 |
+| Fase 4 | `src/test-runner/` | Completada | 43 |
 | Fase 5 + HTTP | `src/mcp/`, `src/server/` | Herramientas MCP por stdio/HTTP y REST implementadas | 28 |
 | Fase 6 | `src/agent/` | Pendiente | — |
 | Hooks | `src/hooks/` | Implementado | 20 |
 | Subagentes | `src/subagents/` | Implementado | 22 |
 | Persistencia | `src/db/` | Local durable + adaptador PostgreSQL | 32 |
-| **Total implementado** | **Fases 1–5 + HTTP + Hooks + Subagentes + DB** | **8 suites** | **236** |
+| **Total implementado** | **Fases 1–5 + HTTP + Hooks + Subagentes + DB** | **8 suites** | **254** |
 
 **Validación integral del backend:**
 
-- **236 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- **254 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -150,7 +150,7 @@ ProyectoCertiIA/
 │   ├── analyzer/
 │   │   └── analyzer.test.mjs          # 44 pruebas del analizador y sus recursos
 │   ├── test-runner/
-│   │   └── runner.test.mjs            # 25 pruebas, incluidos Jest/pytest reales
+│   │   └── runner.test.mjs            # 43 pruebas, incluidos Jest/pytest reales
 │   ├── hooks/hooks.test.mjs           # 20 pruebas de hooks y auditoría
 │   ├── subagents/subagents.test.mjs   # 22 pruebas de delegación y reparación real
 │   ├── db/db.test.mjs                 # 32 pruebas de persistencia y reinicio
@@ -211,13 +211,14 @@ El analizador aplica límites de archivos, programa, nodos AST, texto, diagnóst
 ### Fase 4: Ejecutor de Pruebas y Verificación (`src/test-runner/`)
 
 - **`types.ts`:** opciones del ejecutor, configuración confiable de runners (Jest/pytest), ejecuciones, casos de prueba, resultados de comparación y evidencia de verificación.
-- **`process-runner.ts`:** ejecución sin shell con lista blanca de variables de entorno, cwd fija en el workspace, timeout por proceso, cancelación explícita y terminación del árbol de procesos (grupo de proceso en POSIX, `taskkill` en Windows). stdout y stderr se capturan por separado con presupuesto `min(maxOutputBytes, 100000)` bytes por flujo y marca `truncated`; un fallo de arranque no produce código de salida.
+- **`process.ts`:** ejecución sin shell con lista blanca de variables de entorno, cwd fija en el workspace, timeout por proceso, cancelación explícita y terminación del árbol de procesos (grupo de proceso en POSIX, `taskkill` en Windows). stdout y stderr se capturan por separado con presupuesto `min(maxOutputBytes, 100000)` bytes por flujo y marca `truncated`; un fallo de arranque no produce código de salida.
 - **`reports.ts`:** adaptadores de reporte para Jest (`--json --outputFile=`) y pytest (`--json-report --json-report-file=`), que el módulo agrega a la línea de comandos por sí mismo. Las rutas de suite se normalizan a rutas relativas POSIX del workspace; rutas fuera del workspace, inválidas o identificadores duplicados rechazan el reporte.
 - **Estados:** `passed` solo para una ejecución completa con código 0, al menos un test aprobado y ningún fallo; `failed` para el resto; `timeout`, `cancelled` o `error` para ejecuciones terminadas, canceladas o sin reporte válido. `complete: false` indica que el resultado no sirve como evidencia.
 - **`index.ts`:** fachada con `run_tests` y `compare_test_runs` sobre `Result<T>`, ejecuciones serializadas por instancia, y almacenamiento en memoria de ejecuciones y evidencia con límites de entradas, bytes y TTL. La misma instancia actúa como `VerificationStore` confiable que inyecta `git_commit_fix`.
 - **Huellas:** `workspaceStateHash` se captura del proveedor confiable justo antes de la ejecución; `configurationHash` es SHA-256 de la configuración confiable resuelta del runner. Solo se comparan ejecuciones completas con el mismo hash de configuración.
+- **Integridad de reportes:** Jest exige numTotalTests igual al número de casos; pytest contrasta total y collected menos deselected. Los reportes parciales y errores de suite/colección no sirven como evidencia.
 - **Comparación y ciclo completo:** `compareTestRuns` informa fallos resueltos, fallos nuevos, tests ausentes y veredicto (`regression`, `success`, `inconclusive`). `verify(baselineRunId, candidateRunId)` registra `VerificationEvidence` por `candidateRunId`, lo que permite cerrar el ciclo real analizar → parchear → ejecutar → verificar → confirmar con `git_commit_fix`.
-- **Verificación:** 25 pruebas: 23 casos con ejecutables controlados y repositorios temporales, más dos smoke tests que invocan Jest real y pytest real y validan sus reportes JSON mediante el Test Runner. El caso de integración Git utiliza un ejecutor simulado; los smoke tests verifican los adaptadores con procesos reales.
+- **Verificación:** 43 pruebas: 41 casos con ejecutables controlados y repositorios temporales, más dos smoke tests que invocan Jest real y pytest real y validan sus reportes JSON mediante el Test Runner. El caso de integración Git utiliza un ejecutor simulado; los smoke tests verifican los adaptadores con procesos reales.
 
 El ejecutor no es un sandbox del sistema operativo: los tests son código arbitrario que se ejecuta con el entorno permitido y conviene correrlos en un checkout dedicado. pytest requiere el plugin `pytest-json-report`. Detalles de ejecución, huellas y límites: [documentación técnica del Test Runner](src/test-runner/README.md).
 
@@ -227,7 +228,7 @@ El ejecutor no es un sandbox del sistema operativo: los tests son código arbitr
 - **Flujo completo:** `POST /api/audits/run` conecta el coordinador real con persistencia; conserva baseline/candidato, hallazgos, checkpoint, decisiones de hooks y delegaciones. La suite comprueba commit, rollback, bloqueo y recuperación tras reiniciar.
 - **MCP:** SDK oficial, negociación y descubrimiento de 19 herramientas, esquemas Zod y auditoría durable de llamadas. Transporte stdio y HTTP JSON sin sesión, con clientes oficiales; no incluye SSE ni reanudación de eventos.
 - **Compatibilidad estricta:** la biblioteca `DOM` aporta los tipos web que utiliza el SDK; se mantienen `strict`, `exactOptionalPropertyTypes` y `skipLibCheck: false`.
-- **Verificación:** 28 pruebas adicionales; 236 en total y ocho suites.
+- **Verificación:** 28 pruebas adicionales; 254 en total y ocho suites.
 
 ## 5. Contratos de Herramientas MCP Implementadas
 
@@ -247,8 +248,8 @@ Todas las salidas exitosas de la tabla corresponden a `data` dentro de `Result<T
 | `git_diff` | `sessionId: string`, `attemptId: string` | `{ diff, diffHash, changedFiles, insertions, deletions }` | Diff acotado del intento contra su checkpoint; incluye altas y bajas mediante un índice temporal y detecta modificaciones externas en archivos gestionados. |
 | `git_commit_fix` | `sessionId: string`, `attemptId: string`, `message: string`, `expectedDiffHash: string`, `verificationRunId: string` | `{ commit, branch, files }` | Exige parche no vacío, diff esperado, evidencia vigente y estado compatible; usa locks de índice y actualización condicional del HEAD. No confirma trabajo ajeno. |
 | `git_rollback_attempt` | `sessionId: string`, `attemptId: string` | `{ restoredCommit, revertedFiles, branch, clean }` | Revierte solo cambios del intento activo con rama/HEAD intactos; conserva trabajo externo y rechaza conflictos de propiedad. `clean` puede ser `false` si queda trabajo ajeno. |
-| `run_tests` | `runner: string`, `targets?: string[]`, `timeoutMs?: number` | `{ runId, runner, status, complete, exitCode, signal, durationMs, summary, cases, stdout, stderr, outputTruncated, fingerprint, configurationHash, createdAt }` | Solo acepta runners configurados en arranque; ejecución sin shell, timeout acotado al presupuesto configurado y salida limitada; rutas y reportes confinados al workspace; la huella se captura antes de ejecutar. |
-| `compare_test_runs` | `baselineRunId: string`, `candidateRunId: string` | `{ baselineRunId, candidateRunId, comparable, verdict, resolvedFailures, newFailures, missingTests, message }` | Compara solo ejecuciones completas con hash de configuración idéntico; veredictos `regression`, `success` e `inconclusive` según el contraste de fallos resueltos, nuevos y ausentes. |
+| `run_tests` | `runner: "jest" \| "pytest"`, `targets?: string[]`, `timeoutMs?: number` | `{ runId, runner, status, exitCode, durationMs, summary, cases, stdout, stderr, truncated, complete, startedAt, finishedAt, workspaceStateHash, configurationHash }` | Runners confiables, timeout y salida limitados, rutas confinadas. Solo reportes con totales coherentes pueden ser completos. |
+| `compare_test_runs` | `baselineRunId: string`, `candidateRunId: string` | `{ resolvedFailures, newFailures, missingTests, comparable, verdict }` | Compara runs completos y configuraciones idénticas. `newFailures` incluye pruebas antes aprobadas que pasan a skipped/todo; estas transiciones producen `regression`, nunca `success`. |
 
 Los esquemas y tipos completos están definidos en [`src/shared/contracts.ts`](src/shared/contracts.ts). Los métodos de dominio retornan datos tipados y lanzan errores de dominio; las fachadas `.tools` los convierten al sobre `Result<T>`, expuesto en `structuredContent` y texto por MCP. Las raíces, límites y proveedores de evidencia se configuran al inicializar los servicios y no son argumentos elegibles por el modelo. Las seis consultas y el alias están documentados en [el servidor](src/server/README.md#mcp-herramientas-y-transportes).
 
@@ -283,7 +284,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 236 pruebas en ocho suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 254 pruebas en ocho suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 | Iniciar HTTP compilado | `npm start` | Backend en `http://127.0.0.1:3001` por defecto. |
 | Compilar e iniciar HTTP | `npm run dev:server` | Compilación inicial y servidor HTTP; reiniciar para incorporar cambios. |
 | Iniciar MCP stdio compilado | `node dist/mcp/index.js` | Transporte stdio con stdout reservado al protocolo. |
