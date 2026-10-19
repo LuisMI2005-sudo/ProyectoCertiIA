@@ -5,7 +5,7 @@
 
 DevGuardian es una plataforma para diagnosticar errores de software, generar parches en ramas de reparación y verificar sus resultados mediante pruebas antes de confirmar cambios. Su diseño utiliza **Model Context Protocol (MCP)** para conectar un agente de inteligencia artificial con herramientas locales de análisis de código, ejecución de pruebas y control de versiones, mediante entradas y respuestas estructuradas y validadas.
 
-El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. Las fases completadas proporcionan la base transversal, el controlador Git y el analizador. El Test Runner, el servidor MCP y el agente aún están pendientes; por tanto, el ciclo autónomo completo todavía no está disponible.
+El ciclo autónomo combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad y commit o rollback por intento. El transporte MCP y el agente están implementados. La Fase 4 sigue pendiente en `main`, por lo que el CLI del agente verifica las herramientas necesarias y se detiene sin mutar el repositorio hasta que un servidor MCP publique las doce.
 
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
@@ -16,12 +16,12 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 3 | `src/analyzer/` | Completada | 44 |
 | Fase 4 | `src/test-runner/` | Pendiente | — |
 | Fase 5 | `src/mcp-server/` | Completada | 3 |
-| Fase 6 | `src/agent/` | Pendiente | — |
-| **Total implementado** | **Fases 1–3 y 5** | **4 suites verificadas** | **112** |
+| Fase 6 | `src/agent/` | Implementada; espera Fase 4 para ciclo completo | 14 |
+| **Total implementado** | **Fases 1–3 y 5–6** | **8 suites verificadas** | **126** |
 
-**Validación integral, tras la Fase 5:**
+**Validación integral, tras las Fases 5 y 6:**
 
-- **112 pruebas unitarias y de integración en verde, con 0 fallos.**
+- **126 pruebas unitarias y de integración en verde, con 0 fallos.**
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -31,7 +31,7 @@ Las pruebas de Git realizan commits exclusivamente dentro de sus repositorios te
 
 ## 3. Arquitectura y Árbol de Directorios Actual
 
-El sistema separa cinco responsabilidades: servidor MCP, analizador, ejecutor de pruebas, controlador Git y agente. `shared/` reúne contratos, errores y seguridad comunes. Los módulos de dominio no dependen de una conexión con un modelo para ejecutar sus operaciones.
+El sistema separa responsabilidades entre servidor MCP, analizador, ejecutor de pruebas, controlador Git y agente. `shared/` reúne contratos, errores y seguridad comunes. El agente acepta planificadores intercambiables; las pruebas del flujo no dependen de una conexión a Anthropic.
 
 El siguiente diagrama representa el **flujo objetivo**; los pasos de ejecución/comparación de pruebas, transporte MCP y orquestación del agente requieren las fases pendientes.
 
@@ -57,45 +57,44 @@ Estructura existente del proyecto; los comentarios describen el propósito de ca
 
 ```text
 ProyectoCertiIA/
-├── README.md                         # Identificación, arquitectura y avances
-├── package.json                      # Dependencias exactas y scripts npm
-├── package-lock.json                 # Resolución de dependencias reproducible
-├── tsconfig.json                     # TypeScript estricto y salida en dist/
-├── .gitignore                        # Exclusiones de compilación, secretos y temporales
+├── README.md
+├── package.json                      # Dependencias y scripts npm
+├── package-lock.json                 # Instalación reproducible
+├── .env.example                      # Variables documentadas; sin secretos reales
+├── .github/workflows/ci.yml          # Quality gates de Node 24
 ├── src/
 │   ├── shared/
-│   │   ├── errors.ts                 # Errores tipados y sobre Result<T>
-│   │   ├── path-security.ts          # Validación y confinamiento de rutas
-│   │   └── contracts.ts              # Interfaces y esquemas Zod compartidos
+│   │   ├── errors.ts                 # Errores tipados y Result<T>
+│   │   ├── path-security.ts          # Confinamiento de rutas
+│   │   └── contracts.ts              # Contratos Zod compartidos
 │   ├── git-controller/
-│   │   ├── types.ts                  # Sesiones, intentos, checkpoints y cola
-│   │   ├── repository.ts             # Operaciones Git, ramas y serialización
-│   │   ├── patch-manager.ts          # Parches, hashes, diffs, commits y rollback
-│   │   ├── index.ts                  # Fachada pública y siete handlers Git
-│   │   └── README.md                 # Operación, evidencia y recuperación detalladas
-│   └── analyzer/
-│       ├── types.ts                  # Snapshots, símbolos, límites y análisis guardados
-│       ├── ast-analyzer.ts           # Lectura y análisis con TypeScript Compiler API
-│       ├── eslint-analyzer.ts        # ESLint programático y diagnósticos normalizados
-│       ├── index.ts                  # Tres handlers y almacenamiento por analysisId
-│       └── README.md                 # Semántica, configuración y límites detallados
+│   │   ├── repository.ts             # Ramas, checkpoints y locks Git
+│   │   ├── patch-manager.ts          # Parches, hashes, commits y rollback
+│   │   └── index.ts                  # Siete herramientas Git
+│   ├── analyzer/
+│   │   ├── ast-analyzer.ts           # TypeScript Compiler API
+│   │   ├── eslint-analyzer.ts        # Diagnósticos ESLint normalizados
+│   │   └── index.ts                  # Tres herramientas y caché de análisis
+│   ├── mcp-server/
+│   │   └── index.ts                  # Transporte stdio, diez herramientas y recurso
+│   └── agent/
+│       ├── cli.ts                    # Preflight MCP y composición del agente
+│       ├── index.ts                  # Orquestación segura de reparaciones
+│       ├── mcp-tool-client.ts        # Adaptador tipado SDK MCP
+│       ├── anthropic-planner.ts      # Planificador estructurado
+│       └── types.ts                  # Contratos de solicitud y plan
 ├── tests/
-│   ├── shared.test.mjs                # 30 pruebas de seguridad y contratos
-│   ├── git-controller/
-│   │   └── controller.test.mjs        # 35 pruebas con repositorios Git reales
-│   └── analyzer/
-│       └── analyzer.test.mjs          # 44 pruebas del analizador y sus recursos
-└── fixtures/
-    └── typescript/
-        ├── domain.ts                 # Tipos y funciones importadas por otros casos
-        ├── symbols.ts                # Clases, métodos, funciones y nombres sombreados
-        ├── imports.ts                # Imports, reexports y dependencias de tipos
-        ├── syntax-error.ts           # Error sintáctico controlado
-        ├── semantic-error.ts         # Incompatibilidad de tipos controlada
-        └── lint-error.ts             # Infracciones de reglas ESLint controladas
+│   ├── shared.test.mjs
+│   ├── git-controller/controller.test.mjs
+│   ├── analyzer/analyzer.test.mjs
+│   ├── mcp-server/server.test.mjs
+│   └── agent/                        # 14 pruebas deterministas, sin llamadas API
+└── fixtures/typescript/              # Casos de análisis controlados
 ```
 
-`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. Las carpetas de las fases 4–6 aún no forman parte de la implementación.
+Documentación operativa adicional: [`src/git-controller/README.md`](src/git-controller/README.md), [`src/analyzer/README.md`](src/analyzer/README.md), [`src/mcp-server/README.md`](src/mcp-server/README.md) y [`src/agent/README.md`](src/agent/README.md).
+
+`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. La Fase 4 sigue pendiente en esta línea de `main`.
 
 ## 4. Registro Detallado de Cambios e Implementación por Fase (Changelog Técnico)
 
@@ -142,7 +141,18 @@ El analizador aplica límites de archivos, programa, nodos AST, texto, diagnóst
 - `run_tests` y `compare_test_runs` quedan fuera hasta la Fase 4; por seguridad, `git_commit_fix` no confirma reparaciones sin evidencia real de pruebas.
 - Tres pruebas MCP cliente-servidor validan descubrimiento, validación, análisis y recursos. Detalles: [documentación del servidor MCP](src/mcp-server/README.md).
 
-## 5. Contratos de Herramientas MCP Implementadas (Hasta Fase 3)
+### Fase 6: Agente de reparación autónoma (`src/agent/`)
+
+- **Orquestación:** comprueba checkout limpio; ejecuta baseline antes de abrir rama; valida que el repositorio no cambió durante ella; analiza, solicita plan, aplica parche, compara pruebas y confirma solo con evidencia aprobada.
+- **Aislamiento:** el planificador no ejecuta herramientas ni escribe archivos. Todos los cambios pasan por contratos MCP, validación de hashes, controlador Git y `VerificationStore`.
+- **Anthropic:** salida estructurada restringida, temperatura cero, contexto acotado y API key fuera del proceso MCP hijo. No se usan credenciales ni red en pruebas.
+- **Recuperación:** límite de intentos configurable, cancelación cooperativa, rollback comprobado y `not_needed` si baseline pasa.
+- **CLI y MCP:** `npm run start:agent` lee solicitud JSON y verifica las 12 herramientas antes de cualquier operación Git. El adaptador valida las respuestas MCP contra esquemas de dominio.
+- **Verificación:** 14 pruebas sin red cubren el agente, el adaptador MCP, el planificador y el preflight CLI. Detalles: [documentación del agente](src/agent/README.md).
+
+La integración completa está condicionada a la Fase 4: el servidor en esta rama de `main` aún no implementa `run_tests` ni `compare_test_runs`. El preflight evita crear una rama si faltan; no se simula verificación.
+
+## 5. Contratos de Herramientas MCP Disponibles (Fases 1–5)
 
 Las siguientes **10 herramientas están operativas como handlers de dominio y están publicadas mediante transporte MCP**. Las otras dos herramientas previstas, `run_tests` y `compare_test_runs`, tienen contrato pero implementación pendiente de la Fase 4.
 
@@ -194,7 +204,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 112 pruebas aprobadas en cuatro suites Jest. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 126 pruebas aprobadas en ocho suites Jest. |
 
 Para reproducir la validación completa:
 
@@ -207,4 +217,4 @@ npm test
 
 `npm test` compila de nuevo antes de ejecutar Jest y utiliza el soporte ESM de Node mediante `--experimental-vm-modules`. Esto puede mostrar un aviso de característica experimental sin implicar un fallo de las pruebas. Su timeout base es de 10 segundos por prueba; las suites de integración ajustan sus tiempos para los escenarios correspondientes.
 
-Los scripts `start:server` y `start:agent` ya están declarados, pero sus archivos de entrada corresponden a fases pendientes y todavía no pueden utilizarse para iniciar el sistema completo. En esta etapa no se necesita una clave de Anthropic ni Python/PyTest para compilar y validar las fases 1–3; su configuración se incorporará con los módulos que los utilicen.
+`npm run start:server` inicia el servidor MCP stdio. `npm run start:agent` carga `.env` y requiere `ANTHROPIC_API_KEY`, `DEVGUARDIAN_WORKSPACE` y `DEVGUARDIAN_REPAIR_REQUEST` con una solicitud JSON; también requiere un servidor MCP que publique las herramientas de Fase 4. El preflight se detiene sin mutaciones cuando faltan. Para CI y pruebas no se requiere clave API ni conexión de red.
