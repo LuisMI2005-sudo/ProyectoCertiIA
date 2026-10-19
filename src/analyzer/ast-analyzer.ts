@@ -21,6 +21,7 @@ const EXTENSIONS = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs"
 const hash = (buffer: Buffer): string => createHash("sha256").update(buffer).digest("hex");
 
 function lineStartsOf(text: string): number[] {
+
   const starts = [0];
   for (let index = 0; index < text.length; index++) {
     const character = text.charCodeAt(index);
