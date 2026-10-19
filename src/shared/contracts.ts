@@ -375,8 +375,8 @@ export interface RepairAttempt {
   readonly changedFiles: readonly string[];
 }
 export interface AgentRunResult {
-  readonly status: "fixed" | "exhausted" | "cancelled";
-  readonly sessionId: string;
+  readonly status: "fixed" | "not_needed" | "exhausted" | "cancelled";
+  readonly sessionId: string | null;
   readonly attempts: number;
   readonly commit: string | null;
   readonly lastVerification: CompareTestRunsOutput | null;

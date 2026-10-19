@@ -12,7 +12,7 @@
     "check": "npm run typecheck && npm run lint",
     "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "start:server": "node --enable-source-maps dist/mcp-server/index.js",
-    "start:agent": "node --enable-source-maps dist/agent/index.js"
+    "start:agent": "node --enable-source-maps dist/agent/cli.js"
   },
   "dependencies": {
     "@langchain/anthropic": "1.5.12",
