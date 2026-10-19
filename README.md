@@ -21,7 +21,7 @@ npm test
 
 ```sh
 npm run build
-node scripts/demo-subagents.mjs
+node scripts/demo-subagents.mjs 
 ```
 
 La demo guarda [éxito con commit](artifacts/subagents/success.json) y [regresión con rollback](artifacts/subagents/regression.json): revisar `delegationLogs`, `consumption`, `hookLogs` y los hashes de HEAD. Cada artefacto conserva las tres delegaciones y sus cinco llamadas reales a herramientas.
