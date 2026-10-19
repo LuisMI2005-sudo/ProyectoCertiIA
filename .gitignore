@@ -8,3 +8,11 @@ coverage/
 .phase1-test-*/
 .phase2-test-*/
 .phase3-test-*/
+.phase4-test-*/
+.hooks-test-*/
+.subagents-test-*/
+.devguardian-db.json
+.devguardian-db.json.*
+data/*.json
+data/*.json.lock
+data/*.json.*.tmp

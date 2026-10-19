@@ -57,7 +57,7 @@ jobs:
         id: check
         run: npm run check
 
-      - name: Compilar y ejecutar las cuatro suites con Jest y pytest reales
+      - name: Compilar y ejecutar todas las suites con Jest y pytest reales
         id: tests
         run: npm test
 
@@ -75,7 +75,7 @@ jobs:
             echo '| Comprobación | Resultado |'
             echo '|---|---|'
             echo "| TypeScript y ESLint (npm run check) | $CHECK_RESULT |"
-            echo "| Compilación y cuatro suites (npm test) | $TEST_RESULT |"
+            echo "| Compilación y suite completa (npm test) | $TEST_RESULT |"
             echo "| Smoke test con Jest real | $TEST_RESULT |"
             echo "| Smoke test con pytest real (obligatorio) | $TEST_RESULT |"
             echo "| Python, pytest y pytest-json-report | $PYTHON_RESULT |"

@@ -4,12 +4,15 @@
   "private": true,
   "description": "Autonomous code auditing and repair through MCP",
   "type": "module",
-  "engines": { "node": ">=24.0.0 <25" },
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/copy-db-schema.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint --no-config-lookup --ext .ts --parser @typescript-eslint/parser --plugin @typescript-eslint --rule \"@typescript-eslint/no-explicit-any:error\" --rule \"@typescript-eslint/no-unused-vars:error\" src",
     "check": "npm run typecheck && npm run lint",
+    "db:verify": "npm run build && node scripts/verify-database.mjs",
     "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "start:server": "node --enable-source-maps dist/mcp-server/index.js",
     "start:agent": "node --enable-source-maps dist/agent/index.js"
@@ -22,6 +25,7 @@
     "@typescript-eslint/parser": "8.71.2",
     "dotenv": "18.0.8",
     "eslint": "10.12.0",
+    "pg": "8.23.1",
     "simple-git": "4.0.2",
     "typescript": "6.0.3",
     "zod": "4.6.7"
@@ -29,13 +33,18 @@
   "devDependencies": {
     "@jest/globals": "30.5.2",
     "@types/node": "24.19.2",
+    "@types/pg": "8.23.1",
     "jest": "30.5.2"
   },
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["<rootDir>/tests/**/*.test.mjs"],
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.mjs"
+    ],
     "transform": {},
-    "collectCoverageFrom": ["dist/shared/**/*.js"],
+    "collectCoverageFrom": [
+      "dist/shared/**/*.js"
+    ],
     "testTimeout": 10000
   }
 }

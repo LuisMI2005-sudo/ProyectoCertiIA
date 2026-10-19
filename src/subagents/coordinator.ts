@@ -9,7 +9,7 @@ import {
   AnalyzeCodeInputSchema, CompareTestRunsInputSchema, FileHashSchema, IdentifierSchema, ReadFileContextInputSchema,
   RelativePathSchema, RunnerSchema, RunTestsInputSchema, parseContract
 } from "../shared/contracts.js";
-import type { GitCommitFixOutput, RunnerConfiguration } from "../shared/contracts.js";
+import type { GitCommitFixOutput, RunnerConfiguration, RunTestsOutput } from "../shared/contracts.js";
 import { DevGuardianError, ValidationError } from "../shared/errors.js";
 import { TestRunner } from "../test-runner/index.js";
 import { SubagentRuntime, validateTask } from "./runtime.js";
@@ -56,6 +56,9 @@ export interface DevGuardianCoordinatorOptions {
   readonly analyzer?: Omit<AnalyzerOptions, "workspaceRoot">;
   readonly hookManager?: HookManager;
   readonly delegationAdapter?: DelegationPersistenceAdapter;
+  /** Trusted lifecycle observers; failures stop the repair before its next mutation. */
+  readonly onTestRun?: (run: RunTestsOutput) => Promise<void>;
+  readonly onAttemptStarted?: (attempt: { sessionId: string; attemptId: string; checkpointCommit: string; branch: string }) => Promise<void>;
 }
 export const RepairRequestSchema = z.strictObject({
   parentSessionId: IdentifierSchema.optional(), path: RelativePathSchema,
@@ -78,7 +81,7 @@ export interface CoordinatedRepairResult {
 export class DevGuardianCoordinator {
   private tail: Promise<void> = Promise.resolve();
   private constructor(public readonly agent: AgentCoordinator, public readonly git: GitController,
-    public readonly runner: TestRunner) {}
+    public readonly runner: TestRunner, private readonly onAttemptStarted?: DevGuardianCoordinatorOptions["onAttemptStarted"]) {}
   public get hooks(): HookManager { return this.agent.hooks; }
   public get delegationStore(): DelegationStore { return this.agent.store; }
   public static async create(options: DevGuardianCoordinatorOptions): Promise<DevGuardianCoordinator> {
@@ -100,6 +103,7 @@ export class DevGuardianCoordinator {
         await hooks.assertAllowed("pre:run_tests", { files: parsed.targets ?? [] });
         signal.throwIfAborted();
         const result = await runner.runTests(parsed, signal);
+        await options.onTestRun?.(structuredClone(result));
         await hooks.notify("post:test_run", { workspaceStateHash: result.workspaceStateHash, timestamp: result.finishedAt });
         return result;
       },
@@ -115,7 +119,7 @@ export class DevGuardianCoordinator {
       }
     };
     return new DevGuardianCoordinator(new AgentCoordinator(new SubagentRuntime(handlers), hooks,
-      new DelegationStore(options.delegationAdapter)), git, runner);
+      new DelegationStore(options.delegationAdapter)), git, runner, options.onAttemptStarted);
   }
   public diagnose(path: string, parentSessionId: string = randomUUID(), budget?: TaskBudget): Promise<SubagentTaskResult<DiagnosticReport>> {
     return this.agent.delegate(this.agent.createTask("diagnostic", parentSessionId, "Locate and prioritize static defects in one target file.", { path }, budget));
@@ -151,6 +155,7 @@ export class DevGuardianCoordinator {
       const session = await this.git.createFixBranch({ slug: request.slug, expectedHead: status.headCommit });
       const attempt = await this.git.beginAttempt({ sessionId: session.sessionId });
       ids = { sessionId: session.sessionId, attemptId: attempt.attemptId };
+      await this.onAttemptStarted?.({ ...ids, checkpointCommit: attempt.checkpointCommit, branch: session.branch });
       const baseline = await this.agent.delegate(this.agent.createTask("verification", parentSessionId,
         "Capture failing baseline before any patch is applied.", { mode: "baseline", runner: request.runner, targets: request.targets }, request.budget));
       activeTask = baseline.taskId;

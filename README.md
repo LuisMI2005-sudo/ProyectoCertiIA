@@ -47,11 +47,12 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 6 | `src/agent/` | Pendiente | — |
 | Hooks | `src/hooks/` | Implementado | 20 |
 | Subagentes | `src/subagents/` | Implementado | 22 |
-| **Total implementado** | **Fases 1–4 + Hooks + Subagentes** | **6 suites** | **176** |
+| Persistencia | `src/db/` | Local durable + adaptador PostgreSQL | 32 |
+| **Total implementado** | **Fases 1–4 + Hooks + Subagentes + DB** | **7 suites** | **208** |
 
-**Validación integral de las fases 1–4 con los smoke tests de CI:**
+**Validación integral de fases 1–4, hooks, subagentes y persistencia:**
 
-- **176 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- **208 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -93,6 +94,10 @@ ProyectoCertiIA/
 ├── package-lock.json                 # Resolución de dependencias reproducible
 ├── tsconfig.json                     # TypeScript estricto y salida en dist/
 ├── .gitignore                        # Exclusiones de compilación, secretos y temporales
+├── .env.example                      # Configuración de BD con valores ficticios
+├── scripts/
+│   ├── copy-db-schema.mjs             # Incluye schema.sql en dist/ al compilar
+│   └── verify-database.mjs            # Demo de escritura y recuperación tras reapertura
 ├── src/
 │   ├── shared/
 │   │   ├── errors.ts                 # Errores tipados y sobre Result<T>
@@ -110,20 +115,35 @@ ProyectoCertiIA/
 │   │   ├── eslint-analyzer.ts        # ESLint programático y diagnósticos normalizados
 │   │   ├── index.ts                  # Tres handlers y almacenamiento por analysisId
 │   │   └── README.md                 # Semántica, configuración y límites detallados
-│   └── test-runner/
-│       ├── types.ts                  # Ejecuciones, casos, comparación y evidencia
-│       ├── process-runner.ts         # Ejecución de procesos con timeout y salida acotada
-│       ├── reports.ts                # Adaptadores de reportes Jest y pytest
-│       ├── index.ts                  # Fachada, dos handlers y VerificationStore
-│       └── README.md                 # Ejecución, huellas, comparación y límites detallados
+│   ├── test-runner/
+│   │   ├── types.ts                  # Ejecuciones, casos, comparación y evidencia
+│   │   ├── process.ts                # Ejecución de procesos con timeout y salida acotada
+│   │   ├── reports.ts                # Adaptadores de reportes Jest y pytest
+│   │   ├── index.ts                  # Fachada, dos handlers y VerificationStore
+│   │   └── README.md                 # Ejecución, huellas, comparación y límites detallados
+│   ├── hooks/                        # Registro, guardrails, coordinador y documentación
+│   ├── subagents/                    # Workers, RPC, especialistas, trazas y coordinador
+│   └── db/
+│       ├── types.ts                  # Contratos de persistencia y esquemas Zod
+│       ├── repository.ts             # Integridad y transiciones comunes
+│       ├── schema.sql                # Cinco tablas, constraints e índices PostgreSQL
+│       ├── migrations.ts             # Migración transaccional con versión y checksum
+│       ├── local-adapter.ts          # JSON durable, lock y reemplazo atómico
+│       ├── postgres-adapter.ts       # Pool pg y consultas parametrizadas
+│       ├── bridges.ts                # Hooks/delegaciones y AuditPersistenceService
+│       ├── index.ts                  # Factory local/PostgreSQL y exportaciones
+│       └── README.md                 # Modelo ER, integración y evidencia de persistencia
 ├── tests/
 │   ├── shared.test.mjs                # 30 pruebas de seguridad y contratos
 │   ├── git-controller/
 │   │   └── controller.test.mjs        # 35 pruebas con repositorios Git reales
 │   ├── analyzer/
 │   │   └── analyzer.test.mjs          # 44 pruebas del analizador y sus recursos
-│   └── test-runner/
-│       └── runner.test.mjs            # 23 pruebas del ejecutor y su evidencia
+│   ├── test-runner/
+│   │   └── runner.test.mjs            # 25 pruebas, incluidos Jest/pytest reales
+│   ├── hooks/hooks.test.mjs           # 20 pruebas de hooks y auditoría
+│   ├── subagents/subagents.test.mjs   # 22 pruebas de delegación y reparación real
+│   └── db/db.test.mjs                 # 32 pruebas de persistencia y reinicio
 └── fixtures/
     ├── typescript/
     │   ├── domain.ts                 # Tipos y funciones importadas por otros casos
@@ -244,7 +264,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 176 pruebas en seis suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 208 pruebas en siete suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 
 Para reproducir la validación completa:
 
@@ -264,7 +284,7 @@ Los scripts `start:server` y `start:agent` ya están declarados, pero sus archiv
 El workflow [CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml), definido en [`.github/workflows/ci.yml`](.github/workflows/ci.yml), se ejecuta con cada push a `main` o `Dev` y cada pull request dirigido a esas ramas. Utiliza Ubuntu, Node.js 24.x, caché de npm y Python 3.11. Instala Node con `npm ci` y versiones fijadas de pytest y `pytest-json-report`, configura una identidad Git para los repositorios temporales y ejecuta:
 
 1. `npm run check`: TypeScript estricto sin emitir y ESLint.
-2. `npm test`: compilación y las seis suites, incluidos los smoke tests con Jest y pytest reales y los flujos delegados de commit/rollback. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
+2. `npm test`: compilación y las siete suites, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback y la persistencia con reinicio real de Node. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
 3. Una tabla de resultados en el resumen de Actions, que también informa fallos o pasos no ejecutados.
 
 El workflow solo dispone de `contents: read`, cancela ejecuciones anteriores de la misma rama y tiene un límite de 15 minutos. No incluye despliegues ni requiere secretos o archivos `.env`. `DEVGUARDIAN_REQUIRE_PYTEST=1` hace fallar la suite si falta pytest en CI.
@@ -287,3 +307,19 @@ npm test
 Para exigir pytest también localmente, usar `DEVGUARDIAN_REQUIRE_PYTEST=1 npm test` en Bash o `$env:DEVGUARDIAN_REQUIRE_PYTEST = '1'; npm test` en PowerShell.
 
 Para la defensa, abrir **Actions → CI → Run workflow**, seleccionar `Dev` y ejecutar manualmente. GitHub habilita este botón cuando el workflow está presente en la rama predeterminada; si esta es `main`, primero debe integrarse allí el archivo mediante el flujo habitual de revisión. Mientras solo exista en `Dev`, un push a `Dev` activa automáticamente la validación.
+
+## Base de Datos y Persistencia
+
+`src/db/` implementa cinco tablas de dominio: proyectos, auditorías, ejecuciones de pruebas, decisiones de hooks y delegaciones. Los hallazgos y checkpoints de intentos se conservan en el resumen de la auditoría. Los adaptadores reales `HookPersistenceAdapter` y `DelegationPersistenceAdapter` escriben en el repositorio común; `AuditPersistenceService.repairProject()` conecta el coordinador con ese almacenamiento y guarda baseline, candidato, commit o rollback.
+
+Sin `DATABASE_URL` se utiliza un JSON durable en `./data/devguardian-db.json`, con bloqueo entre procesos y reemplazo atómico. Con `DATABASE_URL` y modo distinto de `local`, la factory usa PostgreSQL con `pg`, consultas parametrizadas, transacciones y migraciones versionadas. `DEVGUARDIAN_DB_MODE=local` permite forzar el modo de desarrollo; para cloud debe cambiarse a `postgres` o eliminarse. Las variables de ejemplo están en [`.env.example`](.env.example), sin credenciales reales; `.env` y los archivos locales documentados están ignorados por Git.
+
+```sh
+npm run db:verify
+```
+
+El comando crea datos de demostración, cierra y reabre la conexión y muestra sus IDs y recuperación. Se pueden consultar desde otro proceso con `npm run db:verify -- UUID_DE_LA_AUDITORIA`. Las pruebas de DB comprueban además una reparación real con Jest, auditorías de hooks y delegaciones que permanecen intactas al arrancar otro proceso Node.
+
+**Estado de entrega:** la persistencia local es funcional y el adaptador PostgreSQL fue comprobado también contra un servidor real temporal, con migraciones, operaciones sobre las cinco tablas y recuperación tras reabrir la conexión. Esto no acredita todavía una BD cloud desplegada: falta aprovisionar el proveedor, configurar `DATABASE_URL` como secreto y demostrar escritura/lectura tras reinicio en ese entorno. El CI usa almacenamiento local y cliente PostgreSQL mockeado, sin requerir servidor externo ni secretos. No se ha implementado aún una API/dashboard para consultar los datos desde un navegador.
+
+Modelo entidad-relación, límites, seguridad, integración y pasos para Render/Supabase/Neon: [documentación de persistencia](src/db/README.md).
