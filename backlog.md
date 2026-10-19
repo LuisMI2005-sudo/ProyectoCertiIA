@@ -4,7 +4,7 @@
 **Equipo:** Six seven — Eduardo Quinteros, Sebhastian Campero y Luis Miguel Gonzales  
 **Rama de trabajo:** `Dev`  
 **Fecha de actualización:** 19 de octubre de 2026  
-**Base revisada:** Dev sobre 331dbc5, con persistencia (src/db/), API HTTP (src/server/) y 19 herramientas MCP (src/mcp/). Este corte cierra comparación de omitidos, integridad de reportes y documentación, antes de integrar origin/main. Las HU conservan sus identificadores; completar código local no acredita despliegue.
+**Base revisada:** Dev sobre 331dbc5, con persistencia (src/db/), API HTTP (src/server/) y 19 herramientas MCP (src/mcp/). Este corte cierra comparación de omitidos, integridad de reportes y documentación e integra origin/main sin squash, conservando sus hashes y autorías. Las HU conservan sus identificadores; completar código local no acredita despliegue.
 
 ## Cómo utilizar el backlog
 
@@ -18,11 +18,11 @@ Las agrupaciones temáticas no sustituyen el campo **Estado** de cada HU. Hooks 
 | Estado | Cantidad | Historias |
 |---|---:|---|
 | Completada | 21 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
-| Parcial | 6 | HU-12, HU-18, HU-19, HU-26, HU-27 y HU-28. |
-| Pendiente | 16 | Colaboración/accesos, recursos MCP completos, agente, worker remoto, frontend, despliegues y robustez pendiente. |
+| Parcial | 7 | HU-12, HU-18, HU-19, HU-24, HU-26, HU-27 y HU-28. |
+| Pendiente | 15 | Colaboración/accesos, recursos MCP completos, agente, worker remoto, frontend, despliegues y robustez pendiente. |
 | **Total** | **43** | No equivale a porcentaje de nota ni esfuerzo. |
 
-**Calidad de referencia:** la última verificación integral previa terminó con **236 pruebas en ocho suites**, tipos y lint correctos. Este corte incorpora **18 regresiones nuevas** del Test Runner (43 casos en esa suite; 254 en las ocho suites originales). El resultado final de la integración se actualizará al completar la verificación requerida. El [run histórico de CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) corresponde a un corte anterior; no acredita el commit nuevo. Actions continúa configurado para Node 24, Python 3.11 y pytest real obligatorio, sin CD.
+**Calidad de referencia:** la última verificación integral previa terminó con **236 pruebas en ocho suites**, tipos y lint correctos. Este corte incorpora **18 regresiones nuevas** del Test Runner (43 casos en esa suite; 254 en las ocho suites originales). La suite MCP aportada por origin/main añade tres casos: **257 pruebas en nueve suites**. El resultado final se confirma mediante check y test tras el merge. El [run histórico de CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) corresponde a un corte anterior; no acredita el commit nuevo. Actions continúa configurado para Node 24, Python 3.11 y pytest real obligatorio, sin CD.
 
 ## Corte de avance del backend
 
@@ -31,8 +31,8 @@ Se mantienen las **33 HU de backend** originales: HU-01 a HU-21, HU-23 a HU-30, 
 | Estado backend | Cantidad | Historias |
 |---|---:|---|
 | Completadas | **21** | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
-| Parciales | **6** | HU-12, HU-18, HU-19, HU-26, HU-27 y HU-28. |
-| Pendientes | **6** | HU-24, HU-25, HU-32, HU-41, HU-42 y HU-43. |
+| Parciales | **7** | HU-12, HU-18, HU-19, HU-24, HU-26, HU-27 y HU-28. |
+| Pendientes | **5** | HU-25, HU-32, HU-41, HU-42 y HU-43. |
 | **Total** | **33** | **21/33 = 63,6 % de historias cerradas; no es porcentaje de nota.** |
 
 HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo necesarias para la entrega. BD/API locales no cierran HU-33/HU-34; faltan frontend público, cloud y CD. El historial durable se recupera tras reiniciar; las sesiones Git activas y análisis por ID continúan en memoria.
@@ -271,11 +271,13 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 ### HU-24 Consultar recursos MCP de proyecto y análisis
 
 **Como** agente conectado, **quiero** consultar configuración, estructura y análisis guardados **para** reutilizar contexto sin repetir herramientas.  
-**Estado:** Pendiente · **Prioridad:** P1 · **Fase:** 5 · **Depende de:** HU-07, HU-23.
+**Estado:** Parcial · **Prioridad:** P1 · **Fase:** 5 · **Depende de:** HU-07, HU-23.
 
 - Publicar los recursos previstos de configuración, estructura y `devguardian://analysis/{analysisId}`.
 - Validar identificadores y permisos; responder correctamente a análisis desconocidos, expirados o expulsados.
 - No exponer secretos ni permitir elegir una raíz externa desde un URI.
+
+- **Integrado desde origin/main:** recurso devguardian://analysis/{analysisId} en src/mcp-server/ y tres pruebas de cliente/recurso. Falta configuración/estructura y exponerlo en src/mcp/ con ámbito de proyecto; no se cierra la HU completa.
 
 ### HU-25 Diagnosticar y proponer un parche con IA
 

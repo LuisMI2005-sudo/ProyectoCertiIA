@@ -44,15 +44,16 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 3 | `src/analyzer/` | Completada | 44 |
 | Fase 4 | `src/test-runner/` | Completada | 43 |
 | Fase 5 + HTTP | `src/mcp/`, `src/server/` | Herramientas MCP por stdio/HTTP y REST implementadas | 28 |
+| MCP de compatibilidad | `src/mcp-server/` | Integrado desde origin/main: recurso de análisis y 10 herramientas de dominio | 3 |
 | Fase 6 | `src/agent/` | Pendiente | — |
 | Hooks | `src/hooks/` | Implementado | 20 |
 | Subagentes | `src/subagents/` | Implementado | 22 |
 | Persistencia | `src/db/` | Local durable + adaptador PostgreSQL | 32 |
-| **Total implementado** | **Fases 1–5 + HTTP + Hooks + Subagentes + DB** | **8 suites** | **254** |
+| **Total implementado** | **Fases 1–5 + HTTP + Hooks + Subagentes + DB** | **9 suites** | **257** |
 
 **Validación integral del backend:**
 
-- **254 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- **257 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -123,6 +124,7 @@ ProyectoCertiIA/
 │   │   └── README.md                 # Ejecución, huellas, comparación y límites detallados
 │   ├── hooks/                        # Registro, guardrails, coordinador y documentación
 │   ├── subagents/                    # Workers, RPC, especialistas, trazas y coordinador
+│   ├── mcp-server/                   # MCP de compatibilidad aportado por Eduardo, con recurso de análisis
 │   ├── mcp/
 │   │   ├── server.ts                 # 19 tools, SDK y transporte HTTP JSON sin sesión
 │   │   └── index.ts                  # Entrada stdio y exportaciones MCP
@@ -154,6 +156,7 @@ ProyectoCertiIA/
 │   ├── hooks/hooks.test.mjs           # 20 pruebas de hooks y auditoría
 │   ├── subagents/subagents.test.mjs   # 22 pruebas de delegación y reparación real
 │   ├── db/db.test.mjs                 # 32 pruebas de persistencia y reinicio
+│   ├── mcp-server/server.test.mjs     # 3 pruebas de discovery, validación y recurso MCP
 │   └── server/server.test.mjs         # 28 pruebas HTTP/MCP con motores y BD reales
 └── fixtures/
     ├── typescript/
@@ -168,7 +171,7 @@ ProyectoCertiIA/
         └── fake-pytest.mjs           # Ejecutable pytest falso para pruebas deterministas
 ```
 
-`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. La Fase 5 utiliza `src/mcp/`; el agente generativo de Fase 6 continúa pendiente. La publicación de recursos MCP por `analysisId` todavía no está implementada.
+`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. La Fase 5 utiliza `src/mcp/`; el agente generativo de Fase 6 continúa pendiente. El servidor de compatibilidad `src/mcp-server/` aporta el recurso `devguardian://analysis/{analysisId}`; su exposición en el servidor principal de 19 herramientas queda pendiente.
 
 ## 4. Registro Detallado de Cambios e Implementación por Fase (Changelog Técnico)
 
@@ -228,7 +231,7 @@ El ejecutor no es un sandbox del sistema operativo: los tests son código arbitr
 - **Flujo completo:** `POST /api/audits/run` conecta el coordinador real con persistencia; conserva baseline/candidato, hallazgos, checkpoint, decisiones de hooks y delegaciones. La suite comprueba commit, rollback, bloqueo y recuperación tras reiniciar.
 - **MCP:** SDK oficial, negociación y descubrimiento de 19 herramientas, esquemas Zod y auditoría durable de llamadas. Transporte stdio y HTTP JSON sin sesión, con clientes oficiales; no incluye SSE ni reanudación de eventos.
 - **Compatibilidad estricta:** la biblioteca `DOM` aporta los tipos web que utiliza el SDK; se mantienen `strict`, `exactOptionalPropertyTypes` y `skipLibCheck: false`.
-- **Verificación:** 28 pruebas adicionales; 254 en total y ocho suites.
+- **Verificación:** 28 pruebas adicionales; 257 en total y nueve suites.
 
 ## 5. Contratos de Herramientas MCP Implementadas
 
@@ -284,7 +287,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 254 pruebas en ocho suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 257 pruebas en nueve suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 | Iniciar HTTP compilado | `npm start` | Backend en `http://127.0.0.1:3001` por defecto. |
 | Compilar e iniciar HTTP | `npm run dev:server` | Compilación inicial y servidor HTTP; reiniciar para incorporar cambios. |
 | Iniciar MCP stdio compilado | `node dist/mcp/index.js` | Transporte stdio con stdout reservado al protocolo. |
@@ -334,7 +337,7 @@ Ejemplos completos de registro, diagnóstico, reparación, hooks bloqueados y ll
 El workflow [CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml), definido en [`.github/workflows/ci.yml`](.github/workflows/ci.yml), se ejecuta con cada push a `main` o `Dev` y cada pull request dirigido a esas ramas. Utiliza Ubuntu, Node.js 24.x, caché de npm y Python 3.11. Instala Node con `npm ci` y versiones fijadas de pytest y `pytest-json-report`, configura una identidad Git para los repositorios temporales y ejecuta:
 
 1. `npm run check`: TypeScript estricto sin emitir y ESLint.
-2. `npm test`: compilación y las ocho suites, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback, la persistencia con reinicio real de Node y el backend HTTP/MCP. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
+2. `npm test`: compilación y las nueve suites, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback, la persistencia con reinicio real de Node y el backend HTTP/MCP. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
 3. Una tabla de resultados en el resumen de Actions, que también informa fallos o pasos no ejecutados.
 
 El workflow solo dispone de `contents: read`, cancela ejecuciones anteriores de la misma rama y tiene un límite de 15 minutos. No incluye despliegues ni requiere secretos o archivos `.env`. `DEVGUARDIAN_REQUIRE_PYTEST=1` hace fallar la suite si falta pytest en CI.
@@ -373,3 +376,7 @@ El comando crea datos de demostración, cierra y reabre la conexión y muestra s
 **Estado de entrega:** la persistencia local es funcional y el adaptador PostgreSQL fue comprobado también contra un servidor real temporal, con migraciones, operaciones sobre las cinco tablas y recuperación tras reabrir la conexión. Esto no acredita todavía una BD cloud desplegada: falta aprovisionar el proveedor, configurar `DATABASE_URL` como secreto y demostrar escritura/lectura tras reinicio en ese entorno. El CI usa almacenamiento local y cliente PostgreSQL mockeado, sin requerir servidor externo ni secretos. La API REST/MCP ya permite consultar el historial; el dashboard frontend y los despliegues externos siguen pendientes.
 
 Modelo entidad-relación, límites, seguridad, integración y pasos para Render/Supabase/Neon: [documentación de persistencia](src/db/README.md).
+
+## Consolidación de ramas y regresiones
+
+Se integró origin/main en Dev mediante merge conservando hashes y autoría: MCP de compatibilidad, corrección de rutas Git antes de evaluar árbol sucio, aserciones CRLF exactas y validación CI en QA. El workflow conserva Node/Python, los smoke tests reales y ejecución manual. Las ocho suites originales suman 254 pruebas tras 18 regresiones nuevas del Test Runner; la suite MCP recibida añade tres: 257 casos en nueve suites. El servidor principal sigue siendo src/mcp/ (19 herramientas auditadas y API HTTP); [src/mcp-server/](src/mcp-server/README.md) conserva la interfaz de workspace fijo y el recurso de análisis aportados desde main. El cliente generativo en otras ramas remotas no se incorporó en este merge.

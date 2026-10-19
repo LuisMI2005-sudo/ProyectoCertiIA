@@ -16,3 +16,4 @@ coverage/
 data/*.json
 data/*.json.lock
 data/*.json.*.tmp
+.phase5-test-*/

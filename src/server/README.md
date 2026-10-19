@@ -244,4 +244,4 @@ npm run check
 npm test
 ```
 
-La suite HTTP/MCP añade **28 pruebas**. Total del proyecto: **254 pruebas en 8 suites** con pytest y su plugin instalados; en CI `DEVGUARDIAN_REQUIRE_PYTEST=1` hace obligatoria esa integración. El workflow existente descubre automáticamente la nueva suite y no incluye despliegue. La ejecución remota en Actions solo se acredita cuando los cambios se suban y GitHub termine el run.
+La suite HTTP/MCP añade **28 pruebas**. Total del proyecto: **257 pruebas en 9 suites** con pytest y su plugin instalados; en CI `DEVGUARDIAN_REQUIRE_PYTEST=1` hace obligatoria esa integración. El workflow existente descubre automáticamente la nueva suite y no incluye despliegue. La ejecución remota en Actions solo se acredita cuando los cambios se suban y GitHub termine el run.
