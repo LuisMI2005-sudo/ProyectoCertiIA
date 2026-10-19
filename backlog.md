@@ -4,7 +4,7 @@
 **Equipo:** Six seven — Eduardo Quinteros, Sebhastian Campero y Luis Miguel Gonzales  
 **Rama de trabajo:** `Dev`  
 **Fecha de actualización:** 19 de octubre de 2026  
-**Base revisada:** Dev sobre 331dbc5, con persistencia (src/db/), API HTTP (src/server/) y 19 herramientas MCP (src/mcp/). Este corte cierra comparación de omitidos, integridad de reportes y documentación e integra origin/main sin squash, conservando sus hashes y autorías. Las HU conservan sus identificadores; completar código local no acredita despliegue.
+**Base revisada:** Dev tras el merge e3c6b8e (padres 2468ec7 y b5b2698), con persistencia (src/db/), API HTTP (src/server/) y 19 herramientas MCP (src/mcp/). Este corte cierra comparación de omitidos, integridad de reportes y documentación e integra origin/main sin squash, conservando sus hashes y autorías. Las HU conservan sus identificadores; completar código local no acredita despliegue.
 
 ## Cómo utilizar el backlog
 
@@ -18,11 +18,11 @@ Las agrupaciones temáticas no sustituyen el campo **Estado** de cada HU. Hooks 
 | Estado | Cantidad | Historias |
 |---|---:|---|
 | Completada | 21 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
-| Parcial | 7 | HU-12, HU-18, HU-19, HU-24, HU-26, HU-27 y HU-28. |
-| Pendiente | 15 | Colaboración/accesos, recursos MCP completos, agente, worker remoto, frontend, despliegues y robustez pendiente. |
+| Parcial | 8 | HU-12, HU-18, HU-19, HU-22, HU-24, HU-26, HU-27 y HU-28. |
+| Pendiente | 14 | Agente, worker remoto, frontend, despliegues, defensa y robustez pendiente. |
 | **Total** | **43** | No equivale a porcentaje de nota ni esfuerzo. |
 
-**Calidad de referencia:** la última verificación integral previa terminó con **236 pruebas en ocho suites**, tipos y lint correctos. Este corte incorpora **18 regresiones nuevas** del Test Runner (43 casos en esa suite; 254 en las ocho suites originales). La suite MCP aportada por origin/main añade tres casos: **257 pruebas en nueve suites**. El resultado final se confirma mediante check y test tras el merge. El [run histórico de CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) corresponde a un corte anterior; no acredita el commit nuevo. Actions continúa configurado para Node 24, Python 3.11 y pytest real obligatorio, sin CD.
+**Validación actual tras el merge:** `npm.cmd run check` sin errores; suite focal del Test Runner **43/43**; `npm.cmd test` **257/257 en nueve suites**, 0 fallos, con pytest obligatorio (518,394 s). Se conservan las ocho suites anteriores (236 casos), se añaden 18 regresiones del Test Runner y tres pruebas MCP recibidas de origin/main. El [run histórico de CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) corresponde al corte anterior; el run remoto del commit nuevo se acredita después del push. El workflow mantiene Node 24, Python 3.11, pytest real obligatorio y no incluye CD.
 
 ## Corte de avance del backend
 
@@ -173,12 +173,12 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 ### HU-15 Validar automáticamente los módulos existentes
 
 **Como** integrante del equipo, **quiero** ejecutar las comprobaciones de calidad localmente **para** detectar regresiones antes de integrar cambios.  
-**Estado:** Completada · **Fases:** 1–4 + Hooks + Subagentes · **Evidencia:** seis suites y scripts npm.
+**Estado:** Completada · **Fases:** motor + Hooks + Subagentes + DB + HTTP/MCP · **Evidencia:** nueve suites y scripts npm.
 
-- En Actions del commit `ac50df8` pasaron 176 pruebas, compilación, tipos y lint; `npm run check` también pasó en esta revisión local.
+- Evidencia histórica: en Actions del commit `ac50df8` pasaron 176 pruebas. El corte actual amplía la base de 236 a 257 casos en nueve suites; comprobar el resultado del commit final en Actions después del push. Tipos/lint y los 43 casos del Test Runner ya pasaron localmente tras el merge.
 - Los commits de prueba se limitan a repositorios temporales. HU-21 ya acredita la ejecución automática en GitHub.
 
-## B. Correcciones y pruebas pendientes de Fase 4
+## B. Estabilización y seguimiento de Fase 4
 
 ### HU-16 Rechazar pruebas aprobadas que pasan a omitidas
 
@@ -244,18 +244,20 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 - Agregar workflow en PR/push a las ramas de trabajo/entrega con Node.js 24 e instalación mediante lockfile.
 - Ejecutar tipos, lint, compilación y pruebas; preparar Python y su plugin para las integraciones reales correspondientes.
 - Mostrar una ejecución verde enlazable y una prueba de que un fallo detiene el pipeline.
-- **Evidencia:** [run fallido `39292749510`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39292749510), donde una prueba hizo fallar `npm test` y el job; [run verde `39306415018`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018), con 176 pruebas en seis suites del HEAD actual.
-- Incluye push/PR hacia `main` y `Dev`, dispatch, permisos de lectura, caché npm, cancelación de ejecuciones previas, instalación por lockfile, Python/pytest y resumen. Las referencias a «cuatro suites» del nombre del paso y su tabla son texto desactualizado: `npm test` descubre y ejecuta las seis suites actuales.
-- No cierra HU-36: no hay pasos de despliegue. `main` sigue en `d51ab85`; su consolidación y la disponibilidad del botón manual en la rama predeterminada pertenecen a HU-38.
+- **Evidencia histórica:** [run fallido `39292749510`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39292749510), donde falló el job; [run verde `39306415018`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018), con 176 pruebas en seis suites de aquel commit. No se atribuye ese resultado al HEAD nuevo.
+- Incluye push/PR hacia `main`, `Dev` y `QA`, dispatch, permisos de lectura, caché npm, cancelación de ejecuciones previas, instalación por lockfile, Python/pytest y resumen. `npm test` descubre las nueve suites integradas; el CI remoto del commit final se acredita después del push.
+- No cierra HU-36: no hay pasos de despliegue. La rama local `main` se adelantó a `origin/main` (`b5b2698`) y este historial se integró en `Dev` sin squash; el PR final de Dev hacia main y su validación pertenecen a HU-38.
 
 ### HU-22 Acreditar colaboración y contribuciones del equipo
 
 **Como** docente, **quiero** acceder al repositorio y reconocer el aporte de los tres integrantes **para** evaluar el trabajo grupal e individual.  
-**Estado:** Pendiente de completar/verificar · **Prioridad:** P0 · **Rúbrica:** requisito de defensa y repositorio/equipo, 10 puntos.
+**Estado:** Parcial · **Prioridad:** P0 · **Rúbrica:** requisito de defensa y repositorio/equipo, 10 puntos.
 
 - Confirmar invitación aceptada del docente y acceso al repositorio correcto.
 - Mostrar contribuciones reales de Eduardo, Sebhastian y Luis Miguel con identidad atribuible y PRs o revisiones.
 - Vincular las historias a sus entregas y evitar commits vacíos creados solo para aparentar participación.
+
+- **Verificado:** merge `e3c6b8e` con padres `2468ec7` y `b5b2698`; los commits originales de Eduardo se conservan. `git shortlog -sn Dev` muestra a LM, SebhastianCampero-Collab, Eduardo Quinteros y su alias eduardoquinteross. Falta acreditar acceso del docente y las revisiones/entregas del resto de criterios.
 
 ## D. Servidor MCP y agente autónomo
 
