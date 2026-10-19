@@ -49,8 +49,10 @@ export function boundedText(text: string, maximum: number): string {
 export function rangeOf(source: ts.SourceFile, start: number, end: number): SourceRange {
   const beginning = source.getLineAndCharacterOfPosition(Math.max(0, Math.min(start, source.text.length)));
   const ending = source.getLineAndCharacterOfPosition(Math.max(start, Math.min(end, source.text.length)));
-  return { start: { line: beginning.line + 1, column: beginning.character + 1 },
-    end: { line: ending.line + 1, column: ending.character + 1 } };
+  return {
+    start: { line: beginning.line + 1, column: beginning.character + 1 },
+    end: { line: ending.line + 1, column: ending.character + 1 }
+  };
 }
 
 /** Compiler callbacks are synchronous: every access has canonical boundary checks. */
@@ -118,7 +120,7 @@ class CompilerFileSystem {
       }
       const after = fstatSync(descriptor);
       if (length !== metadata.size || after.size !== metadata.size || after.mtimeMs !== metadata.mtimeMs ||
-          after.ctimeMs !== metadata.ctimeMs || this.permitted(candidate) !== safe) {
+        after.ctimeMs !== metadata.ctimeMs || this.permitted(candidate) !== safe) {
         throw new AnalysisError("Compiler file changed during analysis.", { retryable: true });
       }
       buffer = allocation.subarray(0, length);
@@ -148,7 +150,7 @@ export class AstAnalyzer {
     public readonly guard: WorkspacePathGuard,
     public readonly limits: AnalyzerLimits,
     private readonly options: AnalyzerOptions
-  ) {}
+  ) { }
 
   public async snapshot(input: string): Promise<SourceSnapshot> {
     const resolved = await this.guard.resolve(input);
@@ -172,15 +174,17 @@ export class AstAnalyzer {
       const verified = await this.guard.resolve(input);
       const identity = await stat(verified.absolutePath);
       if (verified.absolutePath !== resolved.absolutePath || after.size !== length ||
-          after.mtimeMs !== metadata.mtimeMs || after.ctimeMs !== metadata.ctimeMs ||
-          identity.ino !== after.ino || identity.dev !== after.dev) {
+        after.mtimeMs !== metadata.mtimeMs || after.ctimeMs !== metadata.ctimeMs ||
+        identity.ino !== after.ino || identity.dev !== after.dev) {
         throw new AnalysisError("Requested file changed during the read.", { retryable: true });
       }
       const content = buffer.subarray(0, length);
       const text = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(content);
       if (text.includes("\0")) throw new AnalysisError("Binary files cannot be analyzed as source text.");
-      return { path: resolved.relativePath, absolutePath: resolved.absolutePath, text,
-        fileHash: hash(content), lineStarts: lineStartsOf(text) };
+      return {
+        path: resolved.relativePath, absolutePath: resolved.absolutePath, text,
+        fileHash: hash(content), lineStarts: lineStartsOf(text)
+      };
     } catch (error: unknown) {
       if (error instanceof DevGuardianError) throw error;
       throw new AnalysisError("Cannot read source text; UTF-8 is required.", { cause: error });
@@ -228,8 +232,10 @@ export class AstAnalyzer {
     } else if (this.options.tsconfigPath !== undefined) {
       throw new AnalysisError("Configured tsconfig is missing or outside the workspace.");
     }
-    const effective = { ...defaults, ...configured, ...this.options.compilerOptions,
-      noEmit: true, incremental: false, composite: false, rootDir: this.guard.root };
+    const effective = {
+      ...defaults, ...configured, ...this.options.compilerOptions,
+      noEmit: true, incremental: false, composite: false, rootDir: this.guard.root
+    };
     delete effective.tsBuildInfoFile;
     return effective;
   }
@@ -243,9 +249,9 @@ export class AstAnalyzer {
       return [];
     };
     if (ts.isVariableDeclaration(node) || ts.isPropertyDeclaration(node) || ts.isFunctionDeclaration(node) ||
-        ts.isFunctionExpression(node) || ts.isClassDeclaration(node) || ts.isClassExpression(node) ||
-        ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isModuleDeclaration(node) ||
-        ts.isMethodDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) {
+      ts.isFunctionExpression(node) || ts.isClassDeclaration(node) || ts.isClassExpression(node) ||
+      ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isModuleDeclaration(node) ||
+      ts.isMethodDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) {
       return node.name ? collect(node.name) : [];
     }
     return [];
@@ -287,16 +293,20 @@ export class AstAnalyzer {
       } else if (ts.isClassDeclaration(node) || ts.isClassExpression(node) || ts.isInterfaceDeclaration(node)) {
         signature = source.text.slice(start, Math.max(start, node.members.pos - 1)).trim();
       } else if (ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node) || ts.isArrowFunction(node) ||
-                 ts.isMethodDeclaration(node) || ts.isConstructorDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) {
+        ts.isMethodDeclaration(node) || ts.isConstructorDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) {
         const typed = checker.getSignatureFromDeclaration(node);
         signature = typed ? `${name}${checker.signatureToString(typed, node, ts.TypeFormatFlags.NoTruncation)}` :
           source.text.slice(start, node.body?.getStart(source) ?? end).trim();
       } else signature = node.getText(source);
       if (signature.length > this.limits.maxContextCharacters || name.length > 1024) truncated = true;
-      entries.push({ node, nameNodes: names.length > 0 ? names :
-        ((ts.isVariableDeclaration(parent) || ts.isPropertyDeclaration(parent)) ? this.nameNodes(parent) : []),
-        start, end, symbol: { path: file, name: boundedText(name, 1024), kind,
-          signature: boundedText(signature, this.limits.maxContextCharacters), range: rangeOf(source, start, end) } });
+      entries.push({
+        node, nameNodes: names.length > 0 ? names :
+          ((ts.isVariableDeclaration(parent) || ts.isPropertyDeclaration(parent)) ? this.nameNodes(parent) : []),
+        start, end, symbol: {
+          path: file, name: boundedText(name, 1024), kind,
+          signature: boundedText(signature, this.limits.maxContextCharacters), range: rangeOf(source, start, end)
+        }
+      });
       if (entries.length > 10_000) throw new AnalysisError("File exceeds the symbol table limit.");
     }
     return { entries, truncated };
@@ -315,9 +325,11 @@ export class AstAnalyzer {
         try { resolvedPath = validateWorkspaceRelativePath(path.relative(this.guard.root, fs.realpath(resolved.resolvedFileName))); }
         catch { resolvedPath = null; }
       }
-      const dependency: Dependency = { from: file, specifier: boundedText(specifier, 4096), resolvedPath,
+      const dependency: Dependency = {
+        from: file, specifier: boundedText(specifier, 4096), resolvedPath,
         external: !specifier.startsWith(".") && !path.isAbsolute(specifier) &&
-          (resolvedPath === null || resolvedPath.split("/").includes("node_modules")), typeOnly };
+          (resolvedPath === null || resolvedPath.split("/").includes("node_modules")), typeOnly
+      };
       if (!imports.some((entry) => entry.specifier === dependency.specifier && entry.typeOnly === dependency.typeOnly)) imports.push(dependency);
       if (imports.length > 10_000) throw new AnalysisError("File exceeds the dependency limit.");
     };
@@ -336,10 +348,10 @@ export class AstAnalyzer {
           node.exportClause.elements.every((entry) => entry.isTypeOnly)));
       }
       else if (ts.isImportEqualsDeclaration(node) && ts.isExternalModuleReference(node.moduleReference) &&
-               node.moduleReference.expression && ts.isStringLiteralLike(node.moduleReference.expression)) add(node.moduleReference.expression, node.isTypeOnly, ts.ModuleKind.CommonJS);
+        node.moduleReference.expression && ts.isStringLiteralLike(node.moduleReference.expression)) add(node.moduleReference.expression, node.isTypeOnly, ts.ModuleKind.CommonJS);
       else if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument) && ts.isStringLiteralLike(node.argument.literal)) add(node.argument.literal, true);
       else if (ts.isCallExpression(node) && node.arguments.length === 1 &&
-               (node.expression.kind === ts.SyntaxKind.ImportKeyword || (ts.isIdentifier(node.expression) && node.expression.text === "require"))) {
+        (node.expression.kind === ts.SyntaxKind.ImportKeyword || (ts.isIdentifier(node.expression) && node.expression.text === "require"))) {
         const argument = node.arguments[0];
         if (argument && ts.isStringLiteralLike(argument)) add(argument, false,
           node.expression.kind === ts.SyntaxKind.ImportKeyword ? ts.ModuleKind.ESNext : ts.ModuleKind.CommonJS);
@@ -382,8 +394,10 @@ export class AstAnalyzer {
         const table = this.table(sourceFile, checker, snapshot.path);
         const imports = this.imports(sourceFile, snapshot.path, options, fs);
         truncated ||= table.truncated || imports.truncated;
-        files.set(snapshot.path, { snapshot, sourceFile, symbols: table.entries,
-          dependencies: imports.dependencies });
+        files.set(snapshot.path, {
+          snapshot, sourceFile, symbols: table.entries,
+          dependencies: imports.dependencies
+        });
         const sourceDiagnostics = [
           ...(checks.includes("syntax") ? program.getSyntacticDiagnostics(sourceFile) : []),
           ...(checks.includes("semantic") ? program.getSemanticDiagnostics(sourceFile) : [])
@@ -392,11 +406,13 @@ export class AstAnalyzer {
           if (diagnostics.length >= this.limits.maxDiagnostics) { truncated = true; break; }
           const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
           truncated ||= message.length > Limits.maxFileContextCharacters;
-          diagnostics.push({ path: snapshot.path, source: "typescript", code: `TS${diagnostic.code}`,
+          diagnostics.push({
+            path: snapshot.path, source: "typescript", code: `TS${diagnostic.code}`,
             severity: diagnostic.category === ts.DiagnosticCategory.Error ? "error" :
               diagnostic.category === ts.DiagnosticCategory.Warning ? "warning" : "info",
             message: boundedText(message, Limits.maxFileContextCharacters),
-            range: diagnostic.start === undefined ? null : rangeOf(sourceFile, diagnostic.start, diagnostic.start + (diagnostic.length ?? 0)) });
+            range: diagnostic.start === undefined ? null : rangeOf(sourceFile, diagnostic.start, diagnostic.start + (diagnostic.length ?? 0))
+          });
         }
       }
       if (checks.includes("semantic")) {
@@ -406,10 +422,12 @@ export class AstAnalyzer {
             if (diagnostics.length >= this.limits.maxDiagnostics) { truncated = true; break; }
             const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
             truncated ||= message.length > Limits.maxFileContextCharacters;
-            diagnostics.push({ path: first.path, source: "typescript", code: `TS${diagnostic.code}`,
+            diagnostics.push({
+              path: first.path, source: "typescript", code: `TS${diagnostic.code}`,
               severity: diagnostic.category === ts.DiagnosticCategory.Error ? "error" :
                 diagnostic.category === ts.DiagnosticCategory.Warning ? "warning" : "info",
-              message: boundedText(message, Limits.maxFileContextCharacters), range: null });
+              message: boundedText(message, Limits.maxFileContextCharacters), range: null
+            });
           }
         }
       }
