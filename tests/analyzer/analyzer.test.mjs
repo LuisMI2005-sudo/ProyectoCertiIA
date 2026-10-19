@@ -82,7 +82,7 @@ describe('AST symbol context', () => {
     expect(resultSchema(ToolSchemas.get_symbol_context.output).safeParse(result).success).toBe(true);
     const data = unwrap(result);
     expect(data.symbol).toMatchObject({ name: 'add', kind: 'function', path: 'symbols.ts' });
-    expect(data.source).toBe('export function add(left: number, right: number): number {\n  return left + right;\n}');
+    expect(data.source.replace(/\r\n/gu, '\n')).toBe('export function add(left: number, right: number): number {\n  return left + right;\n}');
     expect(data.signature).toContain('left: number');
     expect(data.signature).toContain('right: number');
     expect(data.fileHash).toBe(sha(await readFile(path.join(root, 'symbols.ts'))));

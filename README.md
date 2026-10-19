@@ -5,7 +5,7 @@
 
 DevGuardian es una plataforma para diagnosticar errores de software, generar parches en ramas de reparación y verificar sus resultados mediante pruebas antes de confirmar cambios. Su diseño utiliza **Model Context Protocol (MCP)** para conectar un agente de inteligencia artificial con herramientas locales de análisis de código, ejecución de pruebas y control de versiones, mediante entradas y respuestas estructuradas y validadas.
 
-El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. Las fases completadas proporcionan la base transversal, el controlador Git y el analizador. El Test Runner, el servidor MCP y el agente aún están pendientes; por tanto, el ciclo autónomo completo todavía no está disponible.
+El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. Las fases completadas proporcionan la base transversal, el controlador Git, el analizador y el ejecutor de pruebas con su evidencia de verificación. El servidor MCP y el agente aún están pendientes; por tanto, el ciclo autónomo completo todavía no está disponible.
 
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
@@ -14,18 +14,19 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 1 | `src/shared/` | Completada | 30 |
 | Fase 2 | `src/git-controller/` | Completada | 35 |
 | Fase 3 | `src/analyzer/` | Completada | 44 |
-| Fase 4 | `src/test-runner/` | Pendiente | — |
+| Fase 4 | `src/test-runner/` | Completada | 23 |
 | Fase 5 | `src/mcp-server/` | Pendiente | — |
 | Fase 6 | `src/agent/` | Pendiente | — |
-| **Total implementado** | **Fases 1–3** | **3 suites verificadas** | **109** |
+| **Total implementado** | **Fases 1–4** | **4 suites verificadas** | **132** |
 
-**Última validación integral, al cierre de la Fase 3:**
+**Última validación integral, al cierre de la Fase 4:**
 
-- **109 pruebas unitarias y de integración en verde, con 0 fallos.**
+- **132 pruebas unitarias y de integración en verde, con 0 fallos.**
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
 - Pruebas del analizador sobre símbolos, referencias, imports, diagnósticos, límites, almacenamiento y seguridad de rutas.
+- Ejecutor de pruebas verificado con ejecutables Jest y pytest: estados, límites de tiempo, cancelación, huellas, comparaciones, evidencia y cierre real del ciclo analizar → parchear → ejecutar → verificar → confirmar.
 
 Las pruebas de Git realizan commits exclusivamente dentro de sus repositorios temporales. Los fixtures con errores sintácticos, semánticos o de lint son casos deliberados de prueba, excluidos de la compilación de producción.
 
@@ -33,7 +34,7 @@ Las pruebas de Git realizan commits exclusivamente dentro de sus repositorios te
 
 El sistema separa cinco responsabilidades: servidor MCP, analizador, ejecutor de pruebas, controlador Git y agente. `shared/` reúne contratos, errores y seguridad comunes. Los módulos de dominio no dependen de una conexión con un modelo para ejecutar sus operaciones.
 
-El siguiente diagrama representa el **flujo objetivo**; los pasos de ejecución/comparación de pruebas, transporte MCP y orquestación del agente requieren las fases pendientes.
+El siguiente diagrama representa el **flujo objetivo**; el paso de ejecución/comparación de pruebas ya existe en `src/test-runner/`, y la orquestación del agente sobre el ciclo completo requiere las fases pendientes.
 
 ```mermaid
 flowchart TD
@@ -73,29 +74,40 @@ ProyectoCertiIA/
 │   │   ├── patch-manager.ts          # Parches, hashes, diffs, commits y rollback
 │   │   ├── index.ts                  # Fachada pública y siete handlers Git
 │   │   └── README.md                 # Operación, evidencia y recuperación detalladas
-│   └── analyzer/
-│       ├── types.ts                  # Snapshots, símbolos, límites y análisis guardados
-│       ├── ast-analyzer.ts           # Lectura y análisis con TypeScript Compiler API
-│       ├── eslint-analyzer.ts        # ESLint programático y diagnósticos normalizados
-│       ├── index.ts                  # Tres handlers y almacenamiento por analysisId
-│       └── README.md                 # Semántica, configuración y límites detallados
+│   ├── analyzer/
+│   │   ├── types.ts                  # Snapshots, símbolos, límites y análisis guardados
+│   │   ├── ast-analyzer.ts           # Lectura y análisis con TypeScript Compiler API
+│   │   ├── eslint-analyzer.ts        # ESLint programático y diagnósticos normalizados
+│   │   ├── index.ts                  # Tres handlers y almacenamiento por analysisId
+│   │   └── README.md                 # Semántica, configuración y límites detallados
+│   └── test-runner/
+│       ├── types.ts                  # Ejecuciones, casos, comparación y evidencia
+│       ├── process-runner.ts         # Ejecución de procesos con timeout y salida acotada
+│       ├── reports.ts                # Adaptadores de reportes Jest y pytest
+│       ├── index.ts                  # Fachada, dos handlers y VerificationStore
+│       └── README.md                 # Ejecución, huellas, comparación y límites detallados
 ├── tests/
 │   ├── shared.test.mjs                # 30 pruebas de seguridad y contratos
 │   ├── git-controller/
 │   │   └── controller.test.mjs        # 35 pruebas con repositorios Git reales
-│   └── analyzer/
-│       └── analyzer.test.mjs          # 44 pruebas del analizador y sus recursos
+│   ├── analyzer/
+│   │   └── analyzer.test.mjs          # 44 pruebas del analizador y sus recursos
+│   └── test-runner/
+│       └── runner.test.mjs            # 23 pruebas del ejecutor y su evidencia
 └── fixtures/
-    └── typescript/
-        ├── domain.ts                 # Tipos y funciones importadas por otros casos
-        ├── symbols.ts                # Clases, métodos, funciones y nombres sombreados
-        ├── imports.ts                # Imports, reexports y dependencias de tipos
-        ├── syntax-error.ts           # Error sintáctico controlado
-        ├── semantic-error.ts         # Incompatibilidad de tipos controlada
-        └── lint-error.ts             # Infracciones de reglas ESLint controladas
+    ├── typescript/
+    │   ├── domain.ts                 # Tipos y funciones importadas por otros casos
+    │   ├── symbols.ts                # Clases, métodos, funciones y nombres sombreados
+    │   ├── imports.ts                # Imports, reexports y dependencias de tipos
+    │   ├── syntax-error.ts           # Error sintáctico controlado
+    │   ├── semantic-error.ts         # Incompatibilidad de tipos controlada
+    │   └── lint-error.ts             # Infracciones de reglas ESLint controladas
+    └── runner/
+        ├── fake-jest.mjs             # Ejecutable Jest falso para pruebas deterministas
+        └── fake-pytest.mjs           # Ejecutable pytest falso para pruebas deterministas
 ```
 
-`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. Las carpetas de las fases 4–6 aún no forman parte de la implementación.
+`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. Las carpetas de las fases 5–6 aún no forman parte de la implementación.
 
 ## 4. Registro Detallado de Cambios e Implementación por Fase (Changelog Técnico)
 
@@ -135,9 +147,22 @@ El bloqueo coordina escritores que respetan el protocolo; no impide modificacion
 
 El analizador aplica límites de archivos, programa, nodos AST, texto, diagnósticos y referencias. Su ejecución es en proceso: estos límites no constituyen un timeout estricto de CPU ni un sandbox del sistema operativo. Detalles de configuración y semántica: [documentación técnica del analizador](src/analyzer/README.md).
 
-## 5. Contratos de Herramientas MCP Implementadas (Hasta Fase 3)
+### Fase 4: Ejecutor de Pruebas y Verificación (`src/test-runner/`)
 
-Las siguientes **10 herramientas están operativas como handlers de los módulos de dominio**. Todavía no están publicadas mediante transporte MCP: su registro en el servidor corresponde a la Fase 5. Las otras dos herramientas previstas, `run_tests` y `compare_test_runs`, tienen contrato pero implementación pendiente.
+- **`types.ts`:** opciones del ejecutor, configuración confiable de runners (Jest/pytest), ejecuciones, casos de prueba, resultados de comparación y evidencia de verificación.
+- **`process-runner.ts`:** ejecución sin shell con lista blanca de variables de entorno, cwd fija en el workspace, timeout por proceso, cancelación explícita y terminación del árbol de procesos (grupo de proceso en POSIX, `taskkill` en Windows). stdout y stderr se capturan por separado con presupuesto `min(maxOutputBytes, 100000)` bytes por flujo y marca `truncated`; un fallo de arranque no produce código de salida.
+- **`reports.ts`:** adaptadores de reporte para Jest (`--json --outputFile=`) y pytest (`--json-report --json-report-file=`), que el módulo agrega a la línea de comandos por sí mismo. Las rutas de suite se normalizan a rutas relativas POSIX del workspace; rutas fuera del workspace, inválidas o identificadores duplicados rechazan el reporte.
+- **Estados:** `passed` solo para una ejecución completa con código 0, al menos un test aprobado y ningún fallo; `failed` para el resto; `timeout`, `cancelled` o `error` para ejecuciones terminadas, canceladas o sin reporte válido. `complete: false` indica que el resultado no sirve como evidencia.
+- **`index.ts`:** fachada con `run_tests` y `compare_test_runs` sobre `Result<T>`, ejecuciones serializadas por instancia, y almacenamiento en memoria de ejecuciones y evidencia con límites de entradas, bytes y TTL. La misma instancia actúa como `VerificationStore` confiable que inyecta `git_commit_fix`.
+- **Huellas:** `workspaceStateHash` se captura del proveedor confiable justo antes de la ejecución; `configurationHash` es SHA-256 de la configuración confiable resuelta del runner. Solo se comparan ejecuciones completas con el mismo hash de configuración.
+- **Comparación y ciclo completo:** `compareTestRuns` informa fallos resueltos, fallos nuevos, tests ausentes y veredicto (`regression`, `success`, `inconclusive`). `verify(baselineRunId, candidateRunId)` registra `VerificationEvidence` por `candidateRunId`, lo que permite cerrar el ciclo real analizar → parchear → ejecutar → verificar → confirmar con `git_commit_fix`.
+- **Verificación:** 23 pruebas aprobadas con ejecutables Jest y pytest falsificados en `fixtures/runner/`, más un cierre real del ciclo sobre un repositorio temporal.
+
+El ejecutor no es un sandbox del sistema operativo: los tests son código arbitrario que se ejecuta con el entorno permitido y conviene correrlos en un checkout dedicado. pytest requiere el plugin `pytest-json-report`. Detalles de ejecución, huellas y límites: [documentación técnica del Test Runner](src/test-runner/README.md).
+
+## 5. Contratos de Herramientas MCP Implementadas (Hasta Fase 4)
+
+Las siguientes **12 herramientas están operativas como handlers de los módulos de dominio**. Todavía no están publicadas mediante transporte MCP: su registro en el servidor corresponde a la Fase 5.
 
 Todas las salidas exitosas de la tabla corresponden a `data` dentro de `Result<T>`. Los fallos usan `{ ok: false, error: { code, message, retryable, details? } }`. `?` indica un parámetro opcional; los IDs son UUID, las huellas de archivo/diff son SHA-256 hexadecimales y todas las rutas de herramientas son relativas al workspace configurado.
 
@@ -153,6 +178,8 @@ Todas las salidas exitosas de la tabla corresponden a `data` dentro de `Result<T
 | `git_diff` | `sessionId: string`, `attemptId: string` | `{ diff, diffHash, changedFiles, insertions, deletions }` | Diff acotado del intento contra su checkpoint; incluye altas y bajas mediante un índice temporal y detecta modificaciones externas en archivos gestionados. |
 | `git_commit_fix` | `sessionId: string`, `attemptId: string`, `message: string`, `expectedDiffHash: string`, `verificationRunId: string` | `{ commit, branch, files }` | Exige parche no vacío, diff esperado, evidencia vigente y estado compatible; usa locks de índice y actualización condicional del HEAD. No confirma trabajo ajeno. |
 | `git_rollback_attempt` | `sessionId: string`, `attemptId: string` | `{ restoredCommit, revertedFiles, branch, clean }` | Revierte solo cambios del intento activo con rama/HEAD intactos; conserva trabajo externo y rechaza conflictos de propiedad. `clean` puede ser `false` si queda trabajo ajeno. |
+| `run_tests` | `runner: string`, `targets?: string[]`, `timeoutMs?: number` | `{ runId, runner, status, complete, exitCode, signal, durationMs, summary, cases, stdout, stderr, outputTruncated, fingerprint, configurationHash, createdAt }` | Solo acepta runners configurados en arranque; ejecución sin shell, timeout acotado al presupuesto configurado y salida limitada; rutas y reportes confinados al workspace; la huella se captura antes de ejecutar. |
+| `compare_test_runs` | `baselineRunId: string`, `candidateRunId: string` | `{ baselineRunId, candidateRunId, comparable, verdict, resolvedFailures, newFailures, missingTests, message }` | Compara solo ejecuciones completas con hash de configuración idéntico; veredictos `regression`, `success` e `inconclusive` según el contraste de fallos resueltos, nuevos y ausentes. |
 
 Los esquemas y tipos completos están definidos en [`src/shared/contracts.ts`](src/shared/contracts.ts). Los métodos de dominio retornan datos tipados y lanzan errores de dominio; las fachadas `.tools` los convierten al sobre `Result<T>` para el futuro servidor MCP. Las raíces, límites y proveedores de evidencia se configuran al inicializar los servicios y no son argumentos elegibles por el modelo.
 
@@ -187,7 +214,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 109 pruebas aprobadas en tres suites Jest. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 132 pruebas aprobadas en cuatro suites Jest. |
 
 Para reproducir la validación completa:
 
@@ -200,4 +227,4 @@ npm test
 
 `npm test` compila de nuevo antes de ejecutar Jest y utiliza el soporte ESM de Node mediante `--experimental-vm-modules`. Esto puede mostrar un aviso de característica experimental sin implicar un fallo de las pruebas. Su timeout base es de 10 segundos por prueba; las suites de integración ajustan sus tiempos para los escenarios correspondientes.
 
-Los scripts `start:server` y `start:agent` ya están declarados, pero sus archivos de entrada corresponden a fases pendientes y todavía no pueden utilizarse para iniciar el sistema completo. En esta etapa no se necesita una clave de Anthropic ni Python/PyTest para compilar y validar las fases 1–3; su configuración se incorporará con los módulos que los utilicen.
+Los scripts `start:server` y `start:agent` ya están declarados, pero sus archivos de entrada corresponden a fases pendientes y todavía no pueden utilizarse para iniciar el sistema completo. Compilar y validar las fases 1–4 no requiere una clave de Anthropic ni Python/PyTest: las pruebas del ejecutor usan ejecutables falsos de Jest y pytest en `fixtures/runner/`. Para usar `run_tests` sobre un proyecto real con pytest será necesario instalar el plugin `pytest-json-report`.
