@@ -1,5 +1,7 @@
 # DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA
 
+[![CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml/badge.svg)](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml)
+
 **Grupo:** Six seven  
 **Integrantes:** Eduardo Quinteros, Sebhastian Campero, Luis Miguel Gonzales
 
@@ -14,14 +16,14 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 1 | `src/shared/` | Completada | 30 |
 | Fase 2 | `src/git-controller/` | Completada | 35 |
 | Fase 3 | `src/analyzer/` | Completada | 44 |
-| Fase 4 | `src/test-runner/` | Completada | 23 |
+| Fase 4 | `src/test-runner/` | Completada | 25 |
 | Fase 5 | `src/mcp-server/` | Pendiente | — |
 | Fase 6 | `src/agent/` | Pendiente | — |
-| **Total implementado** | **Fases 1–4** | **4 suites verificadas** | **132** |
+| **Total implementado** | **Fases 1–4** | **4 suites verificadas** | **134** |
 
-**Última validación integral, al cierre de la Fase 4:**
+**Validación integral de las fases 1–4 con los smoke tests de CI:**
 
-- **132 pruebas unitarias y de integración en verde, con 0 fallos.**
+- **134 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -156,7 +158,7 @@ El analizador aplica límites de archivos, programa, nodos AST, texto, diagnóst
 - **`index.ts`:** fachada con `run_tests` y `compare_test_runs` sobre `Result<T>`, ejecuciones serializadas por instancia, y almacenamiento en memoria de ejecuciones y evidencia con límites de entradas, bytes y TTL. La misma instancia actúa como `VerificationStore` confiable que inyecta `git_commit_fix`.
 - **Huellas:** `workspaceStateHash` se captura del proveedor confiable justo antes de la ejecución; `configurationHash` es SHA-256 de la configuración confiable resuelta del runner. Solo se comparan ejecuciones completas con el mismo hash de configuración.
 - **Comparación y ciclo completo:** `compareTestRuns` informa fallos resueltos, fallos nuevos, tests ausentes y veredicto (`regression`, `success`, `inconclusive`). `verify(baselineRunId, candidateRunId)` registra `VerificationEvidence` por `candidateRunId`, lo que permite cerrar el ciclo real analizar → parchear → ejecutar → verificar → confirmar con `git_commit_fix`.
-- **Verificación:** 23 pruebas aprobadas con ejecutables Jest y pytest falsificados en `fixtures/runner/`, más un cierre real del ciclo sobre un repositorio temporal.
+- **Verificación:** 25 pruebas: 23 casos con ejecutables controlados y repositorios temporales, más dos smoke tests que invocan Jest real y pytest real y validan sus reportes JSON mediante el Test Runner. El caso de integración Git utiliza un ejecutor simulado; los smoke tests verifican los adaptadores con procesos reales.
 
 El ejecutor no es un sandbox del sistema operativo: los tests son código arbitrario que se ejecuta con el entorno permitido y conviene correrlos en un checkout dedicado. pytest requiere el plugin `pytest-json-report`. Detalles de ejecución, huellas y límites: [documentación técnica del Test Runner](src/test-runner/README.md).
 
@@ -214,7 +216,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 132 pruebas aprobadas en cuatro suites Jest. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 134 pruebas en cuatro suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 
 Para reproducir la validación completa:
 
@@ -227,4 +229,33 @@ npm test
 
 `npm test` compila de nuevo antes de ejecutar Jest y utiliza el soporte ESM de Node mediante `--experimental-vm-modules`. Esto puede mostrar un aviso de característica experimental sin implicar un fallo de las pruebas. Su timeout base es de 10 segundos por prueba; las suites de integración ajustan sus tiempos para los escenarios correspondientes.
 
-Los scripts `start:server` y `start:agent` ya están declarados, pero sus archivos de entrada corresponden a fases pendientes y todavía no pueden utilizarse para iniciar el sistema completo. Compilar y validar las fases 1–4 no requiere una clave de Anthropic ni Python/PyTest: las pruebas del ejecutor usan ejecutables falsos de Jest y pytest en `fixtures/runner/`. Para usar `run_tests` sobre un proyecto real con pytest será necesario instalar el plugin `pytest-json-report`.
+Los scripts `start:server` y `start:agent` ya están declarados, pero sus archivos de entrada corresponden a fases pendientes y todavía no pueden utilizarse para iniciar el sistema completo. La validación no requiere una clave de Anthropic. Además de los ejecutables controlados de `fixtures/runner/`, la suite incluye dos smoke tests con Jest y pytest reales. pytest debe estar en el PATH junto con el plugin `pytest-json-report`; si el binario existe pero falta el plugin, la prueba falla.
+
+## Integración Continua (CI)
+
+El workflow [CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml), definido en [`.github/workflows/ci.yml`](.github/workflows/ci.yml), se ejecuta con cada push a `main` o `Dev` y cada pull request dirigido a esas ramas. Utiliza Ubuntu, Node.js 24.x, caché de npm y Python 3.11. Instala Node con `npm ci` y versiones fijadas de pytest y `pytest-json-report`, configura una identidad Git para los repositorios temporales y ejecuta:
+
+1. `npm run check`: TypeScript estricto sin emitir y ESLint.
+2. `npm test`: compilación y las cuatro suites, incluidos los smoke tests con Jest y pytest reales. Estos invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
+3. Una tabla de resultados en el resumen de Actions, que también informa fallos o pasos no ejecutados.
+
+El workflow solo dispone de `contents: read`, cancela ejecuciones anteriores de la misma rama y tiene un límite de 15 minutos. No incluye despliegues ni requiere secretos o archivos `.env`. `DEVGUARDIAN_REQUIRE_PYTEST=1` hace fallar la suite si falta pytest en CI.
+
+Para reproducirlo localmente, con Node.js 24.x, Git y Python 3.11 o superior:
+
+```sh
+npm ci
+python -m venv .venv-ci
+```
+
+Activar el entorno virtual con `source .venv-ci/bin/activate` en Bash o `.\.venv-ci\Scripts\Activate.ps1` en PowerShell. Después:
+
+```sh
+python -m pip install pytest==8.4.2 pytest-json-report==1.5.0
+npm run check
+npm test
+```
+
+Para exigir pytest también localmente, usar `DEVGUARDIAN_REQUIRE_PYTEST=1 npm test` en Bash o `$env:DEVGUARDIAN_REQUIRE_PYTEST = '1'; npm test` en PowerShell.
+
+Para la defensa, abrir **Actions → CI → Run workflow**, seleccionar `Dev` y ejecutar manualmente. GitHub habilita este botón cuando el workflow está presente en la rama predeterminada; si esta es `main`, primero debe integrarse allí el archivo mediante el flujo habitual de revisión. Mientras solo exista en `Dev`, un push a `Dev` activa automáticamente la validación.

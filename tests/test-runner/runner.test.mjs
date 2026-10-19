@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { execFile } from 'node:child_process';
+import { execFile, spawnSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { TestRunner, createTestRunner } from '../../dist/test-runner/index.js';
 import { GitController } from '../../dist/git-controller/index.js';
@@ -14,6 +15,12 @@ const sha = (text) => createHash('sha256').update(text).digest('hex');
 const unwrap = (result) => { if (!result.ok) throw new Error(JSON.stringify(result.error)); return result.data; };
 const fakeJest = path.join(process.cwd(), 'fixtures', 'runner', 'fake-jest.mjs');
 const fakePytest = path.join(process.cwd(), 'fixtures', 'runner', 'fake-pytest.mjs');
+const realJest = fileURLToPath(new URL('../../node_modules/jest/bin/jest.js', import.meta.url));
+const pytestProbe = spawnSync('pytest', ['--version'], {
+  timeout: 10000, encoding: 'utf8', windowsHide: true
+});
+const pytestAvailable = pytestProbe.error?.code !== 'ENOENT';
+const requirePytest = process.env.DEVGUARDIAN_REQUIRE_PYTEST === '1';
 const runners = [
   { runner: 'jest', executable: process.execPath, args: [fakeJest], timeoutMs: 10000, maxOutputBytes: 200000 },
   { runner: 'pytest', executable: process.execPath, args: [fakePytest], timeoutMs: 10000, maxOutputBytes: 200000 }
@@ -216,6 +223,49 @@ describe('pytest reporting', () => {
     const mixed = await run('mixed', { runner: 'pytest' });
     expect(mixed.cases.map((entry) => entry.status).sort()).toEqual(['skipped', 'skipped']);
     expect(await run('collecterror', { runner: 'pytest' })).toMatchObject({ status: 'error', complete: false });
+  });
+});
+
+describe('real runner smoke tests', () => {
+  const expectPassingReport = (result, engine, file, id) => {
+    expect(RunTestsOutputSchema.safeParse(result).success).toBe(true);
+    expect(result).toMatchObject({ runner: engine, status: 'passed', complete: true, exitCode: 0 });
+    expect(result.summary).toEqual({ total: 1, passed: 1, failed: 0, skipped: 0, todo: 0 });
+    expect(result.cases).toHaveLength(1);
+    expect(result.cases[0]).toMatchObject({ id, path: file, status: 'passed' });
+    expect(result.cases[0].durationMs).toBeGreaterThanOrEqual(0);
+  };
+
+  test('executes real Jest and parses its complete JSON report', async () => {
+    const config = path.join(root, 'jest.config.cjs');
+    await writeFile(config, "module.exports = { testEnvironment: 'node', testMatch: ['**/*.test.cjs'], transform: {} };\n");
+    await writeFile(path.join(root, 'tests', 'smoke.test.cjs'),
+      "test('adds real numbers', () => { expect(2 + 3).toBe(5); });\n");
+    const realRunner = await TestRunner.create({
+      workspaceRoot: root,
+      workspaceStateHash: async () => stateHash,
+      runners: [{ runner: 'jest', executable: process.execPath,
+        args: [realJest, '--config', config, '--runInBand'], timeoutMs: 30000, maxOutputBytes: 200000 }]
+    });
+    const result = await realRunner.runTests({ runner: 'jest', targets: ['tests/smoke.test.cjs'] });
+    expectPassingReport(result, 'jest', 'tests/smoke.test.cjs', 'tests/smoke.test.cjs::adds real numbers');
+  });
+
+  // Local checkouts may omit Python. CI requires it, so a missing binary must fail there.
+  const pytestTest = pytestAvailable || requirePytest ? test : test.skip;
+  pytestTest('executes real pytest and parses its complete JSON report', async () => {
+    await writeFile(path.join(root, 'pytest.ini'), '[pytest]\n');
+    await writeFile(path.join(root, 'tests', 'test_smoke.py'), 'def test_adds_real_numbers():\n    assert 2 + 3 == 5\n');
+    const realRunner = await TestRunner.create({
+      workspaceRoot: root,
+      workspaceStateHash: async () => stateHash,
+      environment: { PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1', PYTHONDONTWRITEBYTECODE: '1' },
+      runners: [{ runner: 'pytest', executable: 'pytest',
+        args: ['-p', 'pytest_jsonreport.plugin', '-p', 'no:cacheprovider', '-q'],
+        timeoutMs: 30000, maxOutputBytes: 200000 }]
+    });
+    const result = await realRunner.runTests({ runner: 'pytest', targets: ['tests/test_smoke.py'] });
+    expectPassingReport(result, 'pytest', 'tests/test_smoke.py', 'tests/test_smoke.py::test_adds_real_numbers');
   });
 });
 

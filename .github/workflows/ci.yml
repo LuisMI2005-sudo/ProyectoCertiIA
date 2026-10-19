@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, Dev]
+  pull_request:
+    branches: [main, Dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: TypeScript, ESLint, Jest y pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEVGUARDIAN_REQUIRE_PYTEST: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      - name: Instalar dependencias de Node.js
+        run: npm ci
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar pytest y el adaptador JSON
+        id: python
+        run: |
+          python -m pip install pytest==8.4.2 pytest-json-report==1.5.0
+          pytest --version
+          python -c "import pytest_jsonreport"
+
+      - name: Configurar identidad Git para los repositorios temporales
+        run: |
+          git config --global user.name "CI Runner"
+          git config --global user.email "ci@devguardian.local"
+
+      - name: Verificar TypeScript y ESLint
+        id: check
+        run: npm run check
+
+      - name: Compilar y ejecutar las cuatro suites con Jest y pytest reales
+        id: tests
+        run: npm test
+
+      - name: Resumen de ejecución
+        if: ${{ always() }}
+        env:
+          CHECK_RESULT: ${{ steps.check.outcome }}
+          TEST_RESULT: ${{ steps.tests.outcome }}
+          PYTHON_RESULT: ${{ steps.python.outcome }}
+        shell: bash
+        run: |
+          {
+            echo '## Integración Continua de DevGuardian'
+            echo ''
+            echo '| Comprobación | Resultado |'
+            echo '|---|---|'
+            echo "| TypeScript y ESLint (npm run check) | $CHECK_RESULT |"
+            echo "| Compilación y cuatro suites (npm test) | $TEST_RESULT |"
+            echo "| Smoke test con Jest real | $TEST_RESULT |"
+            echo "| Smoke test con pytest real (obligatorio) | $TEST_RESULT |"
+            echo "| Python, pytest y pytest-json-report | $PYTHON_RESULT |"
+            echo ''
+            echo 'El resultado de los smoke tests corresponde al de la suite completa.'
+            echo 'Una suite aprobada exige reportes JSON reales con complete: true y status: passed.'
+            echo 'success = aprobado; failure = fallido; skipped = no ejecutado; cancelled = cancelado.'
+          } >> "$GITHUB_STEP_SUMMARY"
