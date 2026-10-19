@@ -26,7 +26,7 @@ export const PersistedTestRunSchema = RunTestsOutputSchema.safeExtend({ projectI
 export const HookLogRecordSchema = z.strictObject({
   id: IdentifierSchema, auditId: IdentifierSchema, hookId: Text, hookName: Text,
   event: z.enum(["pre:analyze", "pre:apply_patch", "pre:run_tests", "pre:git_commit", "post:test_run", "post:commit",
-    "db:before_save_run", "db:after_save_run", "db:on_hook_decision", "pre:delegate", "post:delegate"]),
+    "db:before_save_run", "db:after_save_run", "db:on_hook_decision", "pre:delegate", "post:delegate", "pre:tool_call", "post:tool_call"]),
   decision: z.enum(["allow", "block", "warn"]), reason: Text, metadataJson: JsonObjectSchema,
   durationMs: z.number().finite().nonnegative(), createdAt: Timestamp
 });

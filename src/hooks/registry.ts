@@ -66,6 +66,7 @@ export class HookManager {
           timestamp: new Date().toISOString(), durationMs: performance.now() - started,
           metadata: { ...outcome.metadata, warning: outcome.decision === "warn", config: this.getConfig() as unknown as import("../shared/errors.js").JsonValue,
             ...(payload.delegation ? { delegation: { ...payload.delegation } } : {}),
+            ...(payload.toolCall ? { toolCall: { ...payload.toolCall } } : {}),
             workspaceStateHash: payload.workspaceStateHash ?? null } };
         await this.logStore.append(execution);
         results.push(execution);

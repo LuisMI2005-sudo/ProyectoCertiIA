@@ -14,7 +14,10 @@
     "check": "npm run typecheck && npm run lint",
     "db:verify": "npm run build && node scripts/verify-database.mjs",
     "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-    "start:server": "node --enable-source-maps dist/mcp-server/index.js",
+    "start": "node dist/server/main.js",
+    "dev:server": "npm run build && node --enable-source-maps dist/server/main.js",
+    "start:server": "node --enable-source-maps dist/server/main.js",
+    "start:mcp": "node dist/mcp/index.js",
     "start:agent": "node --enable-source-maps dist/agent/index.js"
   },
   "dependencies": {
