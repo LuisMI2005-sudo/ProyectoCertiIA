@@ -35,6 +35,8 @@ DevGuardian es una plataforma para diagnosticar errores de software, generar par
 
 El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. El backend HTTP y el servidor MCP ya conectan los módulos, hooks, workers y persistencia. El flujo coordinado ejecuta diagnóstico → baseline → parche propuesto por el cliente → verificación → commit o rollback. La Fase 6 añade un cliente generativo asistido con estado determinista sobre MCP; el dashboard y el despliegue siguen pendientes.
 
+El estado de las **43 historias de usuario**, su evidencia y sus bloqueos se mantiene en [`backlog.md`](backlog.md); las historias de UI, worker remoto y despliegue requieren trabajo/evidencia externa y no se declaran completas por tener backend local.
+
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
 | Fase | Módulo | Estado | Pruebas aprobadas |

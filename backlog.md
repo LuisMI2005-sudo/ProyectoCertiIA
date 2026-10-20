@@ -17,12 +17,12 @@ Las agrupaciones temáticas no sustituyen el campo **Estado** de cada HU. Hooks 
 
 | Estado | Cantidad | Historias |
 |---|---:|---|
-| Completada | 21 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
-| Parcial | 8 | HU-12, HU-18, HU-19, HU-22, HU-24, HU-26, HU-27 y HU-28. |
-| Pendiente | 14 | Agente, worker remoto, frontend, despliegues, defensa y robustez pendiente. |
+| Completada | 23 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-25, HU-26, HU-29 y HU-30. |
+| Parcial | 6 | HU-12, HU-18, HU-19, HU-22, HU-24, HU-27 y HU-28. |
+| Pendiente | 14 | Worker remoto, dashboard/frontend, despliegues, defensa y endurecimiento adicional. |
 | **Total** | **43** | No equivale a porcentaje de nota ni esfuerzo. |
 
-**Validación actual tras el merge:** `npm.cmd run check` sin errores; suite focal del Test Runner **43/43**; `npm.cmd test` **257/257 en nueve suites**, 0 fallos, con pytest obligatorio (518,394 s). Se conservan las ocho suites anteriores (236 casos), se añaden 18 regresiones del Test Runner y tres pruebas MCP recibidas de origin/main. El [run histórico de CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) corresponde al corte anterior; el run remoto del commit nuevo se acredita después del push. El workflow mantiene Node 24, Python 3.11, pytest real obligatorio y no incluye CD.
+**Validación de esta subrama:** `npm run check` sin errores con Node **24.22.0**; `npm test` **285/285 en diez suites**, con pytest y `pytest-json-report` instalados y `DEVGUARDIAN_REQUIRE_PYTEST=1`. Este resultado es local; el CI remoto de esta subrama se acredita después del push. El workflow mantiene Node 24, Python 3.11, pytest real obligatorio y no incluye CD.
 
 ## Corte de avance del backend
 
@@ -30,10 +30,10 @@ Se mantienen las **33 HU de backend** originales: HU-01 a HU-21, HU-23 a HU-30, 
 
 | Estado backend | Cantidad | Historias |
 |---|---:|---|
-| Completadas | **21** | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
-| Parciales | **7** | HU-12, HU-18, HU-19, HU-24, HU-26, HU-27 y HU-28. |
-| Pendientes | **5** | HU-25, HU-32, HU-41, HU-42 y HU-43. |
-| **Total** | **33** | **21/33 = 63,6 % de historias cerradas; no es porcentaje de nota.** |
+| Completadas | **23** | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-25, HU-26, HU-29 y HU-30. |
+| Parciales | **6** | HU-12, HU-18, HU-19, HU-24, HU-27 y HU-28. |
+| Pendientes | **4** | HU-32, HU-41, HU-42 y HU-43. |
+| **Total** | **33** | **23/33 = 69,7 % de historias cerradas; no es porcentaje de nota.** |
 
 HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo necesarias para la entrega. BD/API locales no cierran HU-33/HU-34; faltan frontend público, cloud y CD. El historial durable se recupera tras reiniciar; las sesiones Git activas y análisis por ID continúan en memoria.
 
@@ -47,7 +47,8 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 | HU-23 | Completada | 12 tools de dominio, alias y seis consultas: 19 herramientas por HTTP/stdio con SDK y auditoría durable. |
 | HU-29 | Completada | Cinco entidades, JSON atómico y PostgreSQL con migraciones; 32 pruebas y recuperación tras reinicio. |
 | HU-30 | Completada | REST, raíces confiables, token opcional, CORS y persistencia; 28 pruebas HTTP/MCP. |
-| HU-26 | Parcial | Coordinador de un intento, parche explícito; faltan LLM y reintentos autónomos en esta rama. |
+| HU-25 | Completada | `src/agent-client/` integra LangChain/Anthropic con MCP; propuesta estructurada, contexto/hash validados y credenciales fuera del prompt. 28 pruebas del cliente, incluido formato Anthropic con HTTP simulado. |
+| HU-26 | Completada | Orquestación MCP generativa, baseline, intentos/reintentos acotados, comparación, evidencia, commit/rollback y cancelación; pruebas de éxito, regresión, presupuesto, fallo de transporte y preservación de trabajo ajeno en `tests/agent-client/agent.test.mjs`. |
 | HU-27/HU-28 | Parciales por aceptación docente | Hooks/workers reales, 20/22 pruebas; falta confirmar interpretación de la rúbrica. |
 
 ## A. Historias completadas y capacidades existentes
@@ -284,22 +285,23 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 ### HU-25 Diagnosticar y proponer un parche con IA
 
 **Como** desarrollador, **quiero** que el agente use diagnóstico y contexto acotado **para** proponer una reparación coherente con el error.  
-**Estado:** Pendiente · **Prioridad:** P1 · **Fase:** 6 · **Depende de:** HU-23, HU-24.
+**Estado:** Completada · **Prioridad:** P1 · **Fase:** 6 · **Depende de:** HU-23, HU-24.
 
-- Implementar `src/agent/` con LangChain y Anthropic, conectado como cliente MCP.
+- Implementar `src/agent-client/` con LangChain y Anthropic, conectado como cliente MCP.
 - El agente obtiene diagnóstico/contexto mediante herramientas y genera un parche aplicable con hashes esperados.
 - Las credenciales se configuran fuera del repositorio; no se envían archivos completos sin necesidad ni secretos en los prompts/logs.
+- **Evidencia de cierre:** `src/agent-client/planner.ts`, `mcp-bridge.ts` y `orchestrator.ts`; pruebas de salida estructurada y llamada Anthropic simulada sin API real. La consulta de los recursos de HU-24 permanece parcialmente pendiente, pero no bloquea la lectura por las herramientas MCP ya publicadas.
 
 ### HU-26 Orquestar reparación y reintentos acotados
 
 **Como** desarrollador, **quiero** que el agente gestione intentos completos **para** obtener una reparación verificada o una finalización segura.  
-**Estado:** Parcial · **Prioridad:** P1 · **Fase:** 6 · **Depende de:** HU-18, HU-25.
+**Estado:** Completada · **Prioridad:** P1 · **Fase:** 6 · **Depende de:** HU-18, HU-25.
 
 - Ejecutar baseline, rama/checkpoint, parche, pruebas, comparación y commit o rollback mediante MCP.
 - Respetar límites de intentos y tratar timeout, cancelación, evidencia inválida y cambios externos sin destruir trabajo ajeno.
 - Conservar trazas de decisiones y demostrar tanto éxito como agotamiento seguro de reintentos.
 - **Implementado:** `DevGuardianCoordinator.repair()` gestiona diagnóstico delegado, rama/intento, baseline, aplicación del parche, verificación, commit o rollback. Hay trazas y pruebas de regresión, bloqueo y agotamiento del presupuesto de herramientas.
-- **Para cerrar:** integración con el cliente MCP y el agente generativo, más reintentos acotados de reparación. Agotar `maxToolCalls` de un worker no demuestra agotamiento de reintentos de parches; el parche actual lo entrega el llamador.
+- **Cierre en esta rama:** `src/agent-client/` ejecuta el ciclo mediante el cliente MCP y planificador generativo; `maxAttempts` limita los reintentos de reparación, con rollback comprobado, cancelación, detección de cambios externos y resultados/trazas. Las pruebas cubren éxito, regresión y agotamiento; HU-18 conserva por separado un criterio de integración con trabajo ajeno.
 
 ### HU-27 Ejecutar un hook demostrable
 
@@ -478,7 +480,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 |---|---|---|
 | 1. Cerrar estabilización y requisitos básicos | HU-18, HU-19, HU-22, HU-40 | HU-13/HU-16/HU-17/HU-20 ya cerradas; completar integración real restante y accesos. |
 | 2. Conexión del producto | HU-23, HU-24, HU-29, HU-30, HU-31, HU-32 | MCP, persistencia y API ya implementados; completar recursos, UI y worker remoto. |
-| 3. Completar autonomía y acreditar criterios | HU-25, HU-26, cierre docente de HU-27/HU-28 | Añadir generación y orquestación MCP con reintentos; hooks y delegación determinista ya tienen código, pruebas y artefactos. |
+| 3. Completar autonomía y acreditar criterios | HU-25, HU-26 completadas; aceptación docente de HU-27/HU-28 | Agente generativo y orquestación MCP con reintentos implementados; quedan únicamente las confirmaciones de rúbrica para hooks y subagentes. |
 | 4. Entrega desplegada | HU-33, HU-34, HU-35, HU-36, HU-37 | Tres partes desplegadas, CI/CD y conexión de punta a punta. |
 | 5. Cierre y defensa | HU-38, HU-39 | Versión consolidada, evidencias y presentación individual preparada. |
 | Transversal | HU-41, HU-42, HU-43 | Evidencia reproducible y manejo robusto de recursos/procesos. |
