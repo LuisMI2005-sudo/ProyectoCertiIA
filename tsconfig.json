@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2023",
-    "lib": ["ES2023"],
+    "lib": ["ES2023", "DOM"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "rootDir": "src",
@@ -30,3 +30,4 @@
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "tests", "fixtures"]
 }
+//para hacer commit

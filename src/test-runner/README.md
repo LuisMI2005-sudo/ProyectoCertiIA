@@ -7,15 +7,17 @@ schemas and `Result<T>` envelopes. Domain methods implement `TestRunner` from
 trusted `VerificationStore` that `git_commit_fix` reads from.
 
 ```typescript
-import { createTestRunner } from "./test-runner/index.js";
-import { createGitController } from "./git-controller/index.js";
+import { TestRunner } from "./test-runner/index.js";
+import { GitController } from "./git-controller/index.js";
 
-const runner = await createTestRunner({
+// workspaceRoot and projectConfiguration are trusted startup configuration.
+let controller: GitController;
+const runner = await TestRunner.create({
   workspaceRoot,
   runners: projectConfiguration.runners,
-  workspaceStateHash: () => gitController.workspaceStateHash()
+  workspaceStateHash: () => controller.workspaceStateHash()
 });
-const controller = await createGitController({ workspaceRoot, verificationStore: runner });
+controller = await GitController.create({ workspaceRoot, verificationStore: runner });
 ```
 
 ## Trusted configuration
@@ -52,8 +54,11 @@ recorded outside the workspace, an invalid path or a duplicate test identifier
 rejects the report. Jest assertion results and pytest node ids become `cases`
 with `passed`, `failed`, `skipped` (Jest pending/disabled, pytest skipped/xfailed)
 and `todo` statuses; failed cases carry a bounded failure message. The summary is
-derived from the case list, so `complete` runs always satisfy the contract's
-count invariants.
+derived from the case list. Completeness additionally requires Jest's declared
+`numTotalTests` to match every assertion, and pytest's `summary.total` or
+`summary.collected - summary.deselected` to match every reported test. If both
+pytest counts are present, both must agree. Missing/invalid totals, partial
+reports, suite execution errors and collection failures cannot be complete.
 
 `status` follows the evidence: `timeout` and `cancelled` for terminated runs,
 `error` when the executable could not start or the report was missing, malformed
@@ -76,7 +81,8 @@ comparable when both are complete, use the same runner and share this hash.
 ## Comparison and evidence
 
 `compareTestRuns` reports `resolvedFailures` (baseline failed, candidate passed),
-`newFailures` (candidate failed where the baseline did not), `missingTests`
+`newFailures` (candidate failed where the baseline did not, or a baseline passed
+test became skipped/todo), `missingTests`
 (baseline cases absent from the candidate) and `comparable`. The verdict is
 `regression` when a new failure or a missing test appears, `success` only when the
 comparison is comparable, every baseline failure is resolved and nothing else

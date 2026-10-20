@@ -14,8 +14,12 @@
     "check": "npm run typecheck && npm run lint",
     "db:verify": "npm run build && node scripts/verify-database.mjs",
     "test": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-    "start:server": "node --enable-source-maps dist/mcp-server/index.js",
-    "start:agent": "node --enable-source-maps dist/agent/index.js"
+    "start": "node dist/server/main.js",
+    "dev:server": "npm run build && node --enable-source-maps dist/server/main.js",
+    "start:server": "node --enable-source-maps dist/server/main.js",
+    "start:mcp": "node dist/mcp/index.js",
+    "start:agent": "node dist/agent-client/main.js",
+    "dev:agent": "tsx src/agent-client/main.ts"
   },
   "dependencies": {
     "@langchain/anthropic": "1.5.12",
@@ -34,7 +38,8 @@
     "@jest/globals": "30.5.2",
     "@types/node": "24.19.2",
     "@types/pg": "8.23.1",
-    "jest": "30.5.2"
+    "jest": "30.5.2",
+    "tsx": "4.23.15"
   },
   "jest": {
     "testEnvironment": "node",

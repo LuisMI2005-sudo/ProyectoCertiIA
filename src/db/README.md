@@ -1,6 +1,6 @@
 # Persistencia de DevGuardian
 
-`createDatabaseRepository()` ofrece el mismo contrato `DevGuardianRepository` con JSON local durable o PostgreSQL. `AuditPersistenceService` conecta esa persistencia al coordinador real, hooks y delegaciones. No necesita una API HTTP para verificar la conservación de datos; el frontend podrá consumir estos métodos mediante la futura API.
+`createDatabaseRepository()` ofrece el mismo contrato `DevGuardianRepository` con JSON local durable o PostgreSQL. `AuditPersistenceService` conecta esa persistencia al coordinador real, hooks y delegaciones. La [API HTTP](../server/README.md) y las consultas de `src/mcp/` ya exponen proyectos, auditorías, hooks y delegaciones al cliente; la conservación también puede verificarse sin HTTP.
 
 ## Modelo de datos
 
@@ -35,7 +35,7 @@ Las delegaciones se actualizan por `task_id`, pero `snapshots` conserva el diari
 - `bridges.ts`: adaptadores de hooks/delegaciones y servicio de auditorías.
 - `index.ts`: factory y exportaciones.
 
-Los métodos de dominio lanzan errores tipados; un handler MCP/API puede envolverlos con `captureResult`. La capa DB no importa un frontend ni expone endpoints públicos.
+Los métodos de dominio lanzan errores tipados; los handlers de `src/server/` y `src/mcp/` los exponen mediante respuestas estructuradas. La capa DB permanece independiente de los transportes y del frontend.
 
 ## Selección de modo
 
@@ -88,9 +88,9 @@ try {
 }
 ```
 
-`repairProject()` crea la auditoría, fija su ID como `parentSessionId`, construye los adaptadores DB y los hooks y ejecuta `DevGuardianCoordinator`. Se pueden usar también `beginAudit`, `saveTestRun`, `finishAudit` y `getAuditDetails` desde una futura capa de aplicación. Los callbacks opcionales `onTestRun` y `onAttemptStarted` del coordinador desacoplan la persistencia de los motores de dominio.
+`repairProject()` crea la auditoría, fija su ID como `parentSessionId`, construye los adaptadores DB y los hooks y ejecuta `DevGuardianCoordinator`. `src/server/application.ts` ya utiliza este servicio y `beginAudit`, `saveTestRun` y `getAuditDetails` para las rutas REST y las llamadas MCP auditadas. Los callbacks opcionales `onTestRun` y `onAttemptStarted` del coordinador desacoplan la persistencia de los motores de dominio.
 
-Por defecto el servicio no guarda stdout/stderr arbitrarios de las pruebas. No se persisten el diff propuesto ni la URL de conexión; el preflight de patches conserva su hash. Los hallazgos, fragmentos de código y mensajes de fallo pueden contener información del proyecto: la futura API debe aplicar autorización y la BD debe disponer de controles de acceso. El detector de secretos de hooks sigue siendo heurístico.
+Por defecto el servicio no guarda stdout/stderr arbitrarios de las pruebas. No se persisten el diff propuesto ni la URL de conexión; el preflight de patches conserva su hash. Los hallazgos, fragmentos de código y mensajes de fallo pueden contener información del proyecto: la API confina proyectos a raíces confiables y admite token bearer; activar acceso y CORS apropiados antes de exponerla. La BD también requiere controles de acceso. El detector de secretos de hooks sigue siendo heurístico.
 
 ## Verificación de reinicio y evidencia de despliegue
 
@@ -104,7 +104,7 @@ Este comando crea un proyecto y una auditoría de demostración explícitamente 
 npm run db:verify -- UUID_DE_LA_AUDITORIA
 ```
 
-Para comprobar PostgreSQL en un entorno configurado, ejecutar el mismo comando con `DATABASE_URL` y modo `postgres`. Una URL declarada o un mock no acreditan despliegue: para los 10 puntos de BD desplegada, aprovisionar el servicio cloud, ejecutar esta verificación desde el backend conectado, reiniciar y conservar IDs y evidencia de la segunda consulta sin exponer credenciales. El proveedor aún no se aprovisiona desde este módulo; tampoco hay dashboard HTTP que pueda recargarse todavía.
+Para comprobar PostgreSQL en un entorno configurado, ejecutar el mismo comando con `DATABASE_URL` y modo `postgres`. Una URL declarada o un mock no acreditan despliegue: para los 10 puntos de BD desplegada, aprovisionar el servicio cloud, ejecutar esta verificación desde el backend conectado, reiniciar y conservar IDs y evidencia de la segunda consulta sin exponer credenciales. La API ya recupera el historial en `GET /api/audits/:id`, comprobado tras reiniciar en `tests/server/server.test.mjs`; el frontend y el aprovisionamiento cloud siguen pendientes.
 
 ## Pruebas
 

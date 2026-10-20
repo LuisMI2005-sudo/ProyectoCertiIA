@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { TestRunner, createTestRunner } from '../../dist/test-runner/index.js';
+import { adapterFor } from '../../dist/test-runner/reports.js';
 import { GitController } from '../../dist/git-controller/index.js';
 import { ToolSchemas, resultSchema, RunTestsOutputSchema } from '../../dist/shared/contracts.js';
 
@@ -146,6 +147,17 @@ describe('runner safety and input validation', () => {
 });
 
 describe('comparison and verification evidence', () => {
+  test.each(['skipped', 'todo', 'pending'])('rejects resolved failures when a previously passing test becomes %s', async (status) => {
+    const baseline = await run('fail');
+    const candidate = await run(`resolved-${status}`);
+    const comparison = await runner.verify(baseline.runId, candidate.runId);
+    expect(candidate.complete).toBe(true);
+    expect(candidate.cases.find((entry) => entry.id === sampleCase('keeps existing behavior')).status)
+      .toBe(status === 'todo' ? 'todo' : 'skipped');
+    expect(comparison).toEqual({ resolvedFailures: [sampleCase('adds numbers')],
+      newFailures: [sampleCase('keeps existing behavior')], missingTests: [], comparable: true, verdict: 'regression' });
+    expect((await runner.getEvidence(candidate.runId)).comparison.verdict).toBe('regression');
+  });
   test('detects resolved failures as a successful comparison', async () => {
     const baseline = await run('fail');
     const candidate = await run('pass');
@@ -223,6 +235,45 @@ describe('pytest reporting', () => {
     const mixed = await run('mixed', { runner: 'pytest' });
     expect(mixed.cases.map((entry) => entry.status).sort()).toEqual(['skipped', 'skipped']);
     expect(await run('collecterror', { runner: 'pytest' })).toMatchObject({ status: 'error', complete: false });
+  });
+});
+
+describe('report completeness invariants', () => {
+  const jestReport = () => ({ numTotalTests: 1, testResults: [{ name: 'tests/sample.test.mjs', status: 'passed',
+    assertionResults: [{ fullName: 'adds numbers', status: 'passed', duration: 1 }] }] });
+  const pytestReport = () => ({ summary: { total: 1, collected: 1 }, collectors: [],
+    tests: [{ nodeid: 'tests/test_sample.py::test_adds', outcome: 'passed', call: { duration: 0.001 } }] });
+  const parse = (engine, report) => adapterFor(engine).parseReport(JSON.stringify(report), root);
+
+  test.each([
+    ['jest', 'partial assertions', () => ({ ...jestReport(), numTotalTests: 2 })],
+    ['jest', 'missing count', () => ({ ...jestReport(), numTotalTests: undefined })],
+    ['jest', 'negative count', () => ({ ...jestReport(), numTotalTests: -1 })],
+    ['jest', 'fractional count', () => ({ ...jestReport(), numTotalTests: 1.5 })],
+    ['jest', 'failed suite without cases', () => { const value = jestReport(); value.testResults.push({ name: 'tests/broken.test.mjs', status: 'failed', assertionResults: [] }); return value; }],
+    ['jest', 'suite execution error', () => { const value = jestReport(); value.testResults[0].testExecError = { message: 'teardown failed' }; return value; }],
+    ['pytest', 'partial tests', () => ({ ...pytestReport(), summary: { total: 2, collected: 2 } })],
+    ['pytest', 'partial collection without total', () => ({ ...pytestReport(), summary: { collected: 2 } })],
+    ['pytest', 'inconsistent collection', () => ({ ...pytestReport(), summary: { total: 1, collected: 2 } })],
+    ['pytest', 'missing counts', () => ({ ...pytestReport(), summary: {} })],
+    ['pytest', 'negative count', () => ({ ...pytestReport(), summary: { total: -1, collected: 1 } })],
+    ['pytest', 'real collection error shape', () => ({ ...pytestReport(), collectors: [{ nodeid: 'tests/broken.py', outcome: 'failed', result: [] }] })]
+  ])('%s marks %s as incomplete', (engine, _description, report) => {
+    expect(parse(engine, report()).complete).toBe(false);
+  });
+
+  test('accepts complete pytest reports with explicitly deselected tests', () => {
+    const report = pytestReport(); report.summary = { total: 1, collected: 3, deselected: 2 };
+    expect(parse('pytest', report)).toMatchObject({ complete: true, executionError: false });
+    expect(parse('pytest', { ...report, summary: { collected: 3, deselected: 2 } }).complete).toBe(true);
+  });
+
+  test.each(['jest', 'pytest'])('%s partial reports cannot become successful verification', async (engine) => {
+    const baseline = await run('fail', { runner: engine });
+    const candidate = await run('partial', { runner: engine });
+    expect(candidate.complete).toBe(false);
+    expect(candidate.status).not.toBe('passed');
+    expect(await runner.verify(baseline.runId, candidate.runId)).toMatchObject({ comparable: false, verdict: 'inconclusive' });
   });
 });
 

@@ -4,58 +4,51 @@
 **Equipo:** Six seven — Eduardo Quinteros, Sebhastian Campero y Luis Miguel Gonzales  
 **Rama de trabajo:** `Dev`  
 **Fecha de actualización:** 19 de octubre de 2026  
-**Base revisada:** commit `ac50df8` de `Dev`, que coincide con la rama remota. Incluye fases 1–4, CI (`e318b9b`/`e3eed5b`), hooks (`5d7857e`) y subagentes (`ac50df8`).
-
-Este backlog convierte el avance y las brechas del proyecto en historias de usuario. Incluye tanto el producto autónomo previsto como la aplicación web, persistencia y evidencias que exige la evaluación. No registra implementaciones futuras como terminadas ni asigna responsables o fechas sin acuerdo del equipo.
+**Base revisada:** Dev tras el merge e3c6b8e (padres 2468ec7 y b5b2698), con persistencia (src/db/), API HTTP (src/server/) y 19 herramientas MCP (src/mcp/). Este corte cierra comparación de omitidos, integridad de reportes y documentación e integra origin/main sin squash, conservando sus hashes y autorías. Las HU conservan sus identificadores; completar código local no acredita despliegue.
 
 ## Cómo utilizar el backlog
 
-- **Completada:** la capacidad descrita está implementada y tiene evidencia en las pruebas o en la revisión. No implica que todo el producto esté desplegado.
-- **Parcial:** existe una implementación, pero quedan defectos o validaciones necesarios para cumplir íntegramente la historia.
-- **Pendiente:** no existe evidencia suficiente de implementación o entrega. En accesos y despliegues significa que falta verificarla, no necesariamente que no exista fuera del repositorio.
-- **P0:** requisito de defensa, corrección de un resultado incorrecto o entrega directamente necesaria para la rúbrica.
-- **P1:** capacidad central del producto o dependencia técnica para una entrega P0.
-- **P2:** mejora posterior a la entrega mínima. La prioridad no permite omitir dependencias.
+- **Completada:** criterios técnicos implementados y con pruebas; no implica despliegue salvo que la HU lo exija.
+- **Parcial:** existe implementación con criterios abiertos, detallados en la historia.
+- **Pendiente:** capacidad o evidencia todavía sin acreditar en esta rama.
+- **P0/P1/P2:** prioridad para defensa, producto y mejoras posteriores.
 
-Los criterios de las historias completadas describen el comportamiento existente. Los de las historias parciales y pendientes definen qué demostrar antes de cerrarlas. Una capacidad implementada no cierra automáticamente una historia si quedan criterios de aceptación sin comprobar; en particular, la aceptación del tipo de hook/subagente por el docente se distingue de su funcionamiento técnico.
+Las agrupaciones temáticas no sustituyen el campo **Estado** de cada HU. Hooks y subagentes están implementados; HU-27/HU-28 siguen parciales hasta confirmar la interpretación docente. El frontend de Ronald y las HU/documentación en elaboración por Eduardo se integrarán mediante contribuciones reales.
 
-| Estado | Cantidad | Alcance |
+| Estado | Cantidad | Historias |
 |---|---:|---|
-| Completada | 14 | Base técnica, análisis, operaciones Git, almacenamiento básico, validación local y CI acreditado. |
-| Parcial | 8 | HU-12, HU-13, HU-18, HU-19, HU-26, HU-27, HU-28 y HU-29. |
-| Pendiente | 21 | Correcciones restantes, MCP, agente generativo, API, entrega y evidencias sin acreditar. |
-| **Total** | **43** | **El número de historias no equivale a porcentaje de nota o avance ponderado.** |
+| Completada | 21 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
+| Parcial | 8 | HU-12, HU-18, HU-19, HU-22, HU-24, HU-26, HU-27 y HU-28. |
+| Pendiente | 14 | Agente, worker remoto, frontend, despliegues, defensa y robustez pendiente. |
+| **Total** | **43** | No equivale a porcentaje de nota ni esfuerzo. |
 
-**Calidad comprobada en esta revisión:** [CI del commit `ac50df8`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) terminado con `success`: **176 pruebas aprobadas, 0 fallos, 6 suites**, TypeScript y ESLint correctos. Distribución: Shared 30, Git Controller 35, Analyzer 44, Test Runner 25, Hooks 20 y Subagentes 22. Se volvió a ejecutar `npm run check` localmente sin errores; el conteo integral se verificó en los logs de Actions del mismo commit. Los casos de revisión de HU-16/HU-17 aún no están corregidos en el Test Runner.
+**Validación actual tras el merge:** `npm.cmd run check` sin errores; suite focal del Test Runner **43/43**; `npm.cmd test` **257/257 en nueve suites**, 0 fallos, con pytest obligatorio (518,394 s). Se conservan las ocho suites anteriores (236 casos), se añaden 18 regresiones del Test Runner y tres pruebas MCP recibidas de origin/main. El [run histórico de CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018) corresponde al corte anterior; el run remoto del commit nuevo se acredita después del push. El workflow mantiene Node 24, Python 3.11, pytest real obligatorio y no incluye CD.
 
 ## Corte de avance del backend
 
-Para este conteo, **backend** comprende el motor local, contratos, análisis, Git, pruebas, CI, hooks, subagentes, MCP, agente, persistencia, API y worker. Son **33 HU: HU-01 a HU-21, HU-23 a HU-30, HU-32 y HU-41 a HU-43**. Este alcance se explicita para no confundir el motor local con una API HTTP ya disponible.
+Se mantienen las **33 HU de backend** originales: HU-01 a HU-21, HU-23 a HU-30, HU-32 y HU-41 a HU-43.
 
-| Estado del backend | Cantidad | Historias |
+| Estado backend | Cantidad | Historias |
 |---|---:|---|
-| Completadas, con sus criterios acreditados | **14** | HU-01 a HU-11, HU-14, HU-15 y HU-21. |
-| Parciales | **8** | HU-12, HU-13, HU-18, HU-19, HU-26, HU-27, HU-28 y HU-29. |
-| Pendientes | **11** | HU-16, HU-17, HU-20, HU-23, HU-24, HU-25, HU-30, HU-32, HU-41, HU-42 y HU-43. |
-| **Total backend** | **33** | **14/33 = 42,4 % de historias cerradas; no es porcentaje de nota ni de esfuerzo.** |
+| Completadas | **21** | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-29 y HU-30. |
+| Parciales | **7** | HU-12, HU-18, HU-19, HU-24, HU-26, HU-27 y HU-28. |
+| Pendientes | **5** | HU-25, HU-32, HU-41, HU-42 y HU-43. |
+| **Total** | **33** | **21/33 = 63,6 % de historias cerradas; no es porcentaje de nota.** |
 
-**Hooks y subagentes sí están implementados y probados.** HU-27 y HU-28 permanecen parciales exclusivamente por la confirmación docente exigida en sus criterios originales; no por ausencia de código. Si el docente acepta hooks del motor y especialistas deterministas en workers, ambas se pueden cerrar: el corte pasa a **16 completadas, 6 parciales y 11 pendientes** sin implementar nuevas capacidades para esas dos historias. No se ha encontrado evidencia de esa aceptación en el repositorio. Los especialistas actuales no usan un LLM, y la delegación no utiliza todavía MCP.
+HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo necesarias para la entrega. BD/API locales no cierran HU-33/HU-34; faltan frontend público, cloud y CD. El historial durable se recupera tras reiniciar; las sesiones Git activas y análisis por ID continúan en memoria.
 
-Quedan fuera de este corte diez HU de colaboración, frontend y entrega: HU-22, HU-31 y HU-33 a HU-40. Siguen pendientes; en particular, **BD desplegada (HU-33), backend desplegado (HU-34), CD (HU-36), conexión de punta a punta (HU-37) y seguridad integral de entrega (HU-40)** no deben desaparecer del plan por estar fuera del conteo del motor. El CI existente no realiza despliegues.
+### Cambios acreditados desde el corte anterior
 
-### Cambios acreditados desde el backlog anterior
-
-| Historia | Estado revisado | Evidencia y límite |
+| Historia | Estado | Evidencia y límite |
 |---|---|---|
-| HU-21 · CI | **Completada** | Workflow, ejecución fallida que detuvo el pipeline y ejecuciones verdes posteriores; Node 24, Python 3.11 y pytest real. |
-| HU-27 · Hook | **Parcial; implementación técnica completada** | 20 pruebas, `pre:apply_patch`/`pre:git_commit`, decisiones allow/block y auditoría; falta aceptación docente del tipo de hook. |
-| HU-28 · Subagente | **Parcial; implementación técnica completada** | 22 pruebas, workers independientes, RPC, roles, presupuestos y resultados consumidos; falta aceptación docente de especialistas sin LLM. |
-| HU-18 · Reparación con Jest real | **Parcial** | Ya hay Analyzer → baseline fallido → parche → Jest aprobado → evidencia → commit, más regresión con rollback. Falta cubrir trabajo ajeno dentro de esa integración y cerrar HU-16/HU-17. |
-| HU-19 · pytest real | **Parcial** | Smoke test real de éxito en CI; faltan fallo, colección, timeout y cancelación con pytest real. |
-| HU-26 · Orquestación | **Parcial** | Coordinador de un intento con hooks y subagentes; parche suministrado por el llamador, sin cliente MCP, generación por IA ni bucle de reintentos. |
-| HU-29 · Persistencia | **Parcial** | Adaptadores y trazas en memoria; JSON de demo. No hay BD, migraciones ni historial durable de las entidades de auditoría. |
-
-Las dependencias originalmente previstas de HU-27/HU-28 en MCP o el agente generativo no impiden demostrar la implementación técnica actual: los nuevos módulos se conectan directamente con los motores de dominio. Esto no cierra HU-23, HU-24, HU-25 ni el alcance completo de HU-26.
+| HU-13/HU-16 | Completadas | Un test antes aprobado que pasa a skipped/todo/pending produce regression; pruebas parametrizadas más casos de ausencia/fallo. |
+| HU-17 | Completada | Totales y casos coinciden; fallos de suite/colección y reportes parciales son incompletos e inconclusos para verificar. |
+| HU-20 | Completada | process.ts, salidas contractuales y ejemplo Runner/Git corregidos; documentación DB alineada con API existente. |
+| HU-23 | Completada | 12 tools de dominio, alias y seis consultas: 19 herramientas por HTTP/stdio con SDK y auditoría durable. |
+| HU-29 | Completada | Cinco entidades, JSON atómico y PostgreSQL con migraciones; 32 pruebas y recuperación tras reinicio. |
+| HU-30 | Completada | REST, raíces confiables, token opcional, CORS y persistencia; 28 pruebas HTTP/MCP. |
+| HU-26 | Parcial | Coordinador de un intento, parche explícito; faltan LLM y reintentos autónomos en esta rama. |
+| HU-27/HU-28 | Parciales por aceptación docente | Hooks/workers reales, 20/22 pruebas; falta confirmar interpretación de la rúbrica. |
 
 ## A. Historias completadas y capacidades existentes
 
@@ -156,17 +149,17 @@ Las dependencias originalmente previstas de HU-27/HU-28 en MCP o el agente gener
 **Estado:** Parcial · **Fase:** 4 · **Evidencia:** `src/test-runner/process.ts`, `reports.ts`, `index.ts`.
 
 - **Implementado:** ejecución sin shell, timeout, cancelación, salida acotada, adapters y handlers.
-- **Verificado:** suite de 25 pruebas con smoke tests permanentes de Jest y pytest reales; la suite de subagentes añade reparación real con Jest y rollback por regresión.
-- **Para cerrar:** cumplir HU-17, HU-18 y HU-19. El éxito real con pytest ya está demostrado; faltan sus escenarios de error y terminación y la integridad de los reportes.
+- **Verificado:** suite ampliada de 43 pruebas con smoke tests permanentes de Jest y pytest reales; la suite de subagentes añade reparación real con Jest y rollback por regresión.
+- **Para cerrar:** cumplir HU-18 y HU-19. HU-17 ya está cerrada. El éxito real con pytest ya está demostrado; faltan sus escenarios de error y terminación ; la integridad de totales declarados ya tiene regresiones específicas.
 
 ### HU-13 Comparar ejecuciones sin ocultar regresiones
 
 **Como** agente verificador, **quiero** comparar baseline y candidato **para** distinguir una reparación válida de una regresión o resultado inconcluso.  
-**Estado:** Parcial · **Fase:** 4 · **Evidencia:** `compare_test_runs` y `verify()`.
+**Estado:** Completada · **Fase:** 4 · **Evidencia:** `compare_test_runs` y `verify()`.
 
 - **Implementado:** detección de fallos resueltos, fallos nuevos, casos ausentes y configuraciones distintas.
-- **Para cerrar:** cumplir HU-16 y HU-17 y demostrar que una prueba antes aprobada no puede omitirse para obtener `success`.
-- **Avance adicional:** el especialista de verificación y el hook de commit rechazan skipped/todo o evidencia incompleta; eso protege el flujo coordinado, pero no corrige `compare_test_runs` ni los contadores del parser.
+- **Cerrado:** HU-16/HU-17 impiden success al omitir una prueba antes aprobada o recibir un reporte parcial.
+- **Política:** newFailures incluye pérdida de cobertura aprobada (skipped/todo, incluido pending normalizado); verdict es regression. Los hooks mantienen su protección adicional.
 
 ### HU-14 Guardar y recuperar ejecuciones y evidencia
 
@@ -180,32 +173,32 @@ Las dependencias originalmente previstas de HU-27/HU-28 en MCP o el agente gener
 ### HU-15 Validar automáticamente los módulos existentes
 
 **Como** integrante del equipo, **quiero** ejecutar las comprobaciones de calidad localmente **para** detectar regresiones antes de integrar cambios.  
-**Estado:** Completada · **Fases:** 1–4 + Hooks + Subagentes · **Evidencia:** seis suites y scripts npm.
+**Estado:** Completada · **Fases:** motor + Hooks + Subagentes + DB + HTTP/MCP · **Evidencia:** nueve suites y scripts npm.
 
-- En Actions del commit `ac50df8` pasaron 176 pruebas, compilación, tipos y lint; `npm run check` también pasó en esta revisión local.
+- Evidencia histórica: en Actions del commit `ac50df8` pasaron 176 pruebas. El corte actual amplía la base de 236 a 257 casos en nueve suites; comprobar el resultado del commit final en Actions después del push. Tipos/lint y los 43 casos del Test Runner ya pasaron localmente tras el merge.
 - Los commits de prueba se limitan a repositorios temporales. HU-21 ya acredita la ejecución automática en GitHub.
 
-## B. Correcciones y pruebas pendientes de Fase 4
+## B. Estabilización y seguimiento de Fase 4
 
 ### HU-16 Rechazar pruebas aprobadas que pasan a omitidas
 
 **Como** agente verificador, **quiero** detectar que un caso aprobado pasa a `skipped` o `todo` **para** no declarar una reparación exitosa al dejar de ejecutar pruebas.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Depende de:** HU-13.
+**Estado:** Completada · **Prioridad:** P0 · **Depende de:** HU-13.
 
 - Agregar el caso reproducido: baseline A fallida/B aprobada; candidato A aprobada/B omitida.
 - El comparador no devuelve `success`; el resultado comunica regresión o inconclusión según una política documentada.
 - Probar transiciones a `skipped`, `todo`, ausencia y fallo, manteniendo la protección adicional de Git Controller.
-- **Revisión actual:** los nuevos hooks y el especialista de verificación añaden protección, con pruebas, pero `src/test-runner/index.ts` no cambió y el comparador todavía omite la transición de aprobado a skipped/todo al decidir `success`. La historia sigue pendiente de la corrección del motor.
+- **Evidencia:** tests parametrizados de skipped/todo/pending y casos existentes de ausencia/fallo; compareRuns registra los IDs en newFailures.
 
 ### HU-17 Rechazar reportes incompletos o inconsistentes
 
 **Como** consumidor de resultados, **quiero** comprobar la integridad del reporte **para** no aceptar como completa una ejecución parcial.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Depende de:** HU-12, HU-13.
+**Estado:** Completada · **Prioridad:** P0 · **Depende de:** HU-12, HU-13.
 
 - Un reporte Jest que declara dos tests y entrega una assertion no queda con `complete: true`.
 - Validar contadores, estructura y errores de ejecución; definir y probar las invariantes equivalentes de pytest.
 - Ningún reporte inconsistente permite registrar evidencia de reparación exitosa.
-- **Revisión actual:** `src/test-runner/reports.ts` no cambió. Rechazar un `complete: false` declarado no detecta un reporte que el parser marca incorrectamente como completo.
+- **Evidencia:** parsers contrastan numTotalTests de Jest y summary.total/collected-deselected de pytest; tests de discrepancias, datos inválidos, errores de suite/colección y reportes parciales no verificables.
 
 ### HU-18 Verificar un flujo de reparación con Jest real
 
@@ -216,7 +209,7 @@ Las dependencias originalmente previstas de HU-27/HU-28 en MCP o el agente gener
 - La prueba real lee el archivo modificado; no depende de cambiar `FAKE_MODE`.
 - Incluir un caso de regresión real que impida el commit y permita rollback conservando trabajo ajeno.
 - **Implementado:** `tests/subagents/subagents.test.mjs` verifica el analizador real, Jest leyendo y ejecutando el archivo TypeScript parcheado, baseline fallido, candidato aprobado, evidencia y commit. Su caso de regresión verifica rollback, contenido restaurado, HEAD preservado y ausencia de commit.
-- **Para cerrar:** introducir trabajo ajeno durante ese flujo real y comprobar su conservación tras rollback; actualmente esa garantía tiene pruebas separadas en Git Controller. También siguen abiertas las dependencias HU-16/HU-17. Evidencia visible: `artifacts/subagents/success.json` y `regression.json`.
+- **Para cerrar:** introducir trabajo ajeno durante ese flujo real y comprobar su conservación tras rollback; actualmente esa garantía tiene pruebas separadas en Git Controller. HU-16/HU-17 ya están cerradas; permanece el criterio de conservación de trabajo ajeno dentro de esa integración real. Evidencia visible: `artifacts/subagents/success.json` y `regression.json`.
 
 ### HU-19 Verificar pytest real
 
@@ -231,8 +224,10 @@ Las dependencias originalmente previstas de HU-27/HU-28 en MCP o el agente gener
 
 ### HU-20 Corregir la documentación de Fase 4
 
+- **Evidencia de cierre:** README raíz, src/db/README.md y src/test-runner/README.md alineados con contratos e inicialización actuales.
+
 **Como** integrante o evaluador, **quiero** instrucciones y contratos que coincidan con el código **para** reproducir el sistema sin adivinar su inicialización.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Depende de:** implementación actual.
+**Estado:** Completada · **Prioridad:** P0 · **Depende de:** implementación actual.
 
 - Sustituir las referencias incorrectas a `process-runner.ts` por `process.ts`.
 - Alinear las salidas de `run_tests` y `compare_test_runs` con `src/shared/contracts.ts`.
@@ -249,38 +244,42 @@ Las dependencias originalmente previstas de HU-27/HU-28 en MCP o el agente gener
 - Agregar workflow en PR/push a las ramas de trabajo/entrega con Node.js 24 e instalación mediante lockfile.
 - Ejecutar tipos, lint, compilación y pruebas; preparar Python y su plugin para las integraciones reales correspondientes.
 - Mostrar una ejecución verde enlazable y una prueba de que un fallo detiene el pipeline.
-- **Evidencia:** [run fallido `39292749510`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39292749510), donde una prueba hizo fallar `npm test` y el job; [run verde `39306415018`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018), con 176 pruebas en seis suites del HEAD actual.
-- Incluye push/PR hacia `main` y `Dev`, dispatch, permisos de lectura, caché npm, cancelación de ejecuciones previas, instalación por lockfile, Python/pytest y resumen. Las referencias a «cuatro suites» del nombre del paso y su tabla son texto desactualizado: `npm test` descubre y ejecuta las seis suites actuales.
-- No cierra HU-36: no hay pasos de despliegue. `main` sigue en `d51ab85`; su consolidación y la disponibilidad del botón manual en la rama predeterminada pertenecen a HU-38.
+- **Evidencia histórica:** [run fallido `39292749510`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39292749510), donde falló el job; [run verde `39306415018`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018), con 176 pruebas en seis suites de aquel commit. No se atribuye ese resultado al HEAD nuevo.
+- Incluye push/PR hacia `main`, `Dev` y `QA`, dispatch, permisos de lectura, caché npm, cancelación de ejecuciones previas, instalación por lockfile, Python/pytest y resumen. `npm test` descubre las nueve suites integradas; el CI remoto del commit final se acredita después del push.
+- No cierra HU-36: no hay pasos de despliegue. La rama local `main` se adelantó a `origin/main` (`b5b2698`) y este historial se integró en `Dev` sin squash; el PR final de Dev hacia main y su validación pertenecen a HU-38.
 
 ### HU-22 Acreditar colaboración y contribuciones del equipo
 
 **Como** docente, **quiero** acceder al repositorio y reconocer el aporte de los tres integrantes **para** evaluar el trabajo grupal e individual.  
-**Estado:** Pendiente de completar/verificar · **Prioridad:** P0 · **Rúbrica:** requisito de defensa y repositorio/equipo, 10 puntos.
+**Estado:** Parcial · **Prioridad:** P0 · **Rúbrica:** requisito de defensa y repositorio/equipo, 10 puntos.
 
 - Confirmar invitación aceptada del docente y acceso al repositorio correcto.
 - Mostrar contribuciones reales de Eduardo, Sebhastian y Luis Miguel con identidad atribuible y PRs o revisiones.
 - Vincular las historias a sus entregas y evitar commits vacíos creados solo para aparentar participación.
+
+- **Verificado:** merge `e3c6b8e` con padres `2468ec7` y `b5b2698`; los commits originales de Eduardo se conservan. `git shortlog -sn Dev` muestra a LM, SebhastianCampero-Collab, Eduardo Quinteros y su alias eduardoquinteross. Falta acreditar acceso del docente y las revisiones/entregas del resto de criterios.
 
 ## D. Servidor MCP y agente autónomo
 
 ### HU-23 Publicar las herramientas mediante un servidor MCP
 
 **Como** cliente MCP, **quiero** descubrir e invocar las doce herramientas **para** operar sobre el motor usando el protocolo previsto.  
-**Estado:** Pendiente · **Prioridad:** P1 · **Fase:** 5 · **Depende de:** contratos y módulos de dominio; HU-16/HU-17 para resultados fiables.
+**Estado:** Completada · **Prioridad:** P1 · **Fase:** 5 · **Depende de:** contratos y módulos de dominio; HU-16/HU-17 para resultados fiables.
 
-- Implementar `src/mcp-server/` con SDK MCP, transporte stdio inicial y esquemas Zod.
-- Registrar los doce handlers, configurar raíz y proveedores desde el arranque y mantener logs fuera del canal de protocolo.
-- Probar discovery, invocación real, errores de validación y cierre de conexión desde un cliente MCP.
+- Implementado en `src/mcp/` con SDK, stdio y HTTP JSON sin sesión; esquemas Zod.
+- Registrados los doce handlers, alias git_rollback y seis consultas (19 tools); raíz/proveedores confiables y stdout reservado al protocolo.
+- Discovery, invocación real, validación, cierre y auditoría probados en tests/server/server.test.mjs con clientes oficiales.
 
 ### HU-24 Consultar recursos MCP de proyecto y análisis
 
 **Como** agente conectado, **quiero** consultar configuración, estructura y análisis guardados **para** reutilizar contexto sin repetir herramientas.  
-**Estado:** Pendiente · **Prioridad:** P1 · **Fase:** 5 · **Depende de:** HU-07, HU-23.
+**Estado:** Parcial · **Prioridad:** P1 · **Fase:** 5 · **Depende de:** HU-07, HU-23.
 
 - Publicar los recursos previstos de configuración, estructura y `devguardian://analysis/{analysisId}`.
 - Validar identificadores y permisos; responder correctamente a análisis desconocidos, expirados o expulsados.
 - No exponer secretos ni permitir elegir una raíz externa desde un URI.
+
+- **Integrado desde origin/main:** recurso devguardian://analysis/{analysisId} en src/mcp-server/ y tres pruebas de cliente/recurso. Falta configuración/estructura y exponerlo en src/mcp/ con ámbito de proyecto; no se cierra la HU completa.
 
 ### HU-25 Diagnosticar y proponer un parche con IA
 
@@ -333,18 +332,20 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-29 Persistir auditorías y resultados
 
 **Como** usuario, **quiero** guardar proyectos, ejecuciones, hallazgos, intentos y resultados de tests **para** consultar el historial después de reiniciar la aplicación.  
-**Estado:** Parcial · **Prioridad:** P0 · **Rúbrica:** base para BD desplegada y conexión completa.
+**Estado:** Completada · **Prioridad:** P0 · **Rúbrica:** base para BD desplegada y conexión completa.
 
 - Definir modelo de datos y migraciones para las entidades mínimas de una auditoría.
 - Relacionar identificadores de dominio con registros persistidos sin guardar secretos.
 - Probar creación/consulta y conservación del historial tras reinicio; diferenciar el historial de las sesiones Git actualmente en memoria.
-- **Base implementada:** `HookPersistenceAdapter`, `DelegationPersistenceAdapter`, stores con copias defensivas y callbacks validados/auditados. La demo exporta dos JSON como evidencia de ejecución.
-- **Para cerrar:** elegir e integrar una BD, modelo y migraciones, persistir proyectos/auditorías/hallazgos/intentos/resultados y consultar el historial después de reiniciar. Los adaptadores sin implementación durable y los JSON de demo no cumplen esos criterios.
+- **Implementado:** src/db/ conecta JSON durable/PostgreSQL, cinco entidades, migraciones, hooks y delegaciones; conserva runs, hallazgos y checkpoints.
+- **Evidencia:** 32 pruebas DB y flujos HTTP recuperan el mismo historial después de reiniciar. El despliegue cloud corresponde a HU-33; no se reanudan sesiones Git en memoria.
 
 ### HU-30 Ofrecer una API de aplicación
 
+- **Evidencia de cierre:** src/server/ y sus 28 pruebas; proyectos/auditorías/hooks/delegaciones/MCP, token bearer opcional y límites. Documentación reproducible en src/server/README.md.
+
 **Como** frontend, **quiero** registrar auditorías y consultar su estado/resultados **para** operar con el motor a través de un contrato HTTP definido.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Depende de:** HU-29.
+**Estado:** Completada · **Prioridad:** P0 · **Depende de:** HU-29.
 
 - Implementar healthcheck y endpoints de registro, consulta de estado e historial con validación y autenticación/autorización.
 - Utilizar proyectos/workspaces registrados, sin aceptar comandos o rutas arbitrarias del navegador.
@@ -475,8 +476,8 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 
 | Entrega | Historias principales | Resultado demostrable |
 |---|---|---|
-| 1. Cerrar estabilización y requisitos básicos | HU-16, HU-17, HU-18, HU-19, HU-20, HU-22, HU-40 | Comparación fiable, cobertura real restante y participación/accesos acreditados; HU-21 ya está completada. |
-| 2. Conexión del producto | HU-23, HU-24, HU-29, HU-30, HU-31, HU-32 | Herramientas MCP y recorrido funcional entre UI, API, worker y persistencia. |
+| 1. Cerrar estabilización y requisitos básicos | HU-18, HU-19, HU-22, HU-40 | HU-13/HU-16/HU-17/HU-20 ya cerradas; completar integración real restante y accesos. |
+| 2. Conexión del producto | HU-23, HU-24, HU-29, HU-30, HU-31, HU-32 | MCP, persistencia y API ya implementados; completar recursos, UI y worker remoto. |
 | 3. Completar autonomía y acreditar criterios | HU-25, HU-26, cierre docente de HU-27/HU-28 | Añadir generación y orquestación MCP con reintentos; hooks y delegación determinista ya tienen código, pruebas y artefactos. |
 | 4. Entrega desplegada | HU-33, HU-34, HU-35, HU-36, HU-37 | Tres partes desplegadas, CI/CD y conexión de punta a punta. |
 | 5. Cierre y defensa | HU-38, HU-39 | Versión consolidada, evidencias y presentación individual preparada. |
@@ -497,7 +498,7 @@ Una historia puede pasar a **Completada** cuando:
 ## Referencias y seguimiento
 
 - [Descripción y estado del proyecto](README.md).
-- [CI verde del HEAD revisado: 176 pruebas / 6 suites](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018).
+- [CI histórico anterior a BD/API/MCP](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018).
 - [Hooks: implementación y defensa](src/hooks/README.md), [subagentes: protocolo y defensa](src/subagents/README.md), [demo de éxito](artifacts/subagents/success.json) y [demo de regresión](artifacts/subagents/regression.json).
 - [Informe de revisión del segundo parcial](reports/INFORME_PARCIAL2_2026-10-19.md), con hallazgos, referencias y contraste con la rúbrica.
 - [Git Controller](src/git-controller/README.md), [Analyzer](src/analyzer/README.md) y [Test Runner](src/test-runner/README.md).
