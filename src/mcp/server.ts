@@ -46,7 +46,8 @@ async function domainCall<K extends ToolName>(name: K, raw: unknown, context: To
     compare_test_runs: (value) => captureResult(() => runtime.runner.verify(value.baselineRunId, value.candidateRunId))
   };
   const result = await handlers[name](input);
-  if (!result.ok) throw new DevGuardianError(result.error.code, result.error.message, { retryable: result.error.retryable });
+  if (!result.ok) throw new DevGuardianError(result.error.code, result.error.message, { retryable: result.error.retryable,
+    ...(result.error.details ? { details: result.error.details } : {}) });
   return parseContract(ToolSchemas[name].output, result.data);
 }
 export function createMcpServer(backend: DevGuardianBackend): Server {
@@ -78,6 +79,7 @@ export function createMcpServer(backend: DevGuardianBackend): Server {
     name, description: definition.description, inputSchema: { ...z.toJSONSchema(definition.schema, { io: "input" }), type: "object" }
   })) }));
   server.setRequestHandler(CallToolRequestSchema, async (request): Promise<CallToolResult> => {
+    let auditId: string | undefined;
     const args = request.params.arguments ?? {};
     const result = await backend.withToolAudit(request.params.name, args, async (context) => {
       const definition = definitions.get(request.params.name);
@@ -89,9 +91,10 @@ export function createMcpServer(backend: DevGuardianBackend): Server {
         await backend.persistence.saveTestRun(context.audit.id, run);
       }
       return value;
-    });
+    }, (id) => { auditId = id; });
     const structuredContent = result.ok ? { ok: true, data: toJson(result.data) } : { ok: false, error: toJson(result.error) };
-    return { content: [{ type: "text", text: JSON.stringify(structuredContent) }], structuredContent, isError: !result.ok };
+    return { content: [{ type: "text", text: JSON.stringify(structuredContent) }], structuredContent, isError: !result.ok,
+      ...(auditId ? { _meta: { auditId } } : {}) };
   });
   return server;
 }

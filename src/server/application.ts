@@ -194,13 +194,15 @@ export class DevGuardianBackend {
     return existing ?? this.persistence.registerProject({ name: SYSTEM_NAME, repoPath: first, defaultBranch: "devguardian/system", runnerType: "jest" });
   }
   /** All MCP tool calls, including rejected arguments/unknown names, enter a durable hook audit. */
-  public async withToolAudit(name: string, raw: unknown, executeTool: (context: ToolContext) => Promise<unknown>): Promise<Result<unknown>> {
+  public async withToolAudit(name: string, raw: unknown, executeTool: (context: ToolContext) => Promise<unknown>,
+    onAudit?: (auditId: string) => void): Promise<Result<unknown>> {
     return captureResult(async () => {
       const projectId = typeof raw === "object" && raw !== null && "projectId" in raw ? raw.projectId : undefined;
       const resolved = typeof projectId === "string" ? await captureResult(() => this.project(projectId)) : null;
       const project = resolved?.ok ? resolved.data : await this.systemProject();
       return this.serialize(project.repoPath, async () => {
         const audit = await this.persistence.beginAudit(project.id, "src/mcp/server.ts");
+        onAudit?.(audit.id);
         const loggedName = name.slice(0, 128);
         const hooks = createHookManager(this.hookConfig, new DatabaseHookPersistenceAdapter(this.repository, audit.id));
         hooks.register({ id: "mcp-context-policy", name: "MCP context policy", events: ["pre:tool_call"], execute: () => {

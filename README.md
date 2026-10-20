@@ -15,7 +15,7 @@ npm test
 
 `src/subagents/` implementa delegación real mediante **un worker independiente por tarea**, contexto acotado, whitelist por rol, presupuesto y contratos de salida validados. El coordinador delega diagnóstico AST/lint y verificación con Test Runner; consume sus reportes para aplicar un parche propuesto, hacer commit con evidencia confiable o ejecutar rollback por regresión. El rol adicional `patch-safety` permite delegar un preflight de hooks sin conceder escritura Git.
 
-`DelegationStore` conserva quién delegó, objetivo, contexto, herramientas efectivas, identidad del worker, resultado y decisión tomada con ese resultado. Su adaptador DB conserva las trazas, disponibles mediante REST y MCP. Los especialistas son deterministas y no requieren un LLM; la generación de parches con un modelo sigue pendiente.
+`DelegationStore` conserva quién delegó, objetivo, contexto, herramientas efectivas, identidad del worker, resultado y decisión tomada con ese resultado. Su adaptador DB conserva las trazas, disponibles mediante REST y MCP. Los especialistas son deterministas y no requieren un LLM. La propuesta generativa está disponible en src/agent-client/ mediante un ejecutor MCP separado del coordinador REST.
 
 **Defensa:** [protocolo, aislamiento y demostración reproducible](src/subagents/README.md). Las 22 pruebas de `tests/subagents/subagents.test.mjs` incluyen commit y rollback en repositorios temporales con el analizador y Jest reales. Para producir logs visibles con configuración de hooks:
 
@@ -33,7 +33,7 @@ La demo guarda [éxito con commit](artifacts/subagents/success.json) y [regresi�
 
 DevGuardian es una plataforma para diagnosticar errores de software, generar parches en ramas de reparación y verificar sus resultados mediante pruebas antes de confirmar cambios. Su diseño utiliza **Model Context Protocol (MCP)** para conectar un agente de inteligencia artificial con herramientas locales de análisis de código, ejecución de pruebas y control de versiones, mediante entradas y respuestas estructuradas y validadas.
 
-El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. El backend HTTP y el servidor MCP ya conectan los módulos, hooks, workers y persistencia. El flujo coordinado ejecuta diagnóstico → baseline → parche propuesto por el cliente → verificación → commit o rollback. El agente generativo conectado a un modelo y el dashboard siguen pendientes.
+El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. El backend HTTP y el servidor MCP ya conectan los módulos, hooks, workers y persistencia. El flujo coordinado ejecuta diagnóstico → baseline → parche propuesto por el cliente → verificación → commit o rollback. La Fase 6 añade un cliente generativo asistido con estado determinista sobre MCP; el dashboard y el despliegue siguen pendientes.
 
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
@@ -45,15 +45,15 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 4 | `src/test-runner/` | Completada | 43 |
 | Fase 5 + HTTP | `src/mcp/`, `src/server/` | Herramientas MCP por stdio/HTTP y REST implementadas | 28 |
 | MCP de compatibilidad | `src/mcp-server/` | Integrado desde origin/main: recurso de análisis y 10 herramientas de dominio | 3 |
-| Fase 6 | `src/agent/` | Pendiente | — |
+| Fase 6 | `src/agent-client/` | Generación estructurada + ciclo MCP determinista | 28 |
 | Hooks | `src/hooks/` | Implementado | 20 |
 | Subagentes | `src/subagents/` | Implementado | 22 |
 | Persistencia | `src/db/` | Local durable + adaptador PostgreSQL | 32 |
-| **Total implementado** | **Fases 1–5 + HTTP + Hooks + Subagentes + DB** | **9 suites** | **257** |
+| **Total implementado** | **Fases 1–6 + HTTP + Hooks + Subagentes + DB** | **10 suites** | **285** |
 
 **Validación integral del backend:**
 
-- **257 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- **285 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -67,11 +67,11 @@ Las pruebas de Git realizan commits exclusivamente dentro de sus repositorios te
 
 El sistema separa servidor MCP, API HTTP, analizador, ejecutor de pruebas, controlador Git y coordinación. `shared/` reúne contratos, errores y seguridad comunes; `db/` conserva auditorías, runs, hooks y delegaciones. Los módulos de dominio no dependen de una conexión con un modelo para ejecutar sus operaciones.
 
-El siguiente diagrama muestra el ciclo disponible desde REST y las herramientas MCP. El parche se recibe explícitamente del cliente; su generación con un LLM corresponde al agente pendiente.
+El siguiente diagrama muestra el ciclo disponible desde REST y las herramientas MCP. El cliente generativo propone el parche y un ejecutor TypeScript controla el ciclo MCP. El recorrido REST usa DevGuardianCoordinator y workers; el cliente generativo utiliza las herramientas primitivas y no inicia automáticamente esos workers.
 
 ```mermaid
 flowchart TD
-    A[Cliente HTTP REST o MCP] --> B[Diagnóstico AST y lint mediante workers]
+    A[Cliente HTTP REST o MCP] --> B[Diagnóstico AST y lint]
     B --> C[Contexto de símbolos y pruebas iniciales]
     C --> D[Árbol limpio y validación de HEAD]
     D --> E[Crear rama fix/... y checkpoint del intento]
@@ -124,6 +124,14 @@ ProyectoCertiIA/
 │   │   └── README.md                 # Ejecución, huellas, comparación y límites detallados
 │   ├── hooks/                        # Registro, guardrails, coordinador y documentación
 │   ├── subagents/                    # Workers, RPC, especialistas, trazas y coordinador
+│   ├── agent-client/
+│   │   ├── types.ts                  # Configuración, estados y propuesta Zod
+│   │   ├── mcp-bridge.ts             # SDK Client HTTP/stdio, IDs y auditoría
+│   │   ├── planner.ts                # ChatAnthropic estructurado y MockChatModel
+│   │   ├── orchestrator.ts           # Estado, presupuestos, diff, commit/rollback
+│   │   ├── main.ts                   # CLI con configuración JSON y modo mock
+│   │   ├── index.ts                  # Exportaciones y factories
+│   │   └── README.md                 # Arquitectura, ejecución y límites
 │   ├── mcp-server/                   # MCP de compatibilidad aportado por Eduardo, con recurso de análisis
 │   ├── mcp/
 │   │   ├── server.ts                 # 19 tools, SDK y transporte HTTP JSON sin sesión
@@ -157,6 +165,7 @@ ProyectoCertiIA/
 │   ├── subagents/subagents.test.mjs   # 22 pruebas de delegación y reparación real
 │   ├── db/db.test.mjs                 # 32 pruebas de persistencia y reinicio
 │   ├── mcp-server/server.test.mjs     # 3 pruebas de discovery, validación y recurso MCP
+│   ├── agent-client/agent.test.mjs   # 28 pruebas de agente, MCP real y proveedor simulado
 │   └── server/server.test.mjs         # 28 pruebas HTTP/MCP con motores y BD reales
 └── fixtures/
     ├── typescript/
@@ -171,7 +180,7 @@ ProyectoCertiIA/
         └── fake-pytest.mjs           # Ejecutable pytest falso para pruebas deterministas
 ```
 
-`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. La Fase 5 utiliza `src/mcp/`; el agente generativo de Fase 6 continúa pendiente. El servidor de compatibilidad `src/mcp-server/` aporta el recurso `devguardian://analysis/{analysisId}`; su exposición en el servidor principal de 19 herramientas queda pendiente.
+`dist/` se genera al compilar y `node_modules/` al instalar dependencias; ambos están excluidos de Git. La Fase 5 utiliza `src/mcp/`; el cliente generativo de Fase 6 está en src/agent-client/. El servidor de compatibilidad `src/mcp-server/` aporta el recurso `devguardian://analysis/{analysisId}`; su exposición en el servidor principal de 19 herramientas queda pendiente.
 
 ## 4. Registro Detallado de Cambios e Implementación por Fase (Changelog Técnico)
 
@@ -231,7 +240,15 @@ El ejecutor no es un sandbox del sistema operativo: los tests son código arbitr
 - **Flujo completo:** `POST /api/audits/run` conecta el coordinador real con persistencia; conserva baseline/candidato, hallazgos, checkpoint, decisiones de hooks y delegaciones. La suite comprueba commit, rollback, bloqueo y recuperación tras reiniciar.
 - **MCP:** SDK oficial, negociación y descubrimiento de 19 herramientas, esquemas Zod y auditoría durable de llamadas. Transporte stdio y HTTP JSON sin sesión, con clientes oficiales; no incluye SSE ni reanudación de eventos.
 - **Compatibilidad estricta:** la biblioteca `DOM` aporta los tipos web que utiliza el SDK; se mantienen `strict`, `exactOptionalPropertyTypes` y `skipLibCheck: false`.
-- **Verificación:** 28 pruebas adicionales; 257 en total y nueve suites.
+- **Verificación:** 28 pruebas adicionales; 285 en total y diez suites.
+
+### Fase 6: Agent Client generativo asistido (src/agent-client/)
+
+- ChatAnthropic con salida estructurada validada y MockChatModel inyectable; modelo configurable, predeterminado claude-sonnet-4-6. El LLM propone código/diff; no elige IDs, hashes, comandos o decisiones de commit.
+- Máquina de estados con baseline fallido obligatorio, máximo de intentos, targets idénticos, verificación, rollback y replanteamiento después de un bloqueo. Las mutaciones de resultado desconocido requieren reconciliación y no se repiten automáticamente.
+- SDK MCP HTTP/stdio sobre las 19 herramientas existentes; metadatos aditivos auditId permiten consultar la decisión exacta de hooks. No se introduce una herramienta adicional ni se sustituye el coordinador determinista de REST.
+- 28 pruebas nuevas con MCP/Jest/Git reales, mock sin API key, CLI y una llamada de ChatAnthropic con HTTP simulado. La API comercial de Anthropic no se invocó con credenciales reales.
+- Guía completa: [Agent Client](src/agent-client/README.md). Inicio compilado: npm run start:agent -- --config agent-config.json; mock: añadir --mock mock-proposals.json. Desarrollo: npm run dev:agent con tsx 4.23.15.
 
 ## 5. Contratos de Herramientas MCP Implementadas
 
@@ -287,7 +304,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 257 pruebas en nueve suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 285 pruebas en diez suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 | Iniciar HTTP compilado | `npm start` | Backend en `http://127.0.0.1:3001` por defecto. |
 | Compilar e iniciar HTTP | `npm run dev:server` | Compilación inicial y servidor HTTP; reiniciar para incorporar cambios. |
 | Iniciar MCP stdio compilado | `node dist/mcp/index.js` | Transporte stdio con stdout reservado al protocolo. |
@@ -303,7 +320,7 @@ npm test
 
 `npm test` compila de nuevo antes de ejecutar Jest y utiliza el soporte ESM de Node mediante `--experimental-vm-modules`. Esto puede mostrar un aviso de característica experimental sin implicar un fallo de las pruebas. Su timeout base es de 10 segundos por prueba; las suites de integración ajustan sus tiempos para los escenarios correspondientes.
 
-Los scripts `start`, `start:server`, `dev:server` y `start:mcp` ya son funcionales. `start:agent` continúa reservado para la fase generativa pendiente. La validación no requiere una clave de Anthropic. Además de los ejecutables controlados de `fixtures/runner/`, la suite incluye smoke tests con Jest y pytest reales y reparaciones HTTP con Jest real. pytest debe estar en el PATH junto con el plugin `pytest-json-report`; si el binario existe pero falta el plugin, la prueba falla.
+Los scripts `start`, `start:server`, `dev:server` y `start:mcp` ya son funcionales. `start:agent` inicia el cliente generativo de src/agent-client/ y `dev:agent` lo ejecuta con tsx. La validación no requiere una clave de Anthropic: el planificador y el HTTP del proveedor se simulan en CI. Además de los ejecutables controlados de `fixtures/runner/`, la suite incluye smoke tests con Jest y pytest reales y reparaciones HTTP con Jest real. pytest debe estar en el PATH junto con el plugin `pytest-json-report`; si el binario existe pero falta el plugin, la prueba falla.
 
 ## API HTTP REST y MCP
 
@@ -337,7 +354,7 @@ Ejemplos completos de registro, diagnóstico, reparación, hooks bloqueados y ll
 El workflow [CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml), definido en [`.github/workflows/ci.yml`](.github/workflows/ci.yml), se ejecuta con cada push a `main`, `Dev` o `QA` y cada pull request dirigido a esas ramas. Utiliza Ubuntu, Node.js 24.x, caché de npm y Python 3.11. Instala Node con `npm ci` y versiones fijadas de pytest y `pytest-json-report`, configura una identidad Git para los repositorios temporales y ejecuta:
 
 1. `npm run check`: TypeScript estricto sin emitir y ESLint.
-2. `npm test`: compilación y las nueve suites, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback, la persistencia con reinicio real de Node y el backend HTTP/MCP. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
+2. `npm test`: compilación y las diez suites, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback, la persistencia con reinicio real de Node y el backend HTTP/MCP y el Agent Client. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
 3. Una tabla de resultados en el resumen de Actions, que también informa fallos o pasos no ejecutados.
 
 El workflow solo dispone de `contents: read`, cancela ejecuciones anteriores de la misma rama y tiene un límite de 15 minutos. No incluye despliegues ni requiere secretos o archivos `.env`. `DEVGUARDIAN_REQUIRE_PYTEST=1` hace fallar la suite si falta pytest en CI.
@@ -379,4 +396,4 @@ Modelo entidad-relación, límites, seguridad, integración y pasos para Render/
 
 ## Consolidación de ramas y regresiones
 
-Se integró origin/main en Dev mediante merge conservando hashes y autoría: MCP de compatibilidad, corrección de rutas Git antes de evaluar árbol sucio, aserciones CRLF exactas y validación CI en QA. El workflow conserva Node/Python, los smoke tests reales y ejecución manual. Las ocho suites originales suman 254 pruebas tras 18 regresiones nuevas del Test Runner; la suite MCP recibida añade tres: 257 casos en nueve suites. El servidor principal sigue siendo src/mcp/ (19 herramientas auditadas y API HTTP); [src/mcp-server/](src/mcp-server/README.md) conserva la interfaz de workspace fijo y el recurso de análisis aportados desde main. El cliente generativo en otras ramas remotas no se incorporó en este merge.
+Se integró origin/main en Dev mediante merge conservando hashes y autoría: MCP de compatibilidad, corrección de rutas Git antes de evaluar árbol sucio, aserciones CRLF exactas y validación CI en QA. El workflow conserva Node/Python, los smoke tests reales y ejecución manual. Tras la consolidación había 257 pruebas en nueve suites: 254 de las ocho originales y tres MCP recibidas de main. La Fase 6 añade 28 casos: 285 en diez suites. El servidor principal sigue siendo src/mcp/ (19 herramientas auditadas y API HTTP); [src/mcp-server/](src/mcp-server/README.md) conserva la interfaz de workspace fijo y el recurso de análisis aportados desde main. El cliente de otras ramas remotas no se incorporó en ese merge. La Fase 6 actual se implementa en src/agent-client/ sobre los contratos MCP con projectId.
