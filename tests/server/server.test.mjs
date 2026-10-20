@@ -62,6 +62,40 @@ beforeEach(async () => {
 afterEach(async () => { await app?.close(); app = undefined; await rm(root, { recursive: true, force: true }); });
 
 describe('HTTP contracts, controls and health', () => {
+  test('cloud demo is opt-in and rejects caller-controlled paths and commands', async () => {
+    expect((await request('/api/demo/prepare', {})).response.status).toBe(404);
+    await app.close(); app = await start({ demoEnabled: true });
+    expect((await request('/api/demo/prepare', { repoPath: '../outside', command: 'ignored' })).response.status).toBe(422);
+    expect((await request('/api/projects')).body.data).toEqual([]);
+  });
+  test('prepares a real isolated cloud demo, consumes workers, commits and recovers its evidence', async () => {
+    await app.close();
+    app = await start({ demoEnabled: true, runners: [{ runner: 'jest', executable: process.execPath,
+      args: [fileURLToPath(new URL('../../node_modules/jest/bin/jest.js', import.meta.url)), '--runInBand'],
+      timeoutMs: 30000, maxOutputBytes: 100000 }] });
+    const prepared = await request('/api/demo/prepare', {});
+    expect(prepared.response.status).toBe(201);
+    const demo = prepared.body.data;
+    expect(demo.project.defaultBranch).toBe('Dev');
+    expect(demo.project.repoPath).not.toBe(workspace);
+    const sourcePath = path.join(demo.project.repoPath, demo.repair.path);
+    expect(sha(await readFile(sourcePath, 'utf8'))).toBe(demo.repair.expectedFileHashes[demo.repair.path]);
+    const diagnosed = await request('/api/audits/run', { projectId: demo.project.id, mode: 'diagnose', path: demo.repair.path });
+    expect(diagnosed.body.data.audit.summaryJson.outcome).toBe('diagnosed');
+    expect(diagnosed.body.data.delegations[0]).toMatchObject({ role: 'diagnostic', status: 'completed', consumptionStatus: 'diagnosis_only' });
+    const repaired = await request('/api/audits/run', { projectId: demo.project.id, mode: 'repair', repair: demo.repair });
+    expect(repaired.body.data.audit.status).toBe('committed');
+    expect(repaired.body.data.testRuns).toHaveLength(2);
+    expect(repaired.body.data.testRuns.some(run => run.status === 'failed' && run.complete)).toBe(true);
+    expect(repaired.body.data.testRuns.some(run => run.status === 'passed' && run.complete && run.summary.passed === 2)).toBe(true);
+    expect(repaired.body.data.delegations.some(entry => entry.consumptionStatus === 'committed')).toBe(true);
+    expect((await request('/api/audits/' + repaired.body.data.audit.id)).body.data.audit.commitSha).toMatch(/^[a-f0-9]{40}$/);
+    expect((await readFile(path.join(workspace, 'src/bug.ts'), 'utf8'))).toBe(original);
+    const again = await request('/api/demo/prepare', {});
+    expect(again.body.data.project.id).not.toBe(demo.project.id);
+    expect(sha(await readFile(path.join(again.body.data.project.repoPath, again.body.data.repair.path), 'utf8')))
+      .toBe(again.body.data.repair.expectedFileHashes[again.body.data.repair.path]);
+  });
   test.each(['/health', '/api/health'])('%s reports a live database, version, uptime, table count and real runner availability', async (endpoint) => {
     const reply = await request(endpoint);
     expect(reply.response.status).toBe(200);

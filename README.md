@@ -1,5 +1,31 @@
 # DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA
 
+## 🌐 Entorno de Producción Desplegado (Render)
+
+- **URL Pública del Frontend (Dashboard):** https://proyecto-certificacion-ai-frontend.onrender.com
+- **URL Pública del Backend (API & Healthcheck):** https://proyecto-certificacion-ai-backend.onrender.com/api/health
+- **Base de Datos Cloud:** PostgreSQL **PCAI**, base lógica `pcai`, modo `postgres`, **5 tablas activas**.
+- **Ramas activas:** `Dev` (Backend), `dev` (Frontend); versión de entrega consolidada también en `main` de ambos repositorios, conservando la autoría.
+- **CI/CD:** GitHub Actions valida cada rama de entrega. Render espera **After CI Checks Pass** antes de redesplegar.
+- **Runner en Render Free:** Node/Jest. **pytest se valida obligatoriamente en Ubuntu de GitHub Actions**, con Python 3.11, pytest-json-report y `DEVGUARDIAN_REQUIRE_PYTEST=1`; el health de la instancia web puede indicar pytest no disponible.
+- **Calidad:** base anterior **285 pruebas Backend + 44 Frontend = 329**. Este cierre añade dos regresiones de backend y tres de frontend: **287 + 47 = 334 pruebas**, en **10 suites Backend + 3 archivos Vitest**.
+- **Alcance:** Fases 1 a 6 implementadas. API, MCP HTTP, workers, Git, análisis, Jest y persistencia se ejecutan en el backend desplegado; el cliente generativo de Fase 6 es una CLI MCP, no un endpoint LLM del dashboard. No se acredita una llamada pagada real a Anthropic.
+
+Los secretos se configuran en Environment de Render. Las copias locales `.env` están ignoradas por Git; nunca publicar DATABASE_URL ni claves en variables VITE_*.
+
+### Demo en vivo en tres clics
+
+1. En Auditoría, **Cargar Demo Reparación / Subagentes**. Se crea y registra un checkout nuevo con fallo real, rama inicial Dev, parche y SHA-256 calculado en el servidor.
+2. **Ejecutar reparación**. Esperar COMMITTED: diagnóstico en worker, baseline con un fallo y un aprobado, candidato con dos aprobados, hooks y commit en fix/… del checkout de demo.
+3. **Subagentes**. Mostrar las delegaciones diagnostic/verification y su consumo committed. El selector conserva el proyecto de demo; F5 recupera auditoría, pruebas y trazas de PCAI.
+
+Para diagnóstico independiente: **Cargar Demo Diagnóstico Real → Ejecutar diagnóstico**. El resultado DIAGNOSED conserva outcome=diagnosed y traza completed; la sesión DB mantiene status=blocked por el contrato histórico, pues diagnosticar no autoriza un commit. No es un error.
+
+En **Hooks & Guardrails**, ejecutar **Probar ALLOW** y **Probar BLOCK · .env**. Son preflights reales: guardan evidencia y no modifican archivos. Recargar para comprobar persistencia. No se borran registros fallidos anteriores.
+
+La preparación usa POST /api/demo/prepare con cuerpo vacío; no acepta rutas ni comandos del navegador. Está habilitada en Render o con DEVGUARDIAN_ENABLE_DEMO=1 y limitada a 20 checkouts por proceso. Cada repetición usa un proyecto distinto: nunca restaura ni elimina trabajo previo. Los checkouts son efímeros al redesplegar; las auditorías permanecen en PCAI. Para repetir tras reinicio, cargar una nueva demo. La plantilla fixtures/cloud-demo queda fuera del build y de la suite principal; sus dos casos Jest se ejecutan contra la fuente real al reparar.
+
+
 ## Hooks de Backend y Base de Datos
 
 El motor `src/hooks/` conecta guardrails reales al parcheador y al commit mediante `hookManager` opcional, con bloqueo previo a la mutación, aprobación registrada y auditoría consultable. Incluye protección de archivos/secretos, evidencia de pruebas para commits y validación de registros antes de persistir. La configuración se conserva en los logs y el adaptador de persistencia permite conectar una BD desde el backend separado del frontend.
@@ -33,7 +59,9 @@ La demo guarda [éxito con commit](artifacts/subagents/success.json) y [regresi�
 
 DevGuardian es una plataforma para diagnosticar errores de software, generar parches en ramas de reparación y verificar sus resultados mediante pruebas antes de confirmar cambios. Su diseño utiliza **Model Context Protocol (MCP)** para conectar un agente de inteligencia artificial con herramientas locales de análisis de código, ejecución de pruebas y control de versiones, mediante entradas y respuestas estructuradas y validadas.
 
-El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. El backend HTTP y el servidor MCP ya conectan los módulos, hooks, workers y persistencia. El flujo coordinado ejecuta diagnóstico → baseline → parche propuesto por el cliente → verificación → commit o rollback. La Fase 6 añade un cliente generativo asistido con estado determinista sobre MCP; el dashboard y el despliegue siguen pendientes.
+El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para el modelo, ramas `fix/...`, comprobaciones de integridad, comparación de pruebas y commit o rollback por intento. El backend HTTP y el servidor MCP ya conectan los módulos, hooks, workers y persistencia. El flujo coordinado ejecuta diagnóstico → baseline → parche propuesto por el cliente → verificación → commit o rollback. La Fase 6 añade un cliente generativo asistido con estado determinista sobre MCP; el dashboard y los tres servicios están publicados en Render.
+
+El estado de las **43 historias de usuario**, su evidencia y sus bloqueos se mantiene en [`backlog.md`](backlog.md); la UI y los despliegues tienen evidencia cloud; el worker remoto hacia la computadora del usuario y el endurecimiento adicional conservan su estado propio.
 
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
@@ -43,17 +71,17 @@ El ciclo autónomo previsto combina análisis AST y lint, contexto acotado para 
 | Fase 2 | `src/git-controller/` | Completada | 35 |
 | Fase 3 | `src/analyzer/` | Completada | 44 |
 | Fase 4 | `src/test-runner/` | Completada | 43 |
-| Fase 5 + HTTP | `src/mcp/`, `src/server/` | Herramientas MCP por stdio/HTTP y REST implementadas | 28 |
+| Fase 5 + HTTP | `src/mcp/`, `src/server/` | HTTP/MCP y demo aislada | 30 |
 | MCP de compatibilidad | `src/mcp-server/` | Integrado desde origin/main: recurso de análisis y 10 herramientas de dominio | 3 |
 | Fase 6 | `src/agent-client/` | Generación estructurada + ciclo MCP determinista | 28 |
 | Hooks | `src/hooks/` | Implementado | 20 |
 | Subagentes | `src/subagents/` | Implementado | 22 |
 | Persistencia | `src/db/` | Local durable + adaptador PostgreSQL | 32 |
-| **Total implementado** | **Fases 1–6 + HTTP + Hooks + Subagentes + DB** | **10 suites** | **285** |
+| **Total implementado** | **Fases 1–6 + HTTP + Hooks + Subagentes + DB** | **10 suites** | **287** |
 
 **Validación integral del backend:**
 
-- **285 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- **287 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -304,7 +332,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 285 pruebas en diez suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y 287 pruebas en diez suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
 | Iniciar HTTP compilado | `npm start` | Backend en `http://127.0.0.1:3001` por defecto. |
 | Compilar e iniciar HTTP | `npm run dev:server` | Compilación inicial y servidor HTTP; reiniciar para incorporar cambios. |
 | Iniciar MCP stdio compilado | `node dist/mcp/index.js` | Transporte stdio con stdout reservado al protocolo. |
@@ -390,7 +418,7 @@ npm run db:verify
 
 El comando crea datos de demostración, cierra y reabre la conexión y muestra sus IDs y recuperación. Se pueden consultar desde otro proceso con `npm run db:verify -- UUID_DE_LA_AUDITORIA`. Las pruebas de DB comprueban además una reparación real con Jest, auditorías de hooks y delegaciones que permanecen intactas al arrancar otro proceso Node.
 
-**Estado de entrega:** la persistencia local es funcional y el adaptador PostgreSQL fue comprobado también contra un servidor real temporal, con migraciones, operaciones sobre las cinco tablas y recuperación tras reabrir la conexión. Esto no acredita todavía una BD cloud desplegada: falta aprovisionar el proveedor, configurar `DATABASE_URL` como secreto y demostrar escritura/lectura tras reinicio en ese entorno. El CI usa almacenamiento local y cliente PostgreSQL mockeado, sin requerir servidor externo ni secretos. La API REST/MCP ya permite consultar el historial; el dashboard frontend y los despliegues externos siguen pendientes.
+**Estado de entrega:** PostgreSQL PCAI, API y frontend están desplegados en Render. El health verifica postgres conectado y cinco tablas. La UI registra proyectos, ejecuta hooks y recupera el historial; la demo aislada añade diagnóstico, baseline/candidato, delegaciones consumidas y commit real. Las pruebas de CI son independientes de credenciales cloud.
 
 Modelo entidad-relación, límites, seguridad, integración y pasos para Render/Supabase/Neon: [documentación de persistencia](src/db/README.md).
 

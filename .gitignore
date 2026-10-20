@@ -1,4 +1,5 @@
 node_modules/
+.devguardian-demo/
 dist/
 coverage/
 .venv-ci/

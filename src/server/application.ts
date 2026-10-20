@@ -19,6 +19,7 @@ import { DevGuardianCoordinator } from "../subagents/coordinator.js";
 import { TestRunner } from "../test-runner/index.js";
 import { EvaluateHookSchema, HttpError, RegisterProjectSchema, RunAuditSchema } from "./contracts.js";
 import type { ListQuery } from "./contracts.js";
+import { createCloudDemo } from "./cloud-demo.js";
 
 const execute = promisify(execFile);
 const SYSTEM_NAME = "__devguardian_system__";
@@ -47,6 +48,7 @@ export interface BackendOptions {
   readonly runners?: readonly RunnerConfiguration[];
   readonly hookConfig?: Partial<HookConfig>;
   readonly maxRuntimes?: number;
+  readonly demoEnabled?: boolean;
 }
 export class DevGuardianBackend {
   public readonly persistence: AuditPersistenceService;
@@ -56,8 +58,10 @@ export class DevGuardianBackend {
   private readonly runtimes = new Map<string, DomainRuntime>();
   private readonly availability: Promise<{ runner: string; available: boolean }[]>;
   private closed = false;
+  private demoCount = 0;
   private constructor(public readonly repository: DevGuardianRepository, private readonly roots: readonly string[],
-    runners: readonly RunnerConfiguration[], private readonly hookConfig: Partial<HookConfig>, version: string, private readonly maxRuntimes: number) {
+    runners: readonly RunnerConfiguration[], private readonly hookConfig: Partial<HookConfig>, version: string, private readonly maxRuntimes: number,
+    private readonly demoEnabled: boolean) {
     this.persistence = new AuditPersistenceService(repository); this.runners = structuredClone(runners); this.version = version;
     this.availability = Promise.all(runners.map(async (runner) => {
       try { await execute(runner.executable, [...runner.args, "--version"], { timeout: 5000, maxBuffer: 100000, windowsHide: true });
@@ -75,7 +79,8 @@ export class DevGuardianBackend {
     ];
     const metadata: unknown = JSON.parse(await readFile(new URL("../../package.json", import.meta.url), "utf8"));
     const version = typeof metadata === "object" && metadata !== null && "version" in metadata && typeof metadata.version === "string" ? metadata.version : "0.1.0";
-    return new DevGuardianBackend(options.repository, roots, options.runners ?? defaults, structuredClone(options.hookConfig ?? {}), version, options.maxRuntimes ?? 16);
+    return new DevGuardianBackend(options.repository, roots, options.runners ?? defaults, structuredClone(options.hookConfig ?? {}), version, options.maxRuntimes ?? 16,
+      options.demoEnabled ?? (process.env["RENDER"] === "true" || process.env["DEVGUARDIAN_ENABLE_DEMO"] === "1"));
   }
   public async health() {
     let connected = true;
@@ -104,6 +109,20 @@ export class DevGuardianBackend {
       if ((await WorkspacePathGuard.create(top.trim())).root !== root) throw new Error("Not a repository root.");
     } catch { throw new HttpError(422, "Project must identify the root of an existing Git repository."); }
     return this.persistence.registerProject({ ...input, repoPath: root });
+  }
+  public async prepareDemo(raw: unknown) {
+    if (!this.demoEnabled) throw new HttpError(404, "Cloud demo is disabled on this server.");
+    if (typeof raw !== "object" || raw === null || Array.isArray(raw) || Object.keys(raw).length !== 0)
+      throw new HttpError(422, "Demo preparation accepts only an empty object.");
+    const root = this.roots[0]; if (!root) throw new HttpError(503, "No demo workspace is configured.");
+    return this.serialize(root, async () => {
+      if (this.demoCount >= 20) throw new HttpError(429, "Demo capacity reached (20 sessions per server process).");
+      this.demoCount += 1;
+      const demo = await createCloudDemo(root);
+      const project = await this.registerProject({ name: `Demo Render ${new Date().toISOString()}`, repoPath: demo.repoPath,
+        defaultBranch: "Dev", runnerType: "jest" });
+      return { project, repair: demo.repair };
+    });
   }
   public async audits(projectId?: string) {
     const projects = projectId ? [await this.project(projectId)] : (await this.repository.listProjects()).filter((project) => this.allowed(project.repoPath));
