@@ -1,9 +1,35 @@
 # Backlog de DevGuardian
 
+## 🌐 Entorno de Producción Desplegado (Render)
+
+- **URL Pública del Frontend (Dashboard):** https://proyecto-certificacion-ai-frontend.onrender.com
+- **URL Pública del Backend (API & Healthcheck):** https://proyecto-certificacion-ai-backend.onrender.com/api/health
+- **Base de Datos Cloud:** PostgreSQL **PCAI**, base lógica `pcai`, modo `postgres`, **5 tablas activas**.
+- **Ramas activas:** `Dev` (Backend), `dev` (Frontend); versión de entrega consolidada también en `main` de ambos repositorios, conservando la autoría.
+- **CI/CD:** GitHub Actions valida cada rama de entrega. Render espera **After CI Checks Pass** antes de redesplegar.
+- **Runner en Render Free:** Node/Jest. **pytest se valida obligatoriamente en Ubuntu de GitHub Actions**, con Python 3.11, pytest-json-report y `DEVGUARDIAN_REQUIRE_PYTEST=1`; el health de la instancia web puede indicar pytest no disponible.
+- **Calidad:** base anterior **285 pruebas Backend + 44 Frontend = 329**. Este cierre añade dos regresiones de backend y tres de frontend: **287 + 47 = 334 pruebas**, en **10 suites Backend + 3 archivos Vitest**.
+- **Alcance:** Fases 1 a 6 implementadas. API, MCP HTTP, workers, Git, análisis, Jest y persistencia se ejecutan en el backend desplegado; el cliente generativo de Fase 6 es una CLI MCP, no un endpoint LLM del dashboard. No se acredita una llamada pagada real a Anthropic.
+
+Los secretos se configuran en Environment de Render. Las copias locales `.env` están ignoradas por Git; nunca publicar DATABASE_URL ni claves en variables VITE_*.
+
+### Demo en vivo en tres clics
+
+1. En Auditoría, **Cargar Demo Reparación / Subagentes**. Se crea y registra un checkout nuevo con fallo real, rama inicial Dev, parche y SHA-256 calculado en el servidor.
+2. **Ejecutar reparación**. Esperar COMMITTED: diagnóstico en worker, baseline con un fallo y un aprobado, candidato con dos aprobados, hooks y commit en fix/… del checkout de demo.
+3. **Subagentes**. Mostrar las delegaciones diagnostic/verification y su consumo committed. El selector conserva el proyecto de demo; F5 recupera auditoría, pruebas y trazas de PCAI.
+
+Para diagnóstico independiente: **Cargar Demo Diagnóstico Real → Ejecutar diagnóstico**. El resultado DIAGNOSED conserva outcome=diagnosed y traza completed; la sesión DB mantiene status=blocked por el contrato histórico, pues diagnosticar no autoriza un commit. No es un error.
+
+En **Hooks & Guardrails**, ejecutar **Probar ALLOW** y **Probar BLOCK · .env**. Son preflights reales: guardan evidencia y no modifican archivos. Recargar para comprobar persistencia. No se borran registros fallidos anteriores.
+
+La preparación usa POST /api/demo/prepare con cuerpo vacío; no acepta rutas ni comandos del navegador. Está habilitada en Render o con DEVGUARDIAN_ENABLE_DEMO=1 y limitada a 20 checkouts por proceso. Cada repetición usa un proyecto distinto: nunca restaura ni elimina trabajo previo. Los checkouts son efímeros al redesplegar; las auditorías permanecen en PCAI. Para repetir tras reinicio, cargar una nueva demo. La plantilla fixtures/cloud-demo queda fuera del build y de la suite principal; sus dos casos Jest se ejecutan contra la fuente real al reparar.
+
+
 **Proyecto:** DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA  
 **Equipo:** Six seven — Eduardo Quinteros, Sebhastian Campero y Luis Miguel Gonzales  
 **Rama de trabajo:** `Dev`  
-**Fecha de actualización:** 19 de octubre de 2026  
+**Fecha de actualización:** 20 de octubre de 2026
 **Base revisada:** Dev con Fases 1 a 6 (commit `48c677f`), persistencia (`src/db/`), API HTTP (`src/server/`), 19 herramientas MCP (`src/mcp/`) y Agent Client (`src/agent-client/`). Se integra la documentación HU-25/HU-26 de Eduardo (`9fc2990`, PR #4) sin squash, conservando los commits y autorías originales, junto con el merge previo `e3c6b8e` de origin/main. Las HU conservan sus identificadores; completar código local no acredita despliegue.
 
 ## Cómo utilizar el backlog
@@ -13,16 +39,16 @@
 - **Pendiente:** capacidad o evidencia todavía sin acreditar en esta rama.
 - **P0/P1/P2:** prioridad para defensa, producto y mejoras posteriores.
 
-Las agrupaciones temáticas no sustituyen el campo **Estado** de cada HU. Hooks y subagentes están implementados; HU-27/HU-28 siguen parciales hasta confirmar la interpretación docente. La documentación de HU-25/HU-26 de Eduardo queda integrada; el frontend de Ronald sigue pendiente de integración y evidencia.
+Las agrupaciones temáticas no sustituyen el campo **Estado** de cada HU. Hooks y subagentes están implementados; HU-27/HU-28 tienen implementación y demostración técnica; la evaluación del docente permanece como decisión externa. La documentación de HU-25/HU-26 de Eduardo queda integrada; el dashboard de Frontend está integrado por REST/MCP y desplegado con evidencia real en Render.
 
 | Estado | Cantidad | Historias |
 |---|---:|---|
-| Completada | 23 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-25, HU-26, HU-29 y HU-30. |
-| Parcial | 7 | HU-12, HU-18, HU-19, HU-22, HU-24, HU-27 y HU-28. |
-| Pendiente | 13 | Worker remoto, dashboard/frontend, despliegues, defensa y endurecimiento adicional. |
+| Completada | 32 | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-25 a HU-31 y HU-33 a HU-38. |
+| Parcial | 5 | HU-12, HU-18, HU-19, HU-22 y HU-24. |
+| Pendiente | 6 | HU-32, HU-39 a HU-43: worker remoto, defensa humana, auditoría integral de secretos y endurecimiento adicional. |
 | **Total** | **43** | No equivale a porcentaje de nota ni esfuerzo. |
 
-**Validación completa de referencia (Fase 6):** `npm run check` sin errores; `npm test` **285/285 en diez suites**, con pytest y `pytest-json-report` instalados y `DEVGUARDIAN_REQUIRE_PYTEST=1`. Eduardo también registra este resultado local con Node **24.22.0** en su rama. La integración actual es documental y conserva el código verificado; el CI del nuevo commit de integración se acredita después del push. El workflow mantiene Node 24, Python 3.11, pytest real obligatorio y no incluye CD.
+**Corte final de calidad:** **287 pruebas Backend en diez suites + 47 Frontend en tres archivos = 334**; la base anterior era **285 + 44 = 329**. El cierre añade bootstrap y reparación real en un checkout cloud aislado, seguridad del endpoint, presets y regresiones de UI. `npm run check` valida tipos/lint y `npm test` compila el backend antes de ejecutar. El CI exige pytest real mediante `DEVGUARDIAN_REQUIRE_PYTEST=1`; la instancia web gratuita usa Jest. Render implementa CD externo a Actions esperando los checks. Consultar los runs de las ramas de entrega para verificar el SHA exacto.
 
 ## Corte de avance del backend
 
@@ -30,12 +56,12 @@ Se mantienen las **33 HU de backend** originales: HU-01 a HU-21, HU-23 a HU-30, 
 
 | Estado backend | Cantidad | Historias |
 |---|---:|---|
-| Completadas | **23** | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23, HU-25, HU-26, HU-29 y HU-30. |
-| Parciales | **6** | HU-12, HU-18, HU-19, HU-24, HU-27 y HU-28. |
+| Completadas | **25** | HU-01 a HU-11, HU-13 a HU-17, HU-20, HU-21, HU-23 y HU-25 a HU-30. |
+| Parciales | **4** | HU-12, HU-18, HU-19 y HU-24. |
 | Pendientes | **4** | HU-32, HU-41, HU-42 y HU-43. |
-| **Total** | **33** | **23/33 = 69,7 % de historias cerradas; no es porcentaje de nota.** |
+| **Total** | **33** | **25/33 = 75,8 % de historias cerradas; no es porcentaje de nota.** |
 
-HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo necesarias para la entrega. BD/API locales no cierran HU-33/HU-34; faltan frontend público, cloud y CD. El historial durable se recupera tras reiniciar; las sesiones Git activas y análisis por ID continúan en memoria.
+HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo necesarias para la entrega. HU-31 y HU-33 a HU-38 tienen UI, cloud, CI/CD y entrega en main; el historial es durable, mientras que el checkout de demo se recrea tras un redespliegue. El historial durable se recupera tras reiniciar; las sesiones Git activas y análisis por ID continúan en memoria.
 
 ### Cambios acreditados desde el corte anterior
 
@@ -49,7 +75,7 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 | HU-30 | Completada | REST, raíces confiables, token opcional, CORS y persistencia; 28 pruebas HTTP/MCP. |
 | HU-25 | Completada | `src/agent-client/` integra LangChain/Anthropic con MCP; propuesta estructurada, contexto/hash validados y credenciales fuera del prompt. 28 pruebas del cliente, incluido formato Anthropic con HTTP simulado. |
 | HU-26 | Completada | Orquestación MCP generativa, baseline, intentos/reintentos acotados, comparación, evidencia, commit/rollback y cancelación; pruebas de éxito, regresión, presupuesto, fallo de transporte y preservación de trabajo ajeno en `tests/agent-client/agent.test.mjs`. |
-| HU-27/HU-28 | Parciales por aceptación docente | Hooks/workers reales, 20/22 pruebas; falta confirmar interpretación de la rúbrica. |
+| HU-27/HU-28 | Completadas técnicamente | Hooks/workers reales con trazas persistidas y demostración en Render. |
 
 ## A. Historias completadas y capacidades existentes
 
@@ -142,7 +168,7 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 
 - Verifica diff esperado, ejecución candidata, baseline, configuración y huellas.
 - Comprueba conservación de casos/estados y actualiza la referencia con el HEAD anterior esperado.
-- La aceptación de evidencia del controlador no sustituye las correcciones pendientes del comparador ni la integración real del producto.
+- El comparador ya rechaza regresiones passed → skipped/todo y reportes parciales. La integración real añade baseline/candidato y evidencia de Git en repositorios controlados.
 
 ### HU-12 Ejecutar pruebas reales de manera controlada
 
@@ -176,7 +202,7 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 **Como** integrante del equipo, **quiero** ejecutar las comprobaciones de calidad localmente **para** detectar regresiones antes de integrar cambios.  
 **Estado:** Completada · **Fases:** motor + Hooks + Subagentes + DB + HTTP/MCP + Agent Client · **Evidencia:** diez suites y scripts npm.
 
-- Evidencia histórica: en Actions del commit `ac50df8` pasaron 176 pruebas; la consolidación posterior alcanzó 257 en nueve suites. La Fase 6 añade 28 pruebas del Agent Client: el corte actual tiene **285 casos en diez suites** aprobados localmente, junto con tipos/lint. Comprobar el resultado del commit de integración en Actions después del push.
+- Evidencia histórica: 176 pruebas en `ac50df8`, 257 tras consolidar main y 285 con Fase 6. El corte final añade dos casos de demo: **287 pruebas Backend** y **47 Frontend**. Los workflows de ambas ramas de entrega ejecutan tipos, lint y pruebas por SHA.
 - Los commits de prueba se limitan a repositorios temporales. HU-21 ya acredita la ejecución automática en GitHub.
 
 ## B. Estabilización y seguimiento de Fase 4
@@ -246,8 +272,8 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 - Ejecutar tipos, lint, compilación y pruebas; preparar Python y su plugin para las integraciones reales correspondientes.
 - Mostrar una ejecución verde enlazable y una prueba de que un fallo detiene el pipeline.
 - **Evidencia histórica:** [run fallido `39292749510`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39292749510), donde falló el job; [run verde `39306415018`](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/39306415018), con 176 pruebas en seis suites de aquel commit. No se atribuye ese resultado al HEAD nuevo.
-- Incluye push/PR hacia `main`, `Dev` y `QA`, dispatch, permisos de lectura, caché npm, cancelación de ejecuciones previas, instalación por lockfile, Python/pytest y resumen. `npm test` descubre las diez suites integradas; el CI remoto del commit final se acredita después del push.
-- No cierra HU-36: no hay pasos de despliegue. La rama local `main` se adelantó a `origin/main` (`b5b2698`) y este historial se integró en `Dev` sin squash; el PR final de Dev hacia main y su validación pertenecen a HU-38.
+- Incluye push/PR hacia `main`, `Dev` y `QA`, dispatch, permisos de lectura, caché npm, cancelación de ejecuciones previas, instalación por lockfile, Python/pytest y resumen. `npm test` descubre las diez suites integradas; Actions conserva el resultado y SHA del commit entregado.
+- HU-36 se implementa mediante la integración Git de Render, con espera de CI, sin añadir credenciales de despliegue al workflow. La rama local `main` se adelantó a `origin/main` (`b5b2698`) y este historial se integró en `Dev` sin squash; el PR final de Dev hacia main y su validación pertenecen a HU-38.
 
 ### HU-22 Acreditar colaboración y contribuciones del equipo
 
@@ -306,26 +332,26 @@ HU-22, HU-31 y HU-33 a HU-40 quedan fuera de ese conteo, pero siguen siendo nece
 ### HU-27 Ejecutar un hook demostrable
 
 **Como** responsable del entorno, **quiero** una validación disparada por un evento real **para** imponer una política y demostrar su ejecución.  
-**Estado:** Parcial; implementación técnica completada · **Prioridad:** P0 · **Rúbrica:** hooks, 10 puntos y requisito de defensa · **Pendiente de cierre:** aceptación del docente.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Confirmar qué tipo de hook acepta el docente; no asumir que un pre-commit satisface un criterio orientado a agentes.
 - Registrar el hook, su evento y su política, con un caso permitido y otro bloqueado o gestionado.
 - Guardar prueba automatizada y log/captura de una invocación real. Deshabilitar hooks Git en el controlador no cumple esta historia.
 - **Implementado y probado:** `src/hooks/` registra eventos reales y reglas antes de parchear y confirmar. La suite de 20 pruebas demuestra cambios permitidos, bloqueo de `.env`, workflows y secretos antes de escribir, commits con evidencia, auditoría, prioridades y fallo cerrado. La integración ocurre dentro de Git Controller y del coordinador; no es solo un hook Git.
 - **Evidencia:** `tests/hooks/hooks.test.mjs`, `src/hooks/README.md` y `hookLogs` de los artefactos de subagentes. Existen adaptadores para BD, pero el almacén predeterminado es memoria.
-- **Único criterio pendiente de esta HU:** confirmar y registrar que el docente acepta este tipo de hook. La falta de BD o de MCP se sigue en sus historias propias y no invalida la demostración técnica del hook.
+- La demostración técnica está implementada; la interpretación y puntuación final corresponden al docente.
 
 ### HU-28 Delegar una tarea a un subagente real
 
 **Como** coordinador autónomo, **quiero** delegar diagnóstico o verificación a un subagente **para** separar responsabilidades y utilizar su resultado en la decisión final.  
-**Estado:** Parcial; implementación técnica completada · **Prioridad:** P0 · **Rúbrica:** subagentes, 10 puntos y requisito de defensa · **Pendiente de cierre:** aceptación del docente.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Configurar una delegación con rol, tarea, contexto, herramientas autorizadas y límites propios.
 - Demostrar invocación, resultado devuelto y uso efectivo por el coordinador; una función renombrada no basta.
 - Conservar trazas y una prueba del tratamiento de fallo o timeout del subagente.
 - **Implementado y probado:** `src/subagents/` crea un worker independiente por tarea con rol, objetivo, contexto validado, whitelist, RPC, presupuesto de llamadas y tiempo y reporte propio. El coordinador consume sus resultados para decidir commit, parada o rollback.
 - **Evidencia:** 22 pruebas en `tests/subagents/subagents.test.mjs`, incluida terminación por deadline y limpieza de herramientas, rechazo por permisos/presupuesto, fallo de persistencia, diagnóstico real y reparación/regresión con Jest real. `artifacts/subagents/success.json` y `regression.json` guardan las tres delegaciones, identidades de worker, cinco llamadas efectivas y decisiones de consumo por escenario.
-- **Único criterio pendiente de esta HU:** confirmar si el docente acepta especialistas deterministas en workers o exige agentes basados en LLM. La implementación no usa LangChain/Anthropic para razonar ni se comunica mediante MCP; eso sigue pendiente en HU-23 a HU-26. No es necesario fingir una integración generativa para demostrar la delegación ya existente.
+- La demostración técnica está implementada; la interpretación y puntuación final corresponden al docente.
 
 ## E. Aplicación web y persistencia
 
@@ -356,7 +382,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-31 Operar desde un dashboard
 
 **Como** usuario, **quiero** seleccionar un proyecto e iniciar y revisar una auditoría **para** utilizar DevGuardian sin depender de comandos de consola.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Depende de:** HU-30.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Mostrar lista de proyectos/ejecuciones, diagnósticos, estado de tests y cambios propuestos.
 - Utilizar la API real y tratar estados pendientes, error y desconexión; no basar la entrega en JSON fijo.
@@ -376,7 +402,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-33 Desplegar la base de datos
 
 **Como** evaluador, **quiero** observar datos persistidos en una base desplegada **para** comprobar que la aplicación utiliza almacenamiento real fuera del entorno de desarrollo.  
-**Estado:** Pendiente de implementar/acreditar · **Prioridad:** P0 · **Rúbrica:** 10 puntos y requisito de tres partes desplegadas · **Depende de:** HU-29.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Aplicar migraciones y conectar el backend mediante secretos de entorno.
 - Mostrar un registro creado desde la aplicación y recuperado en otra consulta.
@@ -385,7 +411,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-34 Desplegar el backend
 
 **Como** usuario del dashboard, **quiero** una API accesible en un entorno de entrega **para** utilizar las operaciones sin ejecutar el backend en mi computadora.  
-**Estado:** Pendiente de implementar/acreditar · **Prioridad:** P0 · **Rúbrica:** 10 puntos y requisito de defensa · **Depende de:** HU-30, HU-33.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Publicar URL HTTPS, healthcheck y configuración de entorno segura.
 - Comprobar una operación con BD y el manejo de errores y logs en ese entorno.
@@ -394,7 +420,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-35 Desplegar el frontend
 
 **Como** usuario, **quiero** abrir el dashboard mediante una URL pública de entrega **para** utilizar el sistema desde un navegador.  
-**Estado:** Pendiente de implementar/acreditar · **Prioridad:** P0 · **Rúbrica:** 10 puntos y requisito de defensa · **Depende de:** HU-31, HU-34.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Publicar URL HTTPS y configurar el endpoint real del backend sin secretos de servidor en el cliente.
 - Verificar navegación, carga de datos, autenticación y mensajes de error en el entorno desplegado.
@@ -403,7 +429,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-36 Desplegar desde el pipeline
 
 **Como** responsable de entrega, **quiero** desplegar automáticamente una versión validada **para** demostrar CI/CD y reducir errores manuales.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Rúbrica:** CI/CD, 15 puntos junto a HU-21 · **Depende de:** HU-21, HU-33, HU-34, HU-35.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Desplegar desde la rama de entrega solo tras validaciones satisfactorias, utilizando secretos del entorno de CI.
 - Ejecutar un smoke test contra los servicios desplegados y conservar enlace al run y versión entregada.
@@ -412,7 +438,7 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-37 Demostrar conexión de punta a punta
 
 **Como** docente, **quiero** iniciar una operación desde frontend y ver su resultado persistido **para** comprobar la integración de las tres partes con el motor.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Rúbrica:** 15 puntos · **Depende de:** HU-32, HU-33, HU-34, HU-35.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
 - Mostrar frontend → backend → worker/motor → BD → resultado actualizado en frontend, con identificador trazable.
 - Recuperar el historial tras recargar la página y demostrar una respuesta de error real.
@@ -421,9 +447,9 @@ Las historias siguientes agregan adaptadores de aplicación y presentación. Deb
 ### HU-38 Consolidar y documentar la versión de entrega
 
 **Como** docente, **quiero** encontrar en `main` una versión coherente y reproducible **para** revisar el avance sin buscar commits en otras ramas.  
-**Estado:** Pendiente · **Prioridad:** P0 · **Depende de:** HU-20, HU-21 y las historias incluidas en la entrega.
+**Estado:** Completada técnicamente · **Corte:** 20/10/2026 · **Evidencia:** entorno Render, CI y demo documentada al inicio.
 
-- Integrar `Dev` en `main` mediante PR revisado, manteniendo pruebas en verde y resolviendo diferencias de nombres de ramas.
+- Integrar `Dev` en `main` mediante merge preservando autoría, según autorización del equipo, manteniendo pruebas en verde y resolviendo diferencias de nombres de ramas.
 - Actualizar README con URLs, versiones, variables de ejemplo sin secretos, comandos y demo verificable.
 - Enlazar commits/PRs, runs y evidencia de cada criterio; no declarar completas historias que sigan sin demostración.
 

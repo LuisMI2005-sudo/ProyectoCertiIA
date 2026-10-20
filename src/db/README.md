@@ -1,5 +1,31 @@
 # Persistencia de DevGuardian
 
+## 🌐 Entorno de Producción Desplegado (Render)
+
+- **URL Pública del Frontend (Dashboard):** https://proyecto-certificacion-ai-frontend.onrender.com
+- **URL Pública del Backend (API & Healthcheck):** https://proyecto-certificacion-ai-backend.onrender.com/api/health
+- **Base de Datos Cloud:** PostgreSQL **PCAI**, base lógica `pcai`, modo `postgres`, **5 tablas activas**.
+- **Ramas activas:** `Dev` (Backend), `dev` (Frontend); versión de entrega consolidada también en `main` de ambos repositorios, conservando la autoría.
+- **CI/CD:** GitHub Actions valida cada rama de entrega. Render espera **After CI Checks Pass** antes de redesplegar.
+- **Runner en Render Free:** Node/Jest. **pytest se valida obligatoriamente en Ubuntu de GitHub Actions**, con Python 3.11, pytest-json-report y `DEVGUARDIAN_REQUIRE_PYTEST=1`; el health de la instancia web puede indicar pytest no disponible.
+- **Calidad:** base anterior **285 pruebas Backend + 44 Frontend = 329**. Este cierre añade dos regresiones de backend y tres de frontend: **287 + 47 = 334 pruebas**, en **10 suites Backend + 3 archivos Vitest**.
+- **Alcance:** Fases 1 a 6 implementadas. API, MCP HTTP, workers, Git, análisis, Jest y persistencia se ejecutan en el backend desplegado; el cliente generativo de Fase 6 es una CLI MCP, no un endpoint LLM del dashboard. No se acredita una llamada pagada real a Anthropic.
+
+Los secretos se configuran en Environment de Render. Las copias locales `.env` están ignoradas por Git; nunca publicar DATABASE_URL ni claves en variables VITE_*.
+
+### Demo en vivo en tres clics
+
+1. En Auditoría, **Cargar Demo Reparación / Subagentes**. Se crea y registra un checkout nuevo con fallo real, rama inicial Dev, parche y SHA-256 calculado en el servidor.
+2. **Ejecutar reparación**. Esperar COMMITTED: diagnóstico en worker, baseline con un fallo y un aprobado, candidato con dos aprobados, hooks y commit en fix/… del checkout de demo.
+3. **Subagentes**. Mostrar las delegaciones diagnostic/verification y su consumo committed. El selector conserva el proyecto de demo; F5 recupera auditoría, pruebas y trazas de PCAI.
+
+Para diagnóstico independiente: **Cargar Demo Diagnóstico Real → Ejecutar diagnóstico**. El resultado DIAGNOSED conserva outcome=diagnosed y traza completed; la sesión DB mantiene status=blocked por el contrato histórico, pues diagnosticar no autoriza un commit. No es un error.
+
+En **Hooks & Guardrails**, ejecutar **Probar ALLOW** y **Probar BLOCK · .env**. Son preflights reales: guardan evidencia y no modifican archivos. Recargar para comprobar persistencia. No se borran registros fallidos anteriores.
+
+La preparación usa POST /api/demo/prepare con cuerpo vacío; no acepta rutas ni comandos del navegador. Está habilitada en Render o con DEVGUARDIAN_ENABLE_DEMO=1 y limitada a 20 checkouts por proceso. Cada repetición usa un proyecto distinto: nunca restaura ni elimina trabajo previo. Los checkouts son efímeros al redesplegar; las auditorías permanecen en PCAI. Para repetir tras reinicio, cargar una nueva demo. La plantilla fixtures/cloud-demo queda fuera del build y de la suite principal; sus dos casos Jest se ejecutan contra la fuente real al reparar.
+
+
 `createDatabaseRepository()` ofrece el mismo contrato `DevGuardianRepository` con JSON local durable o PostgreSQL. `AuditPersistenceService` conecta esa persistencia al coordinador real, hooks y delegaciones. La [API HTTP](../server/README.md) y las consultas de `src/mcp/` ya exponen proyectos, auditorías, hooks y delegaciones al cliente; la conservación también puede verificarse sin HTTP.
 
 ## Modelo de datos
@@ -104,7 +130,7 @@ Este comando crea un proyecto y una auditoría de demostración explícitamente 
 npm run db:verify -- UUID_DE_LA_AUDITORIA
 ```
 
-Para comprobar PostgreSQL en un entorno configurado, ejecutar el mismo comando con `DATABASE_URL` y modo `postgres`. Una URL declarada o un mock no acreditan despliegue: para los 10 puntos de BD desplegada, aprovisionar el servicio cloud, ejecutar esta verificación desde el backend conectado, reiniciar y conservar IDs y evidencia de la segunda consulta sin exponer credenciales. La API ya recupera el historial en `GET /api/audits/:id`, comprobado tras reiniciar en `tests/server/server.test.mjs`; el frontend y el aprovisionamiento cloud siguen pendientes.
+PostgreSQL PCAI está desplegado en Render y el backend ejecuta las migraciones al arrancar. La evidencia cloud se consulta en /api/health y en el historial del dashboard: proyectos, auditorías, runs, hooks y delegaciones se guardan en las cinco tablas. F5 recupera los mismos IDs desde la API. El CI permanece independiente de esa BD y de sus secretos.
 
 ## Pruebas
 

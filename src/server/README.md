@@ -31,7 +31,7 @@ Node no lee `.env` automáticamente. Configurar variables en la terminal o usar 
 
 Los proyectos deben identificar la **raíz canónica de un repositorio Git existente**, dentro de una raíz confiable. El arranque programático admite varias `workspaceRoots` y runners de confianza; sus comandos y ejecutables no se pueden establecer desde HTTP/MCP. Los parches exigen el árbol limpio y la identidad Git configurada en el repositorio objetivo.
 
-CORS limita orígenes del navegador; la autenticación se activa mediante el token. Para uso fuera del equipo deben configurarse explícitamente acceso, origen y alojamiento. Esta entrega no realiza ningún despliegue externo ni requiere claves de Anthropic.
+CORS limita orígenes del navegador; la autenticación se activa mediante el token. Para uso fuera del equipo deben configurarse explícitamente acceso, origen y alojamiento. El backend está desplegado en Render; el flujo REST no requiere claves de Anthropic. Ver URLs y demo en el README raíz.
 
 ## Contrato REST
 
@@ -245,3 +245,7 @@ npm test
 ```
 
 La suite HTTP/MCP añade **28 pruebas**. Total del proyecto: **257 pruebas en 9 suites** con pytest y su plugin instalados; en CI `DEVGUARDIAN_REQUIRE_PYTEST=1` hace obligatoria esa integración. El workflow existente descubre automáticamente la nueva suite y no incluye despliegue. La ejecución remota en Actions solo se acredita cuando los cambios se suban y GitHub termine el run.
+
+## Demo cloud controlada
+
+POST `/api/demo/prepare` acepta solo `{}` y devuelve `{ project, repair }`. Se habilita en Render (`RENDER=true`) o con `DEVGUARDIAN_ENABLE_DEMO=1`. Crea un checkout Git independiente bajo `.devguardian-demo/`, con identidad propia y dos pruebas Jest reales, y lo registra en la BD. Está serializado y limitado a 20 sesiones por proceso; no resetea ni elimina checkouts previos. Usa la misma autenticación, límites y CORS de las demás rutas. Las fuentes defectuosas están fuera de `src/` y no rompen el build. Los comandos/rutas de la demo están fijados en el servidor. El diagnóstico exitoso conserva el estado DB `blocked` por el contrato existente y `outcome=diagnosed`; el frontend lo presenta como DIAGNOSED.
