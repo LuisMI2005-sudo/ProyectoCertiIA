@@ -1,4 +1,5 @@
 node_modules/
+.devguardian-imports/
 .devguardian/
 .devguardian-demo/
 dist/

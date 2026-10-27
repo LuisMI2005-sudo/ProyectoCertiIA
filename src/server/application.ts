@@ -51,6 +51,10 @@ export interface BackendOptions {
   readonly demoEnabled?: boolean;
 }
 export class DevGuardianBackend {
+  public get importWorkspaceRoot(): string { return this.roots[0] ?? process.cwd(); }
+  private imported(project: ProjectRecord): boolean {
+    return this.roots.some((root) => path.relative(root, project.repoPath).split(path.sep)[0] === ".devguardian-imports");
+  }
   public readonly persistence: AuditPersistenceService;
   public readonly version: string;
   public readonly runners: readonly RunnerConfiguration[];
@@ -161,6 +165,7 @@ export class DevGuardianBackend {
   }
   public async runAudit(raw: unknown) {
     const input = parseContract(RunAuditSchema, raw); const project = await this.project(input.projectId);
+    if (input.mode === "repair" && this.imported(project)) throw new HttpError(403, "Los repositorios importados solo permiten análisis estático hasta disponer de un sandbox de ejecución.");
     await this.assertWorkspace(project);
     return this.serialize(project.repoPath, async () => {
       if (input.mode === "repair") {
@@ -226,6 +231,7 @@ export class DevGuardianBackend {
         const hooks = createHookManager(this.hookConfig, new DatabaseHookPersistenceAdapter(this.repository, audit.id));
         hooks.register({ id: "mcp-context-policy", name: "MCP context policy", events: ["pre:tool_call"], execute: () => {
           if (projectId !== undefined && !resolved?.ok) return { decision: "block", reason: "Project is unavailable or outside the allowed roots." };
+          if (this.imported(project) && name === "run_tests") return { decision: "block", reason: "Las pruebas de repositorios importados requieren un sandbox de ejecución; solo está habilitado el análisis estático." };
           const args = typeof raw === "object" && raw !== null ? raw as Record<string, unknown> : {};
           const paths = [args["path"], ...(Array.isArray(args["paths"]) ? args["paths"] : [])];
           if (paths.some((value) => typeof value === "string" && /^\.env(?:\.|$)/iu.test(path.basename(value.replaceAll("\\", "/"))))) {

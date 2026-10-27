@@ -1,5 +1,7 @@
 # DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA
 
+La importación por enlace público de GitHub, con progreso SSE, validación de compatibilidad y transición a Auditoría, se documenta en [Importación de proyectos](src/server/PROJECT_IMPORT.md). Esta funcionalidad prepara análisis estático sin instalar dependencias ni ejecutar código de terceros.
+
 ## Integración con el asistente de IA del entorno de desarrollo
 
 La adaptación para Codex se registra en [`.codex/hooks.json`](.codex/hooks.json), con cuatro perfiles en [`.codex/agents/`](.codex/agents/). Protege ediciones y comandos del asistente, verifica cambios TypeScript y audita eventos de herramientas/subagentes mediante [`src/ide-integration/`](src/ide-integration/README.md). Incluye 35 pruebas específicas adicionales al corte publicado de 287 pruebas backend. Las cifras y evidencia CI del despliegue documentado más abajo corresponden a ese corte anterior.

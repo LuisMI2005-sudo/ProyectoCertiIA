@@ -9,6 +9,7 @@ import { DevGuardianError, failure } from "../shared/errors.js";
 import { DevGuardianBackend } from "./application.js";
 import type { BackendOptions } from "./application.js";
 import { HttpError, ListQuerySchema } from "./contracts.js";
+import { ProjectImporter } from "./project-import.js";
 
 export interface RequestLog { readonly requestId: string; readonly method: string; readonly path: string; readonly status: number; readonly durationMs: number }
 export interface HttpServerOptions extends Partial<BackendOptions> {
@@ -70,6 +71,7 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
   catch (error: unknown) { await repository.close(); throw error; }
   const origins = (options.allowedOrigin ?? process.env["ALLOWED_ORIGIN"] ?? process.env["CORS_ORIGIN"] ?? "*").split(",").map((value) => value.trim());
   const token = options.apiToken ?? process.env["DEVGUARDIAN_API_TOKEN"];
+  const importer = new ProjectImporter(backend.importWorkspaceRoot, (raw) => backend.registerProject(raw));
   let active = 0;
   const server = createServer((request, response) => {
     const requestId = randomUUID(), started = performance.now();
@@ -105,6 +107,7 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
         };
         if (health && method === "GET") { const data = await backend.health(); json(response, data.database.connected ? 200 : 503, { ok: data.database.connected, data }); return; }
         if (pathname === "/api/projects" && method === "GET") { json(response, 200, { ok: true, data: await backend.projects() }); return; }
+        if (pathname === "/api/projects/import" && method === "POST") { await importer.stream(await readJson(request, maxBodyBytes), response); return; }
         if (pathname === "/api/projects" && method === "POST") { json(response, 201, { ok: true, data: await backend.registerProject(await readJson(request, maxBodyBytes)) }); return; }
         if (pathname === "/api/demo/prepare" && method === "POST") { json(response, 201, { ok: true, data: await backend.prepareDemo(await readJson(request, maxBodyBytes)) }); return; }
         if (pathname === "/api/audits" && method === "GET") { json(response, 200, { ok: true, data: await backend.auditDetails(query()) }); return; }
@@ -125,9 +128,9 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
           if (!request.headers.accept || request.headers.accept === "*/*") request.headers.accept = "application/json, text/event-stream";
           await handleMcpHttp(backend, request, response, body); return;
         }
-        const known = health || /^\/api\/(?:projects|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
+        const known = health || /^\/api\/(?:projects(?:\/import)?|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
         if (known) response.setHeader("Allow", pathname === "/api/projects" ? "GET, POST, OPTIONS"
-          : ["/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) ? "POST, OPTIONS" : "GET, OPTIONS");
+          : ["/api/projects/import", "/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) ? "POST, OPTIONS" : "GET, OPTIONS");
         throw new HttpError(known ? 405 : 404, known ? "Method not allowed." : "Endpoint not found.");
       } catch (error: unknown) {
         const status = statusFor(error);
