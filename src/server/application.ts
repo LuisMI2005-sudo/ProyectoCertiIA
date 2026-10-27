@@ -168,7 +168,14 @@ export class DevGuardianBackend {
   public async runAudit(raw: unknown) {
     const input = parseContract(RunAuditSchema, raw); const project = await this.project(input.projectId);
     if (input.mode === "repair" && this.imported(project)) throw new HttpError(403, "Los repositorios importados solo permiten análisis estático hasta disponer de un sandbox de ejecución.");
-    await this.assertWorkspace(project);
+    try { await this.assertWorkspace(project); }
+    catch (error: unknown) {
+      // This preflight runs before any audit/patch: a missing workspace is a
+      // definitive rejection, not an ambiguous failure after a Git mutation.
+      if (error instanceof Error && "code" in error && error.code === ErrorCode.FILE_SYSTEM_ERROR)
+        throw new HttpError(409, error.message, ErrorCode.FILE_SYSTEM_ERROR);
+      throw error;
+    }
     return this.serialize(project.repoPath, async () => {
       if (input.mode === "repair") {
         const result = await this.persistence.repairProject(project.id, input.repair, { runners: this.runners, hookConfig: this.hookConfig });

@@ -43,6 +43,7 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "modulePathIgnorePatterns": ["<rootDir>/.devguardian-imports/", "<rootDir>/.devguardian-demo/"],
     "testMatch": [
       "<rootDir>/tests/**/*.test.mjs"
     ],
