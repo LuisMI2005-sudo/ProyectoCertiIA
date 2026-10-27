@@ -20,6 +20,7 @@ import { TestRunner } from "../test-runner/index.js";
 import { EvaluateHookSchema, HttpError, RegisterProjectSchema, RunAuditSchema } from "./contracts.js";
 import type { ListQuery } from "./contracts.js";
 import { createCloudDemo } from "./cloud-demo.js";
+import { listProjectFiles } from "./project-files.js";
 
 const execute = promisify(execFile);
 const SYSTEM_NAME = "__devguardian_system__";
@@ -98,6 +99,7 @@ export class DevGuardianBackend {
   public async projects(): Promise<ProjectRecord[]> {
     return (await this.repository.listProjects()).filter((project) => project.name !== SYSTEM_NAME && this.allowed(project.repoPath));
   }
+  public async projectFiles(id: string) { return listProjectFiles((await this.project(id)).repoPath); }
   public async project(id: string): Promise<ProjectRecord> {
     const project = await this.repository.getProject(parseContract(IdentifierSchema, id));
     if (!project || !this.allowed(project.repoPath)) throw new HttpError(404, "Project not found.");
@@ -179,7 +181,7 @@ export class DevGuardianBackend {
       try {
         const coordinator = await DevGuardianCoordinator.create({ workspaceRoot: project.repoPath, runners: this.runners, hookManager: hooks,
           delegationAdapter: new DatabaseDelegationPersistenceAdapter(this.repository) });
-        const diagnostic = await coordinator.diagnose(input.path, audit.id);
+        const diagnostic = await coordinator.diagnose(input.path, audit.id, undefined, input.checks);
         await coordinator.delegationStore.consume(diagnostic.taskId, "diagnosis_only", "No patch was requested.");
         await this.repository.saveAuditSession({ ...audit, status: diagnostic.status === "completed" ? "blocked" : "failed", finishedAt: new Date().toISOString(),
           summaryJson: { mode: "diagnose", outcome: diagnostic.status === "completed" ? "diagnosed" : "failed", diagnostic: toJson(diagnostic),

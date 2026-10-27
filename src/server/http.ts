@@ -107,6 +107,11 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
         };
         if (health && method === "GET") { const data = await backend.health(); json(response, data.database.connected ? 200 : 503, { ok: data.database.connected, data }); return; }
         if (pathname === "/api/projects" && method === "GET") { json(response, 200, { ok: true, data: await backend.projects() }); return; }
+        const projectFiles = pathname.match(/^\/api\/projects\/([^/]+)\/files$/u);
+        if (projectFiles && method === "GET") {
+          if (url.search) throw new HttpError(422, "El listado de archivos no acepta rutas ni parámetros.");
+          json(response, 200, { ok: true, data: await backend.projectFiles(projectFiles[1] ?? "") }); return;
+        }
         if (pathname === "/api/projects/import" && method === "POST") { await importer.stream(await readJson(request, maxBodyBytes), response); return; }
         if (pathname === "/api/projects" && method === "POST") { json(response, 201, { ok: true, data: await backend.registerProject(await readJson(request, maxBodyBytes)) }); return; }
         if (pathname === "/api/demo/prepare" && method === "POST") { json(response, 201, { ok: true, data: await backend.prepareDemo(await readJson(request, maxBodyBytes)) }); return; }
@@ -128,7 +133,7 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
           if (!request.headers.accept || request.headers.accept === "*/*") request.headers.accept = "application/json, text/event-stream";
           await handleMcpHttp(backend, request, response, body); return;
         }
-        const known = health || /^\/api\/(?:projects(?:\/import)?|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
+        const known = health || /^\/api\/(?:projects(?:\/import|\/[^/]+\/files)?|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
         if (known) response.setHeader("Allow", pathname === "/api/projects" ? "GET, POST, OPTIONS"
           : ["/api/projects/import", "/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) ? "POST, OPTIONS" : "GET, OPTIONS");
         throw new HttpError(known ? 405 : 404, known ? "Method not allowed." : "Endpoint not found.");

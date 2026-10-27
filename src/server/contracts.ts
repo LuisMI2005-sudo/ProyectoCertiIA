@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { IdentifierSchema, RelativePathSchema } from "../shared/contracts.js";
+import { AnalyzeCodeInputSchema, IdentifierSchema, RelativePathSchema } from "../shared/contracts.js";
 import { ProjectRecordSchema } from "../db/types.js";
 import { RepairRequestSchema } from "../subagents/coordinator.js";
 import { DevGuardianError, ErrorCode } from "../shared/errors.js";
 
 export const RegisterProjectSchema = ProjectRecordSchema.omit({ id: true, createdAt: true });
 export const RunAuditSchema = z.discriminatedUnion("mode", [
-  z.strictObject({ projectId: IdentifierSchema, mode: z.literal("diagnose"), path: RelativePathSchema }),
+  z.strictObject({ projectId: IdentifierSchema, mode: z.literal("diagnose"), path: RelativePathSchema, checks: AnalyzeCodeInputSchema.shape.checks.optional() }),
   z.strictObject({ projectId: IdentifierSchema, mode: z.literal("repair"), repair: RepairRequestSchema })
 ]);
 export const EvaluateHookSchema = z.strictObject({

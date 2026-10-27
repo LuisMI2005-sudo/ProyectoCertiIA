@@ -8,7 +8,7 @@ export class DiagnosticSubagent {
   public readonly role = "diagnostic";
   public async execute(context: DiagnosticContext, tools: SubagentToolClient): Promise<DiagnosticReport> {
     const analysis = parseContract(AnalyzeCodeOutputSchema, await tools.call("analyze_code", {
-      paths: [context.path], checks: ["syntax", "semantic", "lint"]
+      paths: [context.path], checks: context.checks ?? ["syntax", "semantic", "lint"]
     }));
     const rank = { error: 0, warning: 1, info: 2 };
     const findings = analysis.diagnostics.filter((entry) => entry.path === context.path)
