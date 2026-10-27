@@ -1,4 +1,5 @@
 node_modules/
+.devguardian/
 .devguardian-demo/
 dist/
 coverage/
@@ -18,3 +19,4 @@ data/*.json
 data/*.json.lock
 data/*.json.*.tmp
 .phase5-test-*/
+.ide-hook-test-*/

@@ -1,0 +1,68 @@
+{
+  "description": "DevGuardian: controles del asistente de IA. Revisar en /hooks antes de activar.",
+  "hooks": {
+    "SessionStart": [{
+      "matcher": "startup|resume|clear|compact|fork",
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" session",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" session",
+        "timeout": 15,
+        "statusMessage": "DevGuardian: comprobar entorno y presentar especialistas"
+      }]
+    }],
+    "PreToolUse": [{
+      "matcher": "apply_patch|Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" files",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" files",
+        "timeout": 15,
+        "statusMessage": "DevGuardian: proteger archivos, pruebas y secretos"
+      }]
+    }, {
+      "matcher": "^Bash$",
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" commands",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" commands",
+        "timeout": 15,
+        "statusMessage": "DevGuardian: revisar comandos del asistente"
+      }]
+    }],
+    "PostToolUse": [{
+      "matcher": "apply_patch|Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" verify",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" verify",
+        "timeout": 360,
+        "statusMessage": "DevGuardian: compilar, revisar lint y ejecutar pruebas afectadas"
+      }]
+    }, {
+      "matcher": ".*",
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "timeout": 15
+      }]
+    }],
+    "SubagentStart": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "timeout": 15
+      }]
+    }],
+    "SubagentStop": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "timeout": 15
+      }]
+    }]
+  }
+}

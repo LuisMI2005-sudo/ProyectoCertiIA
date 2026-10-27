@@ -1,5 +1,11 @@
 # DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA
 
+## Integración con el asistente de IA del entorno de desarrollo
+
+La adaptación para Codex se registra en [`.codex/hooks.json`](.codex/hooks.json), con cuatro perfiles en [`.codex/agents/`](.codex/agents/). Protege ediciones y comandos del asistente, verifica cambios TypeScript y audita eventos de herramientas/subagentes mediante [`src/ide-integration/`](src/ide-integration/README.md). Incluye 35 pruebas específicas adicionales al corte publicado de 287 pruebas backend. Las cifras y evidencia CI del despliegue documentado más abajo corresponden a ese corte anterior.
+
+Esta integración local requiere compilar y revisar las definiciones en `/hooks` antes de activarlas en Codex. Sus perfiles generativos y su auditoría local son distintos de los workers deterministas de `src/subagents/`, de los hooks del motor de `src/hooks/` y del dashboard de Render. Ver [preparación, activación, pruebas y límites](src/ide-integration/README.md).
+
 ## 🌐 Entorno de Producción Desplegado (Render)
 
 - **URL Pública del Frontend (Dashboard):** https://proyecto-certificacion-ai-frontend.onrender.com
