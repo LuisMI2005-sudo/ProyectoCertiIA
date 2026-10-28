@@ -8,7 +8,7 @@ import { parseContract } from "../shared/contracts.js";
 import { DevGuardianError, failure } from "../shared/errors.js";
 import { DevGuardianBackend } from "./application.js";
 import type { BackendOptions } from "./application.js";
-import { HttpError, ListQuerySchema } from "./contracts.js";
+import { HookLogQuerySchema, HttpError, ListQuerySchema } from "./contracts.js";
 import { ProjectImporter } from "./project-import.js";
 
 export interface RequestLog { readonly requestId: string; readonly method: string; readonly path: string; readonly status: number; readonly durationMs: number }
@@ -100,10 +100,10 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
         if (!health && !authenticated(request, token)) throw new HttpError(401, "Authentication required.");
         if (active >= maxRequests) throw new HttpError(503, "Server request capacity reached."); active += 1; counted = true;
         const method = request.method;
-        const query = (): ReturnType<typeof ListQuerySchema.parse> => {
+        const query = (hookLogs = false): ReturnType<typeof HookLogQuerySchema.parse> => {
           const values: Record<string, string> = {};
           for (const [key, value] of url.searchParams) { if (key in values) throw new HttpError(422, "Duplicate query parameter."); values[key] = value; }
-          return parseContract(ListQuerySchema, values);
+          return parseContract(hookLogs ? HookLogQuerySchema : ListQuerySchema, values);
         };
         if (health && method === "GET") { const data = await backend.health(); json(response, data.database.connected ? 200 : 503, { ok: data.database.connected, data }); return; }
         if (pathname === "/api/projects" && method === "GET") { json(response, 200, { ok: true, data: await backend.projects() }); return; }
@@ -120,7 +120,7 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
         const audit = pathname.match(/^\/api\/audits\/([^/]+)$/u);
         if (audit && method === "GET") { json(response, 200, { ok: true, data: await backend.audit(audit[1] ?? "") }); return; }
         if (pathname === "/api/hooks/config" && method === "GET") { json(response, 200, { ok: true, data: backend.hookConfiguration() }); return; }
-        if (pathname === "/api/hooks/logs" && method === "GET") { json(response, 200, { ok: true, data: await backend.hookLogs(query()) }); return; }
+        if (pathname === "/api/hooks/logs" && method === "GET") { json(response, 200, { ok: true, data: await backend.hookLogs(query(true)) }); return; }
         if (pathname === "/api/hooks/evaluate" && method === "POST") { const data = await backend.evaluateHook(await readJson(request, maxBodyBytes)); json(response, data.decision === "block" ? 403 : 200, { ok: data.decision !== "block", data }); return; }
         if (pathname === "/api/subagents/delegations" && method === "GET") { json(response, 200, { ok: true, data: await backend.delegations(query()) }); return; }
         if (pathname === "/api/mcp" && method === "POST") {

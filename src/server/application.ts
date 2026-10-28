@@ -18,7 +18,7 @@ import { WorkspacePathGuard } from "../shared/path-security.js";
 import { DevGuardianCoordinator } from "../subagents/coordinator.js";
 import { TestRunner } from "../test-runner/index.js";
 import { EvaluateHookSchema, HttpError, RegisterProjectSchema, RunAuditSchema } from "./contracts.js";
-import type { ListQuery } from "./contracts.js";
+import type { HookLogQuery, ListQuery } from "./contracts.js";
 import { createCloudDemo } from "./cloud-demo.js";
 import { listProjectFiles } from "./project-files.js";
 
@@ -146,11 +146,12 @@ export class DevGuardianBackend {
     const audits = (await this.audits(query.projectId)).slice(query.offset, query.offset + query.limit);
     return Promise.all(audits.map((audit) => this.persistence.getAuditDetails(audit.id)));
   }
-  public async hookLogs(query: ListQuery) {
-    if (query.auditId) return (await this.audit(query.auditId, query.projectId)).hookLogs.slice(query.offset, query.offset + query.limit);
+  public async hookLogs(query: HookLogQuery) {
+    const filtered = <T extends { decision: string }>(logs: T[]): T[] => query.decision ? logs.filter((log) => log.decision === query.decision) : logs;
+    if (query.auditId) return filtered((await this.audit(query.auditId, query.projectId)).hookLogs).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(query.offset, query.offset + query.limit);
     const audits = await this.audits(query.projectId);
     const logs = (await Promise.all(audits.map((audit) => this.repository.listHookLogs(audit.id)))).flat();
-    return logs.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(query.offset, query.offset + query.limit);
+    return filtered(logs).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(query.offset, query.offset + query.limit);
   }
   public async delegations(query: ListQuery) {
     const audits = query.auditId ? [(await this.audit(query.auditId, query.projectId)).audit] : await this.audits(query.projectId);

@@ -18,6 +18,8 @@ export const ListQuerySchema = z.strictObject({
   limit: z.coerce.number().int().min(1).max(200).default(100), offset: z.coerce.number().int().min(0).max(100000).default(0)
 });
 export type ListQuery = z.infer<typeof ListQuerySchema>;
+export const HookLogQuerySchema = ListQuerySchema.extend({ decision: z.enum(["allow", "block"]).optional() });
+export type HookLogQuery = z.infer<typeof HookLogQuerySchema>;
 export class HttpError extends DevGuardianError {
   public constructor(public readonly status: number, message: string, code: ErrorCode = ErrorCode.VALIDATION_ERROR) { super(code, message); }
 }
