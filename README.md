@@ -1,5 +1,7 @@
 # DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA
 
+> **Entrega docente SDD y Obsidian:** la documentación se publica en el repositorio independiente [DevGuardian-SDD-Obsidian](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian). Incluye constituciones, especificaciones, planes, tareas, diagramas Mermaid y la bóveda con grafos por colores. Este repositorio conserva el código del backend y sus copias operativas de Spec Kit; la separación no reescribe el historial ni modifica el despliegue.
+
 ## Arquitectura objetivo: microservicios y microfrontends
 
 Objetivo solicitado: PostgreSQL relacional multitenant por servicio, principios SOLID explícitos, backend con 7 servicios de dominio y Gateway BFF/MCP, y frontend con Shell y 6 microfrontends. [Diseño completo](specs/segundo-cerebro/arquitectura-objetivo/00-Arquitectura-Objetivo.md). Cada módulo tiene nota y relaciones, con frontend azul, backend naranja y datos verde. **Estado actualizado: perfil local multitenant implementado y en validación, con siete servicios, gateway y seis microfrontends.** El despliegue productivo y la migración de datos históricos siguen pendientes; consultar la sección de plataforma local y su evidencia.
