@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import type { TestSandbox } from "../test-runner/types.js";
 import { createHookManager } from "../hooks/index.js";
 import type { HookConfig, HookExecutionResult, HookPersistenceAdapter } from "../hooks/types.js";
 import { IdentifierSchema, parseContract } from "../shared/contracts.js";
@@ -51,6 +52,7 @@ export class DatabaseDelegationPersistenceAdapter implements DelegationPersisten
   }
 }
 export interface PersistedRepairOptions {
+  readonly sandbox?: TestSandbox;
   readonly runners: DevGuardianCoordinatorOptions["runners"];
   readonly analyzer?: DevGuardianCoordinatorOptions["analyzer"];
   readonly hookConfig?: Partial<HookConfig>;
@@ -98,6 +100,7 @@ export class AuditPersistenceService {
     let result: CoordinatedRepairResult;
     try {
       const coordinator = await DevGuardianCoordinator.create({ workspaceRoot: project.repoPath, runners: options.runners,
+        ...(options.sandbox ? { sandbox: options.sandbox } : {}),
         ...(options.analyzer ? { analyzer: options.analyzer } : {}), hookManager: hooks,
         delegationAdapter: new DatabaseDelegationPersistenceAdapter(this.repository),
         onTestRun: (run) => this.saveTestRun(audit.id, run),

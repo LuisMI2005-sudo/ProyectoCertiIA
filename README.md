@@ -468,6 +468,10 @@ En Graph view de la bóveda ProyectoCertiIA se conservan los grupos del cerebro 
 
 ## Plataforma multitenant local (migración en validación)
 
+### Reparación con ejecución aislada
+
+Se incorporó un [runner Docker opcional](sandbox/README.md) que ejecuta Jest/pytest sobre un snapshot de solo lectura, sin red ni credenciales del host, con límites y reportes estructurados. La imagen se fija por ID SHA-256. En servidores públicos de Render y en el perfil multitenant se exige aislamiento antes de ejecutar pruebas o iniciar reparaciones; la UI consulta `capabilities.isolatedTests` y `requiresIsolation` y mantiene el bloqueo cuando el entorno no está operativo. La integración incluye un job CI separado para verificar commit, rollback, timeout y aislamiento con contenedores reales. Esto no acredita todavía una reparación generativa con Anthropic ni la disponibilidad de un ejecutor Docker en Render.
+
 Se añadió un perfil ejecutable en `src/platform/`: identidad y membresías, gateway autenticado, siete procesos de dominio con bases privadas, RLS en ejecución y agregados, credenciales de servicio firmadas, comandos idempotentes y proyecciones de eventos mediante outbox/inbox. El motor existente conserva la autoridad de Git, pruebas y guardrails. El Agent Client admite tenant y puede usar `createPlatformAgent` con un planificador remoto; la generación real requiere configurar el proveedor.
 
 Para probarlo: `npm run platform:init` una sola vez y `npm run platform:start`. El gateway utiliza `http://127.0.0.1:4107`; el frontend requiere `npm run build:platform` y `npm run preview:platform`. El arranque `npm start` sigue siendo el modo anterior; no migra automáticamente los datos ni activa la nueva arquitectura en Render.

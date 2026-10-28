@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, lstat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
@@ -17,7 +17,7 @@ import { WorkspacePathGuard } from "../shared/path-security.js";
 import { runProcess } from "./process.js";
 import { adapterFor } from "./reports.js";
 import type {
-  ParsedReport, ProcessOutcome, RunnerAdapter, StoredRun, StoredVerification, TestRunnerLimits, TestRunnerOptions
+  ParsedReport, ProcessOutcome, RunnerAdapter, StoredRun, StoredVerification, TestRunnerLimits, TestRunnerOptions, TestSandbox
 } from "./types.js";
 
 const ENVIRONMENT_ALLOWLIST = [
@@ -120,7 +120,8 @@ export class TestRunner implements TestRunnerContract, VerificationStore {
     private readonly adapters: ReadonlyMap<Runner, RunnerAdapter>,
     private readonly limits: TestRunnerLimits,
     private readonly workspaceStateHash: () => Promise<string>,
-    private readonly environment: Readonly<Record<string, string>>
+    private readonly environment: Readonly<Record<string, string>>,
+    private readonly sandbox?: TestSandbox
   ) {
     this.tools = {
       run_tests: (input) => captureResult(() => this.runTests(input)),
@@ -140,7 +141,7 @@ export class TestRunner implements TestRunnerContract, VerificationStore {
       adapters.set(configuration.runner, adapterFor(configuration.runner));
     }
     if (configurations.size === 0) throw new ValidationError("At least one runner must be configured.");
-    return new TestRunner(guard, configurations, adapters, limits, options.workspaceStateHash, options.environment ?? {});
+    return new TestRunner(guard, configurations, adapters, limits, options.workspaceStateHash, options.environment ?? {}, options.sandbox);
   }
 
   /** Serializes runs per instance so fingerprints and stored results stay consistent. */
@@ -191,6 +192,8 @@ export class TestRunner implements TestRunnerContract, VerificationStore {
 
   private async readReport(reportPath: string): Promise<string> {
     let content: Buffer;
+    const info = await lstat(reportPath);
+    if (!info.isFile() || info.isSymbolicLink() || info.nlink !== 1 || info.size > MAX_REPORT_BYTES) throw new TestExecutionError("The report must be a bounded regular file.");
     try { content = await readFile(reportPath); }
     catch (error: unknown) {
       throw new TestExecutionError("The runner did not produce a machine-readable report.", { cause: error });
@@ -230,7 +233,8 @@ export class TestRunner implements TestRunnerContract, VerificationStore {
       const startedAt = new Date();
       let outcome: ProcessOutcome;
       try {
-        outcome = await runProcess({
+        outcome = this.sandbox ? await this.sandbox.run({ runner: parsed.runner, targets, workspaceRoot: this.guard.root,
+          reportPath, timeoutMs, maxOutputBytes, signal: controller.signal }) : await runProcess({
           executable: configuration.executable,
           args: [...configuration.args, ...adapter.reportArgs(reportPath), ...targets],
           cwd: this.guard.root, env: trustedEnvironment(this.environment),
@@ -261,7 +265,7 @@ export class TestRunner implements TestRunnerContract, VerificationStore {
         exitCode: outcome.exitCode, durationMs: outcome.durationMs, summary, cases,
         stdout: outcome.stdout, stderr, truncated: outcome.truncated, complete,
         startedAt: startedAt.toISOString(), finishedAt: finishedAt.toISOString(),
-        workspaceStateHash, configurationHash: configurationHash(configuration)
+        workspaceStateHash, configurationHash: this.sandbox ? createHash("sha256").update(configurationHash(configuration) + this.sandbox.fingerprint).digest("hex") : configurationHash(configuration)
       });
       this.store(result);
       return result;

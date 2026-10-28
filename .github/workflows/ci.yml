@@ -15,6 +15,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  isolated-repair:
+    name: Reparación real con Jest y pytest en Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: npm
+      - run: npm ci
+      - name: Construir imagen de pruebas sin secretos
+        run: |
+          docker build -f sandbox/Dockerfile -t devguardian-tests:ci .
+          image_id="$(docker image inspect --format '{{.Id}}' devguardian-tests:ci)"
+          test -n "$image_id"
+          echo "DEVGUARDIAN_SANDBOX_IMAGE_ID=$image_id" >> "$GITHUB_ENV"
+      - run: npm run build
+      - name: Verificar aislamiento, timeout y reparación con commit real
+        run: node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand tests/test-runner/sandbox.test.mjs
   validate:
     name: TypeScript, ESLint, Jest y pytest
     runs-on: ubuntu-latest

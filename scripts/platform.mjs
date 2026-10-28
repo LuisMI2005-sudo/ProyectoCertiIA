@@ -40,6 +40,7 @@ if (command === 'init') {
     for (const key of ['PATH', 'Path', 'SystemRoot', 'WINDIR', 'COMSPEC', 'TEMP', 'TMP', 'HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA']) if (process.env[key]) environment[key] = process.env[key];
     environment.NODE_ENV = 'production';
     if (service === 'planner' && process.env.ANTHROPIC_API_KEY) environment.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+    if (service === 'execution') for (const key of ['DEVGUARDIAN_SANDBOX_IMAGE_ID', 'DEVGUARDIAN_DOCKER_BINARY']) if (process.env[key]) environment[key] = process.env[key];
     const child = spawn(process.execPath, [path.join(root, 'dist/platform/main.js'), path.join(directory, `${service}.json`)], { cwd: root, env: environment, stdio: ['ignore', 'inherit', 'inherit'], windowsHide: true });
     children.push(child);
     child.once('error', () => { console.error(`No se pudo iniciar ${service}.`); process.exitCode = 1; close(); });
