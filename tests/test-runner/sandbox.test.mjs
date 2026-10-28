@@ -30,7 +30,10 @@ integration('real Docker isolation and repair', () => {
     await writeFile(path.join(root, 'package.json'), JSON.stringify({ name: 'isolated-fixture', jest: { testMatch: ['**/tests/*.test.cjs'] } }));
     await writeFile(path.join(root, 'tests/add.test.cjs'), "const {add}=require('../src/add.ts');test('adds',()=>expect(add(2,3)).toBe(5));\n");
     await writeFile(path.join(root, 'tests/test_python.py'), 'def test_actual_pytest():\n    assert 2 + 3 == 5\n');
-    await git('init', '-b', 'main'); await git('add', '.'); await git('-c', 'user.name=Sandbox CI', '-c', 'user.email=sandbox@example.invalid', 'commit', '-m', 'fixture');
+    await git('init', '-b', 'main');
+    await git('config', 'user.name', 'Sandbox CI');
+    await git('config', 'user.email', 'sandbox@example.invalid');
+    await git('add', '.'); await git('commit', '-m', 'fixture');
     sandbox = new DockerTestSandbox(process.env.DEVGUARDIAN_DOCKER_BINARY || 'docker', image);
     expect(await sandbox.ready()).toBe(true);
   });
@@ -68,6 +71,10 @@ integration('real Docker isolation and repair', () => {
     const result = await coordinator.repair({ path: 'src/add.ts', slug: 'isolated-rollback', message: 'fix: rejected candidate', runner: 'jest', targets: ['tests/add.test.cjs'],
       expectedFileHashes: { 'src/add.ts': createHash('sha256').update(original).digest('hex') }, unifiedDiff: buildReplacementDiff('src/add.ts', original, wrong) });
     expect(result.status).toBe('rolled_back'); expect(result.commit).toBeNull();
+    expect(result.verification).not.toBeNull();
+    expect(result.verification.verdict).not.toBe('ready_to_commit');
+    expect(coordinator.runner.getRun(result.verification.baselineRunId)).toMatchObject({ ok: true, data: { status: 'failed', complete: true, summary: { failed: 1 } } });
+    expect(coordinator.runner.getRun(result.verification.candidateRunId)).toMatchObject({ ok: true, data: { status: 'failed', complete: true, summary: { failed: 1 } } });
     expect(await readFile(path.join(root, 'src/add.ts'), 'utf8')).toBe(original);
   });
   test('kills a timed-out test container instead of accepting incomplete evidence', async () => {
