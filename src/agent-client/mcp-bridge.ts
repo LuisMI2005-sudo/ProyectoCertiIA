@@ -66,7 +66,7 @@ export class McpClientAdapter {
             maxReconnectionDelay: number; reconnectionDelayGrowFactor: number }
         }) => Transport;
         await client.connect(new HttpTransport(url, {
-          requestInit: config.apiToken ? { headers: { Authorization: `Bearer ${config.apiToken}` } } : {},
+          requestInit: { headers: { ...(config.apiToken ? { Authorization: `Bearer ${config.apiToken}` } : {}), ...(config.tenantId ? { "X-Tenant-Id": config.tenantId } : {}) } },
           reconnectionOptions: { maxRetries: 0, initialReconnectionDelay: 1000, maxReconnectionDelay: 1000, reconnectionDelayGrowFactor: 1 }
         }), { timeout: config.callTimeoutMs });
       } else {

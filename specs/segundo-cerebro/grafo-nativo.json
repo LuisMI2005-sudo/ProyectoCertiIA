@@ -1,0 +1,121 @@
+{
+  "search": "path:\"specs/segundo-cerebro\"",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": true,
+  "showOrphans": true,
+  "colorGroups": [
+    {
+      "query": "tag:#dg/capa/frontend",
+      "color": {
+        "a": 1,
+        "rgb": 6333946
+      }
+    },
+    {
+      "query": "tag:#dg/capa/backend",
+      "color": {
+        "a": 1,
+        "rgb": 16486972
+      }
+    },
+    {
+      "query": "tag:#dg/capa/datos",
+      "color": {
+        "a": 1,
+        "rgb": 3462041
+      }
+    },
+    {
+      "query": "tag:#dg/capa/infraestructura",
+      "color": {
+        "a": 1,
+        "rgb": 9741240
+      }
+    },
+    {
+      "query": "tag:#dg/capa/arquitectura",
+      "color": {
+        "a": 1,
+        "rgb": 10980346
+      }
+    },
+    {
+      "query": "tag:#dg/capa/seguridad",
+      "color": {
+        "a": 1,
+        "rgb": 16281969
+      }
+    },
+    {
+      "query": "tag:#dg/direccion",
+      "color": {
+        "a": 1,
+        "rgb": 10980346
+      }
+    },
+    {
+      "query": "tag:#dg/fuentes",
+      "color": {
+        "a": 1,
+        "rgb": 9741240
+      }
+    },
+    {
+      "query": "tag:#dg/analisis",
+      "color": {
+        "a": 1,
+        "rgb": 6333946
+      }
+    },
+    {
+      "query": "tag:#dg/arquitectura",
+      "color": {
+        "a": 1,
+        "rgb": 2282478
+      }
+    },
+    {
+      "query": "tag:#dg/seguridad",
+      "color": {
+        "a": 1,
+        "rgb": 16281969
+      }
+    },
+    {
+      "query": "tag:#dg/verificacion",
+      "color": {
+        "a": 1,
+        "rgb": 3462041
+      }
+    },
+    {
+      "query": "tag:#dg/investigacion",
+      "color": {
+        "a": 1,
+        "rgb": 16498468
+      }
+    },
+    {
+      "query": "tag:#dg/ia",
+      "color": {
+        "a": 1,
+        "rgb": 16020150
+      }
+    },
+    {
+      "query": "path:\"specs/segundo-cerebro/arquitectura-objetivo/Arquitectura-Objetivo.canvas\"",
+      "color": {
+        "a": 1,
+        "rgb": 10980346
+      }
+    },
+    {
+      "query": "path:\"specs/segundo-cerebro/Grafo-DevGuardian.canvas\"",
+      "color": {
+        "a": 1,
+        "rgb": 10980346
+      }
+    }
+  ]
+}

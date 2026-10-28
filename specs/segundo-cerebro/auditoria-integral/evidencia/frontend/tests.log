@@ -1,0 +1,17 @@
+
+> proyectofrontend@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/Users/HP/ProyectocertiIA/Frontend
+
+
+ Test Files  13 passed (13)
+      Tests  119 passed (119)
+   Start at  14:24:42
+   Duration  50.02s (environment 73%, setup 20%, tests 4%, transform 2%, import 1%)
+
+Environment  jsdom was created 13 times · 368.44s total, 73% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

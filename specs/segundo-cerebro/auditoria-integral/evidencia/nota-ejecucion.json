@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-28",
+  "backendCheck": "passed",
+  "frontendCheck": "passed",
+  "frontendTests": {
+    "passed": 119,
+    "files": 13,
+    "exit": 0
+  },
+  "backendInitial": "interrupted-after-sandbox-permission-failures",
+  "backendAuthorized": "interrupted-without-final-summary-and-active-git-child",
+  "backendVerdict": "inconclusive",
+  "productionChecked": false,
+  "fullSourceAudit": false
+}

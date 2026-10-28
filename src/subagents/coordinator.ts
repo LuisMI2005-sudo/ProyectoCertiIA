@@ -17,7 +17,7 @@ import type { ScopedToolHandlers } from "./runtime.js";
 import { DelegationStore } from "./store.js";
 import { PatchSafetyContextSchema, ROLE_TOOLS } from "./types.js";
 import type {
-  DelegationPersistenceAdapter, DiagnosticReport, RoleContexts, RoleOutputs, SubagentRole,
+  DelegationPersistenceAdapter, DiagnosticContext, DiagnosticReport, RoleContexts, RoleOutputs, SubagentRole,
   SubagentTaskEnvelope, SubagentTaskResult, TaskBudget, VerificationVerdict
 } from "./types.js";
 
@@ -121,8 +121,8 @@ export class DevGuardianCoordinator {
     return new DevGuardianCoordinator(new AgentCoordinator(new SubagentRuntime(handlers), hooks,
       new DelegationStore(options.delegationAdapter)), git, runner, options.onAttemptStarted);
   }
-  public diagnose(path: string, parentSessionId: string = randomUUID(), budget?: TaskBudget): Promise<SubagentTaskResult<DiagnosticReport>> {
-    return this.agent.delegate(this.agent.createTask("diagnostic", parentSessionId, "Locate and prioritize static defects in one target file.", { path }, budget));
+  public diagnose(path: string, parentSessionId: string = randomUUID(), budget?: TaskBudget, checks?: DiagnosticContext["checks"]): Promise<SubagentTaskResult<DiagnosticReport>> {
+    return this.agent.delegate(this.agent.createTask("diagnostic", parentSessionId, "Locate and prioritize static defects in one target file.", { path, ...(checks ? { checks } : {}) }, budget));
   }
   public async repair(raw: RepairRequest): Promise<CoordinatedRepairResult> {
     const request = parseContract(RepairRequestSchema, raw);

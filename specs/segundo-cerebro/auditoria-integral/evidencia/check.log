@@ -1,0 +1,12 @@
+
+> devguardian@0.1.0 check
+> npm run typecheck && npm run lint
+
+
+> devguardian@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+
+> devguardian@0.1.0 lint
+> eslint --no-config-lookup --ext .ts --parser @typescript-eslint/parser --plugin @typescript-eslint --rule "@typescript-eslint/no-explicit-any:error" --rule "@typescript-eslint/no-unused-vars:error" src
+

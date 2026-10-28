@@ -12,6 +12,7 @@ export const AgentConfigSchema = z.strictObject({
   modelName: z.string().trim().min(1).max(200).default(() => process.env["DEVGUARDIAN_MODEL"] ?? "claude-sonnet-4-6"),
   apiKey: z.string().min(1).max(4096).optional(), transportType: z.enum(["http", "stdio"]).default("http"),
   serverUrl: z.url().optional(), apiToken: z.string().min(1).max(4096).optional(),
+  tenantId: z.uuid().optional(),
   maxDurationMs: z.number().int().min(100).max(900000).default(300000),
   planningTimeoutMs: z.number().int().min(100).max(120000).default(45000),
   callTimeoutMs: z.number().int().min(100).max(360000).default(45000),

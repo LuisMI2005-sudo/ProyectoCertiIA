@@ -53,6 +53,8 @@ export class ScopedToolProxy {
     const data = input as Record<string, unknown>;
     if (this.request.role === "diagnostic") {
       const context = parseContract(ContextSchemas.diagnostic, this.request.scopedContext);
+      if (name === "analyze_code" && context.checks && JSON.stringify(data.checks) !== JSON.stringify(context.checks))
+        throw new ToolScopeError("Diagnostic checks differ from the requested scope.");
       if ((name === "analyze_code" && JSON.stringify(data.paths) !== JSON.stringify([context.path])) ||
           (name === "read_file_context" && data.path !== context.path)) throw new ToolScopeError("Diagnostic tool escaped the target path.");
     } else if (this.request.role === "verification") {

@@ -1,4 +1,6 @@
 node_modules/
+.devguardian-imports/
+.devguardian/
 .devguardian-demo/
 dist/
 coverage/
@@ -18,3 +20,9 @@ data/*.json
 data/*.json.lock
 data/*.json.*.tmp
 .phase5-test-*/
+.ide-hook-test-*/
+
+# Preferencias personales de Obsidian; los diagramas no requieren plugins.
+.obsidian/
+.platform-local/
+.platform-pg/

@@ -8,6 +8,10 @@
     "node": ">=24.0.0 <25"
   },
   "scripts": {
+    "platform:init": "npm run build && node scripts/platform.mjs init",
+    "platform:start": "node scripts/platform.mjs start",
+    "platform:status": "node scripts/platform.mjs status",
+    "test:platform": "npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand tests/platform",
     "build": "tsc -p tsconfig.json && node scripts/copy-db-schema.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint --no-config-lookup --ext .ts --parser @typescript-eslint/parser --plugin @typescript-eslint --rule \"@typescript-eslint/no-explicit-any:error\" --rule \"@typescript-eslint/no-unused-vars:error\" src",
@@ -19,7 +23,9 @@
     "start:server": "node --enable-source-maps dist/server/main.js",
     "start:mcp": "node dist/mcp/index.js",
     "start:agent": "node dist/agent-client/main.js",
-    "dev:agent": "tsx src/agent-client/main.ts"
+    "dev:agent": "tsx src/agent-client/main.ts",
+    "sdd:sync": "node scripts/spec-kit-docs.mjs sync",
+    "sdd:check": "node scripts/spec-kit-docs.mjs check"
   },
   "dependencies": {
     "@langchain/anthropic": "1.5.12",
@@ -43,6 +49,7 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "modulePathIgnorePatterns": ["<rootDir>/.devguardian-imports/", "<rootDir>/.devguardian-demo/"],
     "testMatch": [
       "<rootDir>/tests/**/*.test.mjs"
     ],

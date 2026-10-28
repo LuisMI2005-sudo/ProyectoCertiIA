@@ -1,0 +1,250 @@
+{
+  "nodes": [
+    {
+      "id": "g-direccion",
+      "type": "group",
+      "x": 0,
+      "y": 0,
+      "width": 530,
+      "height": 850,
+      "label": "direccion",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "01-Alcance-y-metodo",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/01-Alcance-y-metodo.md",
+      "x": 20,
+      "y": 65,
+      "width": 490,
+      "height": 225,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "08-Validacion-y-entrega-docente",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/08-Validacion-y-entrega-docente.md",
+      "x": 20,
+      "y": 315,
+      "width": 490,
+      "height": 225,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "00-Informe-Integral",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/00-Informe-Integral.md",
+      "x": 20,
+      "y": 565,
+      "width": 490,
+      "height": 225,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "g-seguridad",
+      "type": "group",
+      "x": 580,
+      "y": 0,
+      "width": 530,
+      "height": 350,
+      "label": "seguridad",
+      "color": "#f87171"
+    },
+    {
+      "id": "03-Hallazgos-y-plan",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/03-Hallazgos-y-plan.md",
+      "x": 600,
+      "y": 65,
+      "width": 490,
+      "height": 225,
+      "color": "#f87171"
+    },
+    {
+      "id": "g-arquitectura",
+      "type": "group",
+      "x": 1160,
+      "y": 0,
+      "width": 530,
+      "height": 350,
+      "label": "arquitectura",
+      "color": "#22d3ee"
+    },
+    {
+      "id": "04-Evaluacion-arquitectonica",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/04-Evaluacion-arquitectonica.md",
+      "x": 1180,
+      "y": 65,
+      "width": 490,
+      "height": 225,
+      "color": "#22d3ee"
+    },
+    {
+      "id": "g-investigacion",
+      "type": "group",
+      "x": 1740,
+      "y": 0,
+      "width": 530,
+      "height": 850,
+      "label": "investigacion",
+      "color": "#fbbf24"
+    },
+    {
+      "id": "05-Producto-y-mercado",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/05-Producto-y-mercado.md",
+      "x": 1760,
+      "y": 65,
+      "width": 490,
+      "height": 225,
+      "color": "#fbbf24"
+    },
+    {
+      "id": "06-Modelo-comercial",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/06-Modelo-comercial.md",
+      "x": 1760,
+      "y": 315,
+      "width": 490,
+      "height": 225,
+      "color": "#fbbf24"
+    },
+    {
+      "id": "07-Marketing-y-metricas",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/07-Marketing-y-metricas.md",
+      "x": 1760,
+      "y": 565,
+      "width": 490,
+      "height": 225,
+      "color": "#fbbf24"
+    },
+    {
+      "id": "g-verificacion",
+      "type": "group",
+      "x": 2320,
+      "y": 0,
+      "width": 530,
+      "height": 350,
+      "label": "verificacion",
+      "color": "#34d399"
+    },
+    {
+      "id": "02-Evidencia-tecnica",
+      "type": "file",
+      "file": "specs/segundo-cerebro/auditoria-integral/02-Evidencia-tecnica.md",
+      "x": 2340,
+      "y": 65,
+      "width": 490,
+      "height": 225,
+      "color": "#34d399"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "01-Alcance-y-metodo",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e1",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "03-Hallazgos-y-plan",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e2",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "04-Evaluacion-arquitectonica",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e3",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "05-Producto-y-mercado",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e4",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "06-Modelo-comercial",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e5",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "07-Marketing-y-metricas",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e6",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "08-Validacion-y-entrega-docente",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e7",
+      "fromNode": "00-Informe-Integral",
+      "toNode": "02-Evidencia-tecnica",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e8",
+      "fromNode": "02-Evidencia-tecnica",
+      "toNode": "03-Hallazgos-y-plan",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e9",
+      "fromNode": "03-Hallazgos-y-plan",
+      "toNode": "04-Evaluacion-arquitectonica",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e10",
+      "fromNode": "05-Producto-y-mercado",
+      "toNode": "06-Modelo-comercial",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e11",
+      "fromNode": "06-Modelo-comercial",
+      "toNode": "07-Marketing-y-metricas",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    },
+    {
+      "id": "e12",
+      "fromNode": "07-Marketing-y-metricas",
+      "toNode": "08-Validacion-y-entrega-docente",
+      "fromSide": "right",
+      "toSide": "left",
+      "toEnd": "arrow"
+    }
+  ]
+}

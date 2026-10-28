@@ -1,0 +1,2109 @@
+{
+  "nodes": [
+    {
+      "id": "group-frontend",
+      "type": "group",
+      "x": 0,
+      "y": 0,
+      "width": 650,
+      "height": 1950,
+      "label": "FRONTEND",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Proyectos",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Proyectos.md",
+      "x": 25,
+      "y": 70,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Revision",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Revision.md",
+      "x": 25,
+      "y": 300,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Resultados",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Resultados.md",
+      "x": 25,
+      "y": 530,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Seguridad",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Seguridad.md",
+      "x": 25,
+      "y": 760,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Subagentes",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Subagentes.md",
+      "x": 25,
+      "y": 990,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Sandbox-MCP",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Sandbox-MCP.md",
+      "x": 25,
+      "y": 1220,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "MF-Shell",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/MF-Shell.md",
+      "x": 25,
+      "y": 1450,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "AR-Microfrontends",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Microfrontends.md",
+      "x": 25,
+      "y": 1680,
+      "width": 600,
+      "height": 205,
+      "color": "#60a5fa"
+    },
+    {
+      "id": "group-backend",
+      "type": "group",
+      "x": 690,
+      "y": 0,
+      "width": 650,
+      "height": 2180,
+      "label": "BACKEND",
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Identidad",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Identidad.md",
+      "x": 715,
+      "y": 70,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Proyectos",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Proyectos.md",
+      "x": 715,
+      "y": 300,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Auditorias",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Auditorias.md",
+      "x": 715,
+      "y": 530,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Ejecucion",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Ejecucion.md",
+      "x": 715,
+      "y": 760,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Politicas",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Politicas.md",
+      "x": 715,
+      "y": 990,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Telemetria",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Telemetria.md",
+      "x": 715,
+      "y": 1220,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Planificador-IA",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Planificador-IA.md",
+      "x": 715,
+      "y": 1450,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "BE-Gateway",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/BE-Gateway.md",
+      "x": 715,
+      "y": 1680,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "AR-Flujos",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Flujos.md",
+      "x": 715,
+      "y": 1910,
+      "width": 600,
+      "height": 205,
+      "color": "#fb923c"
+    },
+    {
+      "id": "group-datos",
+      "type": "group",
+      "x": 1380,
+      "y": 0,
+      "width": 650,
+      "height": 2180,
+      "label": "DATOS",
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Identidad",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Identidad.md",
+      "x": 1405,
+      "y": 70,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Proyectos",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Proyectos.md",
+      "x": 1405,
+      "y": 300,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Auditorias",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Auditorias.md",
+      "x": 1405,
+      "y": 530,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Ejecucion",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Ejecucion.md",
+      "x": 1405,
+      "y": 760,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Politicas",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Politicas.md",
+      "x": 1405,
+      "y": 990,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Telemetria",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Telemetria.md",
+      "x": 1405,
+      "y": 1220,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "DB-Planificador",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/DB-Planificador.md",
+      "x": 1405,
+      "y": 1450,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "AR-Multitenancy",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Multitenancy.md",
+      "x": 1405,
+      "y": 1680,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "AR-Datos-y-migracion",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Datos-y-migracion.md",
+      "x": 1405,
+      "y": 1910,
+      "width": 600,
+      "height": 205,
+      "color": "#34d399"
+    },
+    {
+      "id": "group-infraestructura",
+      "type": "group",
+      "x": 0,
+      "y": 2300,
+      "width": 650,
+      "height": 1030,
+      "label": "INFRAESTRUCTURA",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "INF-Broker",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/INF-Broker.md",
+      "x": 25,
+      "y": 2370,
+      "width": 600,
+      "height": 205,
+      "color": "#94a3b8"
+    },
+    {
+      "id": "INF-Aislamiento",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/INF-Aislamiento.md",
+      "x": 25,
+      "y": 2600,
+      "width": 600,
+      "height": 205,
+      "color": "#94a3b8"
+    },
+    {
+      "id": "INF-Contratos",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/INF-Contratos.md",
+      "x": 25,
+      "y": 2830,
+      "width": 600,
+      "height": 205,
+      "color": "#94a3b8"
+    },
+    {
+      "id": "INF-Entrega",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/INF-Entrega.md",
+      "x": 25,
+      "y": 3060,
+      "width": 600,
+      "height": 205,
+      "color": "#94a3b8"
+    },
+    {
+      "id": "group-arquitectura",
+      "type": "group",
+      "x": 690,
+      "y": 2300,
+      "width": 650,
+      "height": 1260,
+      "label": "ARQUITECTURA",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "AR-SOLID",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-SOLID.md",
+      "x": 715,
+      "y": 2370,
+      "width": 600,
+      "height": 205,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "AR-Patrones",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Patrones.md",
+      "x": 715,
+      "y": 2600,
+      "width": 600,
+      "height": 205,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "AR-Migracion",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Migracion.md",
+      "x": 715,
+      "y": 2830,
+      "width": 600,
+      "height": 205,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "AR-Fuentes",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Fuentes.md",
+      "x": 715,
+      "y": 3060,
+      "width": 600,
+      "height": 205,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "00-Arquitectura-Objetivo",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/00-Arquitectura-Objetivo.md",
+      "x": 715,
+      "y": 3290,
+      "width": 600,
+      "height": 205,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "group-seguridad",
+      "type": "group",
+      "x": 1380,
+      "y": 2300,
+      "width": 650,
+      "height": 340,
+      "label": "SEGURIDAD",
+      "color": "#f87171"
+    },
+    {
+      "id": "AR-Seguridad",
+      "type": "file",
+      "file": "specs/segundo-cerebro/arquitectura-objetivo/AR-Seguridad.md",
+      "x": 1405,
+      "y": 2370,
+      "width": 600,
+      "height": 205,
+      "color": "#f87171"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0",
+      "fromNode": "BE-Identidad",
+      "fromSide": "right",
+      "toNode": "DB-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e1",
+      "fromNode": "BE-Identidad",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e2",
+      "fromNode": "BE-Identidad",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e3",
+      "fromNode": "BE-Identidad",
+      "fromSide": "right",
+      "toNode": "BE-Gateway",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e4",
+      "fromNode": "BE-Identidad",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e5",
+      "fromNode": "BE-Identidad",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e6",
+      "fromNode": "DB-Identidad",
+      "fromSide": "right",
+      "toNode": "BE-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e7",
+      "fromNode": "DB-Identidad",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e8",
+      "fromNode": "DB-Identidad",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e9",
+      "fromNode": "DB-Identidad",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e10",
+      "fromNode": "BE-Proyectos",
+      "fromSide": "right",
+      "toNode": "DB-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e11",
+      "fromNode": "BE-Proyectos",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e12",
+      "fromNode": "BE-Proyectos",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e13",
+      "fromNode": "BE-Proyectos",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e14",
+      "fromNode": "BE-Proyectos",
+      "fromSide": "right",
+      "toNode": "BE-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e15",
+      "fromNode": "BE-Proyectos",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e16",
+      "fromNode": "DB-Proyectos",
+      "fromSide": "right",
+      "toNode": "BE-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e17",
+      "fromNode": "DB-Proyectos",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e18",
+      "fromNode": "DB-Proyectos",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e19",
+      "fromNode": "DB-Proyectos",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e20",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "DB-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e21",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e22",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e23",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e24",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e25",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "AR-Flujos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e26",
+      "fromNode": "BE-Auditorias",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e27",
+      "fromNode": "DB-Auditorias",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e28",
+      "fromNode": "DB-Auditorias",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e29",
+      "fromNode": "DB-Auditorias",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e30",
+      "fromNode": "DB-Auditorias",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e31",
+      "fromNode": "BE-Ejecucion",
+      "fromSide": "right",
+      "toNode": "DB-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e32",
+      "fromNode": "BE-Ejecucion",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e33",
+      "fromNode": "BE-Ejecucion",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e34",
+      "fromNode": "BE-Ejecucion",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e35",
+      "fromNode": "BE-Ejecucion",
+      "fromSide": "right",
+      "toNode": "AR-Flujos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e36",
+      "fromNode": "BE-Ejecucion",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e37",
+      "fromNode": "DB-Ejecucion",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e38",
+      "fromNode": "DB-Ejecucion",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e39",
+      "fromNode": "DB-Ejecucion",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e40",
+      "fromNode": "DB-Ejecucion",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e41",
+      "fromNode": "BE-Politicas",
+      "fromSide": "right",
+      "toNode": "DB-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e42",
+      "fromNode": "BE-Politicas",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e43",
+      "fromNode": "BE-Politicas",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e44",
+      "fromNode": "BE-Politicas",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e45",
+      "fromNode": "BE-Politicas",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e46",
+      "fromNode": "BE-Politicas",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e47",
+      "fromNode": "DB-Politicas",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e48",
+      "fromNode": "DB-Politicas",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e49",
+      "fromNode": "DB-Politicas",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e50",
+      "fromNode": "DB-Politicas",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e51",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "DB-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e52",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e53",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e54",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e55",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e56",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "INF-Broker",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e57",
+      "fromNode": "BE-Telemetria",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e58",
+      "fromNode": "DB-Telemetria",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e59",
+      "fromNode": "DB-Telemetria",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e60",
+      "fromNode": "DB-Telemetria",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e61",
+      "fromNode": "DB-Telemetria",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e62",
+      "fromNode": "BE-Planificador-IA",
+      "fromSide": "right",
+      "toNode": "DB-Planificador",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e63",
+      "fromNode": "BE-Planificador-IA",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e64",
+      "fromNode": "BE-Planificador-IA",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e65",
+      "fromNode": "BE-Planificador-IA",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e66",
+      "fromNode": "BE-Planificador-IA",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e67",
+      "fromNode": "BE-Planificador-IA",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e68",
+      "fromNode": "DB-Planificador",
+      "fromSide": "right",
+      "toNode": "BE-Planificador-IA",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e69",
+      "fromNode": "DB-Planificador",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e70",
+      "fromNode": "DB-Planificador",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e71",
+      "fromNode": "DB-Planificador",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e72",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "BE-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e73",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "BE-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e74",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e75",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e76",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e77",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e78",
+      "fromNode": "BE-Gateway",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e79",
+      "fromNode": "MF-Proyectos",
+      "fromSide": "right",
+      "toNode": "BE-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e80",
+      "fromNode": "MF-Proyectos",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e81",
+      "fromNode": "MF-Proyectos",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e82",
+      "fromNode": "MF-Proyectos",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e83",
+      "fromNode": "MF-Proyectos",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e84",
+      "fromNode": "MF-Revision",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e85",
+      "fromNode": "MF-Revision",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e86",
+      "fromNode": "MF-Revision",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e87",
+      "fromNode": "MF-Revision",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e88",
+      "fromNode": "MF-Revision",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e89",
+      "fromNode": "MF-Resultados",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e90",
+      "fromNode": "MF-Resultados",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e91",
+      "fromNode": "MF-Resultados",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e92",
+      "fromNode": "MF-Resultados",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e93",
+      "fromNode": "MF-Resultados",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e94",
+      "fromNode": "MF-Seguridad",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e95",
+      "fromNode": "MF-Seguridad",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e96",
+      "fromNode": "MF-Seguridad",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e97",
+      "fromNode": "MF-Seguridad",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e98",
+      "fromNode": "MF-Seguridad",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e99",
+      "fromNode": "MF-Subagentes",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e100",
+      "fromNode": "MF-Subagentes",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e101",
+      "fromNode": "MF-Subagentes",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e102",
+      "fromNode": "MF-Subagentes",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e103",
+      "fromNode": "MF-Subagentes",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e104",
+      "fromNode": "MF-Sandbox-MCP",
+      "fromSide": "right",
+      "toNode": "BE-Gateway",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e105",
+      "fromNode": "MF-Sandbox-MCP",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e106",
+      "fromNode": "MF-Sandbox-MCP",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e107",
+      "fromNode": "MF-Sandbox-MCP",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e108",
+      "fromNode": "MF-Sandbox-MCP",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e109",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "MF-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e110",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "MF-Revision",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e111",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "MF-Resultados",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e112",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "MF-Seguridad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e113",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "MF-Subagentes",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e114",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "MF-Sandbox-MCP",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e115",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "BE-Gateway",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e116",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e117",
+      "fromNode": "MF-Shell",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e118",
+      "fromNode": "INF-Broker",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e119",
+      "fromNode": "INF-Broker",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e120",
+      "fromNode": "INF-Broker",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e121",
+      "fromNode": "INF-Broker",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e122",
+      "fromNode": "INF-Broker",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e123",
+      "fromNode": "INF-Aislamiento",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e124",
+      "fromNode": "INF-Aislamiento",
+      "fromSide": "right",
+      "toNode": "BE-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e125",
+      "fromNode": "INF-Aislamiento",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e126",
+      "fromNode": "INF-Aislamiento",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e127",
+      "fromNode": "INF-Contratos",
+      "fromSide": "right",
+      "toNode": "BE-Gateway",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e128",
+      "fromNode": "INF-Contratos",
+      "fromSide": "right",
+      "toNode": "INF-Broker",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e129",
+      "fromNode": "INF-Contratos",
+      "fromSide": "right",
+      "toNode": "AR-Flujos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e130",
+      "fromNode": "INF-Contratos",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e131",
+      "fromNode": "INF-Entrega",
+      "fromSide": "right",
+      "toNode": "AR-Migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e132",
+      "fromNode": "INF-Entrega",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e133",
+      "fromNode": "INF-Entrega",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e134",
+      "fromNode": "INF-Entrega",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#94a3b8"
+    },
+    {
+      "id": "e135",
+      "fromNode": "AR-Multitenancy",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e136",
+      "fromNode": "AR-SOLID",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e137",
+      "fromNode": "AR-SOLID",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e138",
+      "fromNode": "AR-SOLID",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e139",
+      "fromNode": "AR-Patrones",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e140",
+      "fromNode": "AR-Microfrontends",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#60a5fa"
+    },
+    {
+      "id": "e141",
+      "fromNode": "AR-Datos-y-migracion",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#34d399"
+    },
+    {
+      "id": "e142",
+      "fromNode": "AR-Flujos",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#fb923c"
+    },
+    {
+      "id": "e143",
+      "fromNode": "AR-Migracion",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e144",
+      "fromNode": "AR-Fuentes",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e145",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e146",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e147",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e148",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e149",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e150",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Auditorias",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e151",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e152",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e153",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e154",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e155",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e156",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Telemetria",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e157",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Planificador-IA",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e158",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "DB-Planificador",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e159",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "BE-Gateway",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e160",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Proyectos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e161",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Revision",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e162",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Resultados",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e163",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Seguridad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e164",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Subagentes",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e165",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Sandbox-MCP",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e166",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "MF-Shell",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e167",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "INF-Broker",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e168",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "INF-Aislamiento",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e169",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "INF-Contratos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e170",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "INF-Entrega",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e171",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e172",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-SOLID",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e173",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Patrones",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e174",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e175",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Datos-y-migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e176",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Flujos",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e177",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Migracion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e178",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Fuentes",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e179",
+      "fromNode": "00-Arquitectura-Objetivo",
+      "fromSide": "right",
+      "toNode": "AR-Seguridad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#a78bfa"
+    },
+    {
+      "id": "e180",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "AR-Multitenancy",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    },
+    {
+      "id": "e181",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "BE-Identidad",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    },
+    {
+      "id": "e182",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "BE-Politicas",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    },
+    {
+      "id": "e183",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "BE-Ejecucion",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    },
+    {
+      "id": "e184",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "INF-Aislamiento",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    },
+    {
+      "id": "e185",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "AR-Microfrontends",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    },
+    {
+      "id": "e186",
+      "fromNode": "AR-Seguridad",
+      "fromSide": "right",
+      "toNode": "00-Arquitectura-Objetivo",
+      "toSide": "left",
+      "toEnd": "arrow",
+      "color": "#f87171"
+    }
+  ]
+}

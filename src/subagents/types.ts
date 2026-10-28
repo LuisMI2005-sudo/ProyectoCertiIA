@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  DiagnosticSchema, FileHashSchema, IdentifierSchema, RelativePathSchema, RunnerSchema
+  AnalyzeCodeInputSchema, DiagnosticSchema, FileHashSchema, IdentifierSchema, RelativePathSchema, RunnerSchema
 } from "../shared/contracts.js";
 import type { ToolName } from "../shared/contracts.js";
 import type { JsonValue } from "../shared/errors.js";
@@ -43,7 +43,7 @@ export interface SubagentTaskResult<TOutput> {
   readonly durationMs: number;
   readonly workerThreadId: number | null;
 }
-export const DiagnosticContextSchema = z.strictObject({ path: RelativePathSchema });
+export const DiagnosticContextSchema = z.strictObject({ path: RelativePathSchema, checks: AnalyzeCodeInputSchema.shape.checks.optional() });
 export const VerificationContextSchema = z.discriminatedUnion("mode", [
   z.strictObject({ mode: z.literal("baseline"), runner: RunnerSchema, targets: z.array(RelativePathSchema).min(1).max(200) }),
   z.strictObject({ mode: z.literal("candidate"), runner: RunnerSchema, targets: z.array(RelativePathSchema).min(1).max(200), baselineRunId: IdentifierSchema })

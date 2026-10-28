@@ -18,8 +18,9 @@ import { WorkspacePathGuard } from "../shared/path-security.js";
 import { DevGuardianCoordinator } from "../subagents/coordinator.js";
 import { TestRunner } from "../test-runner/index.js";
 import { EvaluateHookSchema, HttpError, RegisterProjectSchema, RunAuditSchema } from "./contracts.js";
-import type { ListQuery } from "./contracts.js";
+import type { HookLogQuery, ListQuery } from "./contracts.js";
 import { createCloudDemo } from "./cloud-demo.js";
+import { listProjectFiles } from "./project-files.js";
 
 const execute = promisify(execFile);
 const SYSTEM_NAME = "__devguardian_system__";
@@ -51,6 +52,10 @@ export interface BackendOptions {
   readonly demoEnabled?: boolean;
 }
 export class DevGuardianBackend {
+  public get importWorkspaceRoot(): string { return this.roots[0] ?? process.cwd(); }
+  private imported(project: ProjectRecord): boolean {
+    return this.roots.some((root) => path.relative(root, project.repoPath).split(path.sep)[0] === ".devguardian-imports");
+  }
   public readonly persistence: AuditPersistenceService;
   public readonly version: string;
   public readonly runners: readonly RunnerConfiguration[];
@@ -94,6 +99,7 @@ export class DevGuardianBackend {
   public async projects(): Promise<ProjectRecord[]> {
     return (await this.repository.listProjects()).filter((project) => project.name !== SYSTEM_NAME && this.allowed(project.repoPath));
   }
+  public async projectFiles(id: string) { return listProjectFiles((await this.project(id)).repoPath); }
   public async project(id: string): Promise<ProjectRecord> {
     const project = await this.repository.getProject(parseContract(IdentifierSchema, id));
     if (!project || !this.allowed(project.repoPath)) throw new HttpError(404, "Project not found.");
@@ -140,11 +146,12 @@ export class DevGuardianBackend {
     const audits = (await this.audits(query.projectId)).slice(query.offset, query.offset + query.limit);
     return Promise.all(audits.map((audit) => this.persistence.getAuditDetails(audit.id)));
   }
-  public async hookLogs(query: ListQuery) {
-    if (query.auditId) return (await this.audit(query.auditId, query.projectId)).hookLogs.slice(query.offset, query.offset + query.limit);
+  public async hookLogs(query: HookLogQuery) {
+    const filtered = <T extends { decision: string }>(logs: T[]): T[] => query.decision ? logs.filter((log) => log.decision === query.decision) : logs;
+    if (query.auditId) return filtered((await this.audit(query.auditId, query.projectId)).hookLogs).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(query.offset, query.offset + query.limit);
     const audits = await this.audits(query.projectId);
     const logs = (await Promise.all(audits.map((audit) => this.repository.listHookLogs(audit.id)))).flat();
-    return logs.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(query.offset, query.offset + query.limit);
+    return filtered(logs).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(query.offset, query.offset + query.limit);
   }
   public async delegations(query: ListQuery) {
     const audits = query.auditId ? [(await this.audit(query.auditId, query.projectId)).audit] : await this.audits(query.projectId);
@@ -161,7 +168,15 @@ export class DevGuardianBackend {
   }
   public async runAudit(raw: unknown) {
     const input = parseContract(RunAuditSchema, raw); const project = await this.project(input.projectId);
-    await this.assertWorkspace(project);
+    if (input.mode === "repair" && this.imported(project)) throw new HttpError(403, "Los repositorios importados solo permiten análisis estático hasta disponer de un sandbox de ejecución.");
+    try { await this.assertWorkspace(project); }
+    catch (error: unknown) {
+      // This preflight runs before any audit/patch: a missing workspace is a
+      // definitive rejection, not an ambiguous failure after a Git mutation.
+      if (error instanceof Error && "code" in error && error.code === ErrorCode.FILE_SYSTEM_ERROR)
+        throw new HttpError(409, error.message, ErrorCode.FILE_SYSTEM_ERROR);
+      throw error;
+    }
     return this.serialize(project.repoPath, async () => {
       if (input.mode === "repair") {
         const result = await this.persistence.repairProject(project.id, input.repair, { runners: this.runners, hookConfig: this.hookConfig });
@@ -174,7 +189,7 @@ export class DevGuardianBackend {
       try {
         const coordinator = await DevGuardianCoordinator.create({ workspaceRoot: project.repoPath, runners: this.runners, hookManager: hooks,
           delegationAdapter: new DatabaseDelegationPersistenceAdapter(this.repository) });
-        const diagnostic = await coordinator.diagnose(input.path, audit.id);
+        const diagnostic = await coordinator.diagnose(input.path, audit.id, undefined, input.checks);
         await coordinator.delegationStore.consume(diagnostic.taskId, "diagnosis_only", "No patch was requested.");
         await this.repository.saveAuditSession({ ...audit, status: diagnostic.status === "completed" ? "blocked" : "failed", finishedAt: new Date().toISOString(),
           summaryJson: { mode: "diagnose", outcome: diagnostic.status === "completed" ? "diagnosed" : "failed", diagnostic: toJson(diagnostic),
@@ -226,6 +241,7 @@ export class DevGuardianBackend {
         const hooks = createHookManager(this.hookConfig, new DatabaseHookPersistenceAdapter(this.repository, audit.id));
         hooks.register({ id: "mcp-context-policy", name: "MCP context policy", events: ["pre:tool_call"], execute: () => {
           if (projectId !== undefined && !resolved?.ok) return { decision: "block", reason: "Project is unavailable or outside the allowed roots." };
+          if (this.imported(project) && name === "run_tests") return { decision: "block", reason: "Las pruebas de repositorios importados requieren un sandbox de ejecución; solo está habilitado el análisis estático." };
           const args = typeof raw === "object" && raw !== null ? raw as Record<string, unknown> : {};
           const paths = [args["path"], ...(Array.isArray(args["paths"]) ? args["paths"] : [])];
           if (paths.some((value) => typeof value === "string" && /^\.env(?:\.|$)/iu.test(path.basename(value.replaceAll("\\", "/"))))) {

@@ -8,7 +8,8 @@ import { parseContract } from "../shared/contracts.js";
 import { DevGuardianError, failure } from "../shared/errors.js";
 import { DevGuardianBackend } from "./application.js";
 import type { BackendOptions } from "./application.js";
-import { HttpError, ListQuerySchema } from "./contracts.js";
+import { HookLogQuerySchema, HttpError, ListQuerySchema } from "./contracts.js";
+import { ProjectImporter } from "./project-import.js";
 
 export interface RequestLog { readonly requestId: string; readonly method: string; readonly path: string; readonly status: number; readonly durationMs: number }
 export interface HttpServerOptions extends Partial<BackendOptions> {
@@ -70,6 +71,7 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
   catch (error: unknown) { await repository.close(); throw error; }
   const origins = (options.allowedOrigin ?? process.env["ALLOWED_ORIGIN"] ?? process.env["CORS_ORIGIN"] ?? "*").split(",").map((value) => value.trim());
   const token = options.apiToken ?? process.env["DEVGUARDIAN_API_TOKEN"];
+  const importer = new ProjectImporter(backend.importWorkspaceRoot, (raw) => backend.registerProject(raw));
   let active = 0;
   const server = createServer((request, response) => {
     const requestId = randomUUID(), started = performance.now();
@@ -98,13 +100,19 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
         if (!health && !authenticated(request, token)) throw new HttpError(401, "Authentication required.");
         if (active >= maxRequests) throw new HttpError(503, "Server request capacity reached."); active += 1; counted = true;
         const method = request.method;
-        const query = (): ReturnType<typeof ListQuerySchema.parse> => {
+        const query = (hookLogs = false): ReturnType<typeof HookLogQuerySchema.parse> => {
           const values: Record<string, string> = {};
           for (const [key, value] of url.searchParams) { if (key in values) throw new HttpError(422, "Duplicate query parameter."); values[key] = value; }
-          return parseContract(ListQuerySchema, values);
+          return parseContract(hookLogs ? HookLogQuerySchema : ListQuerySchema, values);
         };
         if (health && method === "GET") { const data = await backend.health(); json(response, data.database.connected ? 200 : 503, { ok: data.database.connected, data }); return; }
         if (pathname === "/api/projects" && method === "GET") { json(response, 200, { ok: true, data: await backend.projects() }); return; }
+        const projectFiles = pathname.match(/^\/api\/projects\/([^/]+)\/files$/u);
+        if (projectFiles && method === "GET") {
+          if (url.search) throw new HttpError(422, "El listado de archivos no acepta rutas ni parámetros.");
+          json(response, 200, { ok: true, data: await backend.projectFiles(projectFiles[1] ?? "") }); return;
+        }
+        if (pathname === "/api/projects/import" && method === "POST") { await importer.stream(await readJson(request, maxBodyBytes), response); return; }
         if (pathname === "/api/projects" && method === "POST") { json(response, 201, { ok: true, data: await backend.registerProject(await readJson(request, maxBodyBytes)) }); return; }
         if (pathname === "/api/demo/prepare" && method === "POST") { json(response, 201, { ok: true, data: await backend.prepareDemo(await readJson(request, maxBodyBytes)) }); return; }
         if (pathname === "/api/audits" && method === "GET") { json(response, 200, { ok: true, data: await backend.auditDetails(query()) }); return; }
@@ -112,7 +120,7 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
         const audit = pathname.match(/^\/api\/audits\/([^/]+)$/u);
         if (audit && method === "GET") { json(response, 200, { ok: true, data: await backend.audit(audit[1] ?? "") }); return; }
         if (pathname === "/api/hooks/config" && method === "GET") { json(response, 200, { ok: true, data: backend.hookConfiguration() }); return; }
-        if (pathname === "/api/hooks/logs" && method === "GET") { json(response, 200, { ok: true, data: await backend.hookLogs(query()) }); return; }
+        if (pathname === "/api/hooks/logs" && method === "GET") { json(response, 200, { ok: true, data: await backend.hookLogs(query(true)) }); return; }
         if (pathname === "/api/hooks/evaluate" && method === "POST") { const data = await backend.evaluateHook(await readJson(request, maxBodyBytes)); json(response, data.decision === "block" ? 403 : 200, { ok: data.decision !== "block", data }); return; }
         if (pathname === "/api/subagents/delegations" && method === "GET") { json(response, 200, { ok: true, data: await backend.delegations(query()) }); return; }
         if (pathname === "/api/mcp" && method === "POST") {
@@ -125,9 +133,9 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
           if (!request.headers.accept || request.headers.accept === "*/*") request.headers.accept = "application/json, text/event-stream";
           await handleMcpHttp(backend, request, response, body); return;
         }
-        const known = health || /^\/api\/(?:projects|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
+        const known = health || /^\/api\/(?:projects(?:\/import|\/[^/]+\/files)?|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
         if (known) response.setHeader("Allow", pathname === "/api/projects" ? "GET, POST, OPTIONS"
-          : ["/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) ? "POST, OPTIONS" : "GET, OPTIONS");
+          : ["/api/projects/import", "/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) ? "POST, OPTIONS" : "GET, OPTIONS");
         throw new HttpError(known ? 405 : 404, known ? "Method not allowed." : "Endpoint not found.");
       } catch (error: unknown) {
         const status = statusFor(error);

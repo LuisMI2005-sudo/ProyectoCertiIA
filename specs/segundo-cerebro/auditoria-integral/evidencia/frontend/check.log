@@ -1,0 +1,12 @@
+
+> proyectofrontend@1.0.0 check
+> npm run typecheck && npm run lint
+
+
+> proyectofrontend@1.0.0 typecheck
+> tsc --noEmit
+
+
+> proyectofrontend@1.0.0 lint
+> eslint .
+

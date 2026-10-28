@@ -1,14 +1,14 @@
 {
   "scenario": "success",
-  "generatedAt": "2026-10-19T18:44:01.952Z",
-  "originalHead": "019cf3d347642d523dd5fdb61d9c615e07030974",
-  "currentHead": "f0538b462134c246dbc23e0bcd18acdde669cf6c",
+  "generatedAt": "2026-10-22T16:59:56.424Z",
+  "originalHead": "abfd0bb691608adf1e11d85f3988faa4acfe9540",
+  "currentHead": "65aa40770ad887dcd9e7ca7ef7b9e20e524bf36f",
   "result": {
-    "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+    "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
     "status": "committed",
     "diagnostic": {
       "path": "src/bug.ts",
-      "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+      "analysisId": "b7c63ad0-f9b1-483e-a2a8-320573fa02bb",
       "findings": [
         {
           "path": "src/bug.ts",
@@ -40,13 +40,13 @@
     },
     "verification": {
       "verdict": "ready_to_commit",
-      "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-      "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
-      "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+      "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+      "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0",
+      "verificationId": "b53499fd-2692-4812-be0f-eef45831a0f0",
       "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
     },
     "commit": {
-      "commit": "f0538b462134c246dbc23e0bcd18acdde669cf6c",
+      "commit": "65aa40770ad887dcd9e7ca7ef7b9e20e524bf36f",
       "branch": "fix/demo-success",
       "files": [
         "src/bug.ts"
@@ -64,11 +64,11 @@
   },
   "delegationLogs": [
     {
-      "delegationId": "dc5cdbdd-6358-4be2-9cef-f75c4e2f6d5b",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "e44f7f49-7937-411b-a091-14dcec27f04a",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "diagnostic",
         "objective": "Locate and prioritize static defects in one target file.",
         "scopedContext": {
@@ -86,14 +86,14 @@
       "result": null,
       "phase": "delegated",
       "consumption": null,
-      "timestamp": "2026-10-19T18:43:43.721Z"
+      "timestamp": "2026-10-22T16:59:30.084Z"
     },
     {
-      "delegationId": "dc5cdbdd-6358-4be2-9cef-f75c4e2f6d5b",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "e44f7f49-7937-411b-a091-14dcec27f04a",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "diagnostic",
         "objective": "Locate and prioritize static defects in one target file.",
         "scopedContext": {
@@ -109,13 +109,13 @@
         }
       },
       "result": {
-        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-        "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207",
+        "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+        "subagentId": "3b0f2989-cb29-45f9-8b79-d364ec7bc231",
         "role": "diagnostic",
         "status": "completed",
         "output": {
           "path": "src/bug.ts",
-          "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+          "analysisId": "b7c63ad0-f9b1-483e-a2a8-320573fa02bb",
           "findings": [
             {
               "path": "src/bug.ts",
@@ -148,7 +148,7 @@
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "ba622ce7-007b-4ea5-9cd2-774c6457ffbc",
+            "callId": "b4072861-a2e4-4ad4-9ded-a328e2df3d10",
             "tool": "analyze_code",
             "input": {
               "paths": [
@@ -162,20 +162,20 @@
             },
             "status": "completed",
             "output": {
-              "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+              "analysisId": "b7c63ad0-f9b1-483e-a2a8-320573fa02bb",
               "analyzedFiles": [
                 "src/bug.ts"
               ],
               "truncated": false
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:44.243Z",
-            "finishedAt": "2026-10-19T18:43:45.422Z",
-            "durationMs": 1179.5639,
+            "startedAt": "2026-10-22T16:59:30.655Z",
+            "finishedAt": "2026-10-22T16:59:33.499Z",
+            "durationMs": 2843.8064000000013,
             "dispatched": true
           },
           {
-            "callId": "776f1ce1-c4dc-4d31-a9f3-61f94fb9c09e",
+            "callId": "344ac0b1-de72-48aa-b540-bd8cb07605ed",
             "tool": "read_file_context",
             "input": {
               "path": "src/bug.ts",
@@ -191,27 +191,27 @@
               "truncated": false
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:45.438Z",
-            "finishedAt": "2026-10-19T18:43:45.453Z",
-            "durationMs": 14.796800000000076,
+            "startedAt": "2026-10-22T16:59:33.511Z",
+            "finishedAt": "2026-10-22T16:59:33.531Z",
+            "durationMs": 20.336199999997916,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:43.728Z",
-        "finishedAt": "2026-10-19T18:43:45.469Z",
-        "durationMs": 1740.5356000000002,
+        "startedAt": "2026-10-22T16:59:30.091Z",
+        "finishedAt": "2026-10-22T16:59:33.546Z",
+        "durationMs": 3455.4809999999998,
         "workerThreadId": 1
       },
       "phase": "returned",
       "consumption": null,
-      "timestamp": "2026-10-19T18:43:45.469Z"
+      "timestamp": "2026-10-22T16:59:33.547Z"
     },
     {
-      "delegationId": "dc5cdbdd-6358-4be2-9cef-f75c4e2f6d5b",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "e44f7f49-7937-411b-a091-14dcec27f04a",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "diagnostic",
         "objective": "Locate and prioritize static defects in one target file.",
         "scopedContext": {
@@ -227,13 +227,13 @@
         }
       },
       "result": {
-        "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-        "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207",
+        "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+        "subagentId": "3b0f2989-cb29-45f9-8b79-d364ec7bc231",
         "role": "diagnostic",
         "status": "completed",
         "output": {
           "path": "src/bug.ts",
-          "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+          "analysisId": "b7c63ad0-f9b1-483e-a2a8-320573fa02bb",
           "findings": [
             {
               "path": "src/bug.ts",
@@ -266,7 +266,7 @@
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "ba622ce7-007b-4ea5-9cd2-774c6457ffbc",
+            "callId": "b4072861-a2e4-4ad4-9ded-a328e2df3d10",
             "tool": "analyze_code",
             "input": {
               "paths": [
@@ -280,20 +280,20 @@
             },
             "status": "completed",
             "output": {
-              "analysisId": "fd0cbf49-d08d-41a5-84e1-cb226e55b058",
+              "analysisId": "b7c63ad0-f9b1-483e-a2a8-320573fa02bb",
               "analyzedFiles": [
                 "src/bug.ts"
               ],
               "truncated": false
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:44.243Z",
-            "finishedAt": "2026-10-19T18:43:45.422Z",
-            "durationMs": 1179.5639,
+            "startedAt": "2026-10-22T16:59:30.655Z",
+            "finishedAt": "2026-10-22T16:59:33.499Z",
+            "durationMs": 2843.8064000000013,
             "dispatched": true
           },
           {
-            "callId": "776f1ce1-c4dc-4d31-a9f3-61f94fb9c09e",
+            "callId": "344ac0b1-de72-48aa-b540-bd8cb07605ed",
             "tool": "read_file_context",
             "input": {
               "path": "src/bug.ts",
@@ -309,31 +309,31 @@
               "truncated": false
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:45.438Z",
-            "finishedAt": "2026-10-19T18:43:45.453Z",
-            "durationMs": 14.796800000000076,
+            "startedAt": "2026-10-22T16:59:33.511Z",
+            "finishedAt": "2026-10-22T16:59:33.531Z",
+            "durationMs": 20.336199999997916,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:43.728Z",
-        "finishedAt": "2026-10-19T18:43:45.469Z",
-        "durationMs": 1740.5356000000002,
+        "startedAt": "2026-10-22T16:59:30.091Z",
+        "finishedAt": "2026-10-22T16:59:33.546Z",
+        "durationMs": 3455.4809999999998,
         "workerThreadId": 1
       },
       "phase": "consumed",
       "consumption": {
         "decision": "prepare_repair",
-        "reason": "Diagnosis fd0cbf49-d08d-41a5-84e1-cb226e55b058 authorizes patching src/bug.ts.",
-        "timestamp": "2026-10-19T18:43:45.470Z"
+        "reason": "Diagnosis b7c63ad0-f9b1-483e-a2a8-320573fa02bb authorizes patching src/bug.ts.",
+        "timestamp": "2026-10-22T16:59:33.549Z"
       },
-      "timestamp": "2026-10-19T18:43:45.470Z"
+      "timestamp": "2026-10-22T16:59:33.549Z"
     },
     {
-      "delegationId": "2f74dbb1-6242-4450-bf3e-af982ea16b0a",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "c93cf724-f004-44a0-8e50-1226bf3ffa9c",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Capture failing baseline before any patch is applied.",
         "scopedContext": {
@@ -355,14 +355,14 @@
       "result": null,
       "phase": "delegated",
       "consumption": null,
-      "timestamp": "2026-10-19T18:43:47.845Z"
+      "timestamp": "2026-10-22T16:59:35.767Z"
     },
     {
-      "delegationId": "2f74dbb1-6242-4450-bf3e-af982ea16b0a",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "c93cf724-f004-44a0-8e50-1226bf3ffa9c",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Capture failing baseline before any patch is applied.",
         "scopedContext": {
@@ -382,13 +382,13 @@
         }
       },
       "result": {
-        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-        "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12",
+        "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+        "subagentId": "35d2ffb8-7eec-401c-858a-5198687367d7",
         "role": "verification",
         "status": "completed",
         "output": {
           "verdict": "inconclusive",
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
           "candidateRunId": null,
           "verificationId": null,
           "reason": "Failing baseline captured before patching."
@@ -396,7 +396,7 @@
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "ad2c1a50-b0ea-4c63-aa79-5c044162176b",
+            "callId": "e8562f39-9f66-4cdf-832c-635bc76a3510",
             "tool": "run_tests",
             "input": {
               "runner": "jest",
@@ -406,7 +406,7 @@
             },
             "status": "completed",
             "output": {
-              "runId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "runId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
               "status": "failed",
               "summary": {
                 "total": 2,
@@ -416,31 +416,31 @@
                 "todo": 0
               },
               "complete": true,
-              "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c",
-              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+              "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f",
+              "configurationHash": "664a11880eb61c42842e63210ff727c3f4341e8d8de0e8bcc5db9a1be829b6e5"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:48.310Z",
-            "finishedAt": "2026-10-19T18:43:49.724Z",
-            "durationMs": 1414.7286000000004,
+            "startedAt": "2026-10-22T16:59:36.196Z",
+            "finishedAt": "2026-10-22T16:59:47.146Z",
+            "durationMs": 10949.7491,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:47.845Z",
-        "finishedAt": "2026-10-19T18:43:49.743Z",
-        "durationMs": 1897.6713,
+        "startedAt": "2026-10-22T16:59:35.768Z",
+        "finishedAt": "2026-10-22T16:59:47.154Z",
+        "durationMs": 11386.502999999997,
         "workerThreadId": 2
       },
       "phase": "returned",
       "consumption": null,
-      "timestamp": "2026-10-19T18:43:49.743Z"
+      "timestamp": "2026-10-22T16:59:47.154Z"
     },
     {
-      "delegationId": "2f74dbb1-6242-4450-bf3e-af982ea16b0a",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "c93cf724-f004-44a0-8e50-1226bf3ffa9c",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Capture failing baseline before any patch is applied.",
         "scopedContext": {
@@ -460,13 +460,13 @@
         }
       },
       "result": {
-        "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-        "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12",
+        "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+        "subagentId": "35d2ffb8-7eec-401c-858a-5198687367d7",
         "role": "verification",
         "status": "completed",
         "output": {
           "verdict": "inconclusive",
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
           "candidateRunId": null,
           "verificationId": null,
           "reason": "Failing baseline captured before patching."
@@ -474,7 +474,7 @@
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "ad2c1a50-b0ea-4c63-aa79-5c044162176b",
+            "callId": "e8562f39-9f66-4cdf-832c-635bc76a3510",
             "tool": "run_tests",
             "input": {
               "runner": "jest",
@@ -484,7 +484,7 @@
             },
             "status": "completed",
             "output": {
-              "runId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
+              "runId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
               "status": "failed",
               "summary": {
                 "total": 2,
@@ -494,35 +494,35 @@
                 "todo": 0
               },
               "complete": true,
-              "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c",
-              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+              "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f",
+              "configurationHash": "664a11880eb61c42842e63210ff727c3f4341e8d8de0e8bcc5db9a1be829b6e5"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:48.310Z",
-            "finishedAt": "2026-10-19T18:43:49.724Z",
-            "durationMs": 1414.7286000000004,
+            "startedAt": "2026-10-22T16:59:36.196Z",
+            "finishedAt": "2026-10-22T16:59:47.146Z",
+            "durationMs": 10949.7491,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:47.845Z",
-        "finishedAt": "2026-10-19T18:43:49.743Z",
-        "durationMs": 1897.6713,
+        "startedAt": "2026-10-22T16:59:35.768Z",
+        "finishedAt": "2026-10-22T16:59:47.154Z",
+        "durationMs": 11386.502999999997,
         "workerThreadId": 2
       },
       "phase": "consumed",
       "consumption": {
         "decision": "apply_patch",
-        "reason": "Baseline f4ad31a4-6cb4-405b-84ab-556e10111d49 captures the failing checkpoint.",
-        "timestamp": "2026-10-19T18:43:50.043Z"
+        "reason": "Baseline 6fbcb0c3-b989-4b08-87c7-8aef68c65862 captures the failing checkpoint.",
+        "timestamp": "2026-10-22T16:59:47.446Z"
       },
-      "timestamp": "2026-10-19T18:43:50.043Z"
+      "timestamp": "2026-10-22T16:59:47.446Z"
     },
     {
-      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "618f73bc-6924-4edd-8def-65ea65497921",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
         "scopedContext": {
@@ -531,7 +531,7 @@
           "targets": [
             "tests/bug.test.cjs"
           ],
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862"
         },
         "allowedTools": [
           "run_tests",
@@ -545,14 +545,14 @@
       "result": null,
       "phase": "delegated",
       "consumption": null,
-      "timestamp": "2026-10-19T18:43:54.192Z"
+      "timestamp": "2026-10-22T16:59:50.863Z"
     },
     {
-      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "618f73bc-6924-4edd-8def-65ea65497921",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
         "scopedContext": {
@@ -561,7 +561,7 @@
           "targets": [
             "tests/bug.test.cjs"
           ],
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862"
         },
         "allowedTools": [
           "run_tests",
@@ -573,21 +573,21 @@
         }
       },
       "result": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "subagentId": "4be79cff-237d-4a4d-81ed-ef7b2281e74c",
         "role": "verification",
         "status": "completed",
         "output": {
           "verdict": "ready_to_commit",
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-          "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
-          "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+          "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0",
+          "verificationId": "b53499fd-2692-4812-be0f-eef45831a0f0",
           "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
         },
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "4b3242dc-d8c5-4b68-a20c-d5e2da06780c",
+            "callId": "773f6df8-fccc-45f2-b5f8-f223f13492bc",
             "tool": "run_tests",
             "input": {
               "runner": "jest",
@@ -597,7 +597,7 @@
             },
             "status": "completed",
             "output": {
-              "runId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+              "runId": "b53499fd-2692-4812-be0f-eef45831a0f0",
               "status": "passed",
               "summary": {
                 "total": 2,
@@ -607,21 +607,21 @@
                 "todo": 0
               },
               "complete": true,
-              "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de",
-              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+              "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5",
+              "configurationHash": "664a11880eb61c42842e63210ff727c3f4341e8d8de0e8bcc5db9a1be829b6e5"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:54.703Z",
-            "finishedAt": "2026-10-19T18:43:56.192Z",
-            "durationMs": 1488.8174999999992,
+            "startedAt": "2026-10-22T16:59:51.054Z",
+            "finishedAt": "2026-10-22T16:59:52.297Z",
+            "durationMs": 1242.0371999999988,
             "dispatched": true
           },
           {
-            "callId": "d71d3fc1-fc00-4032-b257-bfea13424127",
+            "callId": "a08704d7-dcf7-4952-be93-5d1b9d9d0ce8",
             "tool": "compare_test_runs",
             "input": {
-              "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-              "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec"
+              "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+              "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0"
             },
             "status": "completed",
             "output": {
@@ -634,27 +634,27 @@
               "verdict": "success"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:56.203Z",
-            "finishedAt": "2026-10-19T18:43:56.207Z",
-            "durationMs": 4.113499999999476,
+            "startedAt": "2026-10-22T16:59:52.302Z",
+            "finishedAt": "2026-10-22T16:59:52.304Z",
+            "durationMs": 2.0689999999958673,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:54.193Z",
-        "finishedAt": "2026-10-19T18:43:56.215Z",
-        "durationMs": 2022.2253999999994,
+        "startedAt": "2026-10-22T16:59:50.863Z",
+        "finishedAt": "2026-10-22T16:59:52.308Z",
+        "durationMs": 1444.5786999999982,
         "workerThreadId": 3
       },
       "phase": "returned",
       "consumption": null,
-      "timestamp": "2026-10-19T18:43:56.216Z"
+      "timestamp": "2026-10-22T16:59:52.308Z"
     },
     {
-      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "618f73bc-6924-4edd-8def-65ea65497921",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
         "scopedContext": {
@@ -663,7 +663,7 @@
           "targets": [
             "tests/bug.test.cjs"
           ],
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862"
         },
         "allowedTools": [
           "run_tests",
@@ -675,21 +675,21 @@
         }
       },
       "result": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "subagentId": "4be79cff-237d-4a4d-81ed-ef7b2281e74c",
         "role": "verification",
         "status": "completed",
         "output": {
           "verdict": "ready_to_commit",
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-          "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
-          "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+          "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0",
+          "verificationId": "b53499fd-2692-4812-be0f-eef45831a0f0",
           "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
         },
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "4b3242dc-d8c5-4b68-a20c-d5e2da06780c",
+            "callId": "773f6df8-fccc-45f2-b5f8-f223f13492bc",
             "tool": "run_tests",
             "input": {
               "runner": "jest",
@@ -699,7 +699,7 @@
             },
             "status": "completed",
             "output": {
-              "runId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+              "runId": "b53499fd-2692-4812-be0f-eef45831a0f0",
               "status": "passed",
               "summary": {
                 "total": 2,
@@ -709,21 +709,21 @@
                 "todo": 0
               },
               "complete": true,
-              "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de",
-              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+              "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5",
+              "configurationHash": "664a11880eb61c42842e63210ff727c3f4341e8d8de0e8bcc5db9a1be829b6e5"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:54.703Z",
-            "finishedAt": "2026-10-19T18:43:56.192Z",
-            "durationMs": 1488.8174999999992,
+            "startedAt": "2026-10-22T16:59:51.054Z",
+            "finishedAt": "2026-10-22T16:59:52.297Z",
+            "durationMs": 1242.0371999999988,
             "dispatched": true
           },
           {
-            "callId": "d71d3fc1-fc00-4032-b257-bfea13424127",
+            "callId": "a08704d7-dcf7-4952-be93-5d1b9d9d0ce8",
             "tool": "compare_test_runs",
             "input": {
-              "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-              "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec"
+              "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+              "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0"
             },
             "status": "completed",
             "output": {
@@ -736,31 +736,31 @@
               "verdict": "success"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:56.203Z",
-            "finishedAt": "2026-10-19T18:43:56.207Z",
-            "durationMs": 4.113499999999476,
+            "startedAt": "2026-10-22T16:59:52.302Z",
+            "finishedAt": "2026-10-22T16:59:52.304Z",
+            "durationMs": 2.0689999999958673,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:54.193Z",
-        "finishedAt": "2026-10-19T18:43:56.215Z",
-        "durationMs": 2022.2253999999994,
+        "startedAt": "2026-10-22T16:59:50.863Z",
+        "finishedAt": "2026-10-22T16:59:52.308Z",
+        "durationMs": 1444.5786999999982,
         "workerThreadId": 3
       },
       "phase": "consumed",
       "consumption": {
         "decision": "commit_authorized",
-        "reason": "Use trusted evidence 97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec for Git commit.",
-        "timestamp": "2026-10-19T18:43:56.216Z"
+        "reason": "Use trusted evidence b53499fd-2692-4812-be0f-eef45831a0f0 for Git commit.",
+        "timestamp": "2026-10-22T16:59:52.308Z"
       },
-      "timestamp": "2026-10-19T18:43:56.216Z"
+      "timestamp": "2026-10-22T16:59:52.308Z"
     },
     {
-      "delegationId": "29db778e-360f-4e98-90af-6a620d3f8c48",
-      "coordinatorId": "b25597f2-4167-410e-b150-337e13b28059",
+      "delegationId": "618f73bc-6924-4edd-8def-65ea65497921",
+      "coordinatorId": "583aeb0c-4cc2-46c1-9d7f-bce644225f44",
       "request": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
         "role": "verification",
         "objective": "Verify the patched candidate against the captured baseline and decide whether to commit.",
         "scopedContext": {
@@ -769,7 +769,7 @@
           "targets": [
             "tests/bug.test.cjs"
           ],
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49"
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862"
         },
         "allowedTools": [
           "run_tests",
@@ -781,21 +781,21 @@
         }
       },
       "result": {
-        "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-        "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e",
+        "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+        "subagentId": "4be79cff-237d-4a4d-81ed-ef7b2281e74c",
         "role": "verification",
         "status": "completed",
         "output": {
           "verdict": "ready_to_commit",
-          "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-          "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
-          "verificationId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+          "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+          "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0",
+          "verificationId": "b53499fd-2692-4812-be0f-eef45831a0f0",
           "reason": "All tests pass; baseline failures resolved with no regressions or omissions."
         },
         "reason": null,
         "toolCallsExecuted": [
           {
-            "callId": "4b3242dc-d8c5-4b68-a20c-d5e2da06780c",
+            "callId": "773f6df8-fccc-45f2-b5f8-f223f13492bc",
             "tool": "run_tests",
             "input": {
               "runner": "jest",
@@ -805,7 +805,7 @@
             },
             "status": "completed",
             "output": {
-              "runId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec",
+              "runId": "b53499fd-2692-4812-be0f-eef45831a0f0",
               "status": "passed",
               "summary": {
                 "total": 2,
@@ -815,21 +815,21 @@
                 "todo": 0
               },
               "complete": true,
-              "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de",
-              "configurationHash": "f27c31e4bb0aba28f78e92ca533ee3230f32ace8e0f494d3c7247e49725b1b0a"
+              "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5",
+              "configurationHash": "664a11880eb61c42842e63210ff727c3f4341e8d8de0e8bcc5db9a1be829b6e5"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:54.703Z",
-            "finishedAt": "2026-10-19T18:43:56.192Z",
-            "durationMs": 1488.8174999999992,
+            "startedAt": "2026-10-22T16:59:51.054Z",
+            "finishedAt": "2026-10-22T16:59:52.297Z",
+            "durationMs": 1242.0371999999988,
             "dispatched": true
           },
           {
-            "callId": "d71d3fc1-fc00-4032-b257-bfea13424127",
+            "callId": "a08704d7-dcf7-4952-be93-5d1b9d9d0ce8",
             "tool": "compare_test_runs",
             "input": {
-              "baselineRunId": "f4ad31a4-6cb4-405b-84ab-556e10111d49",
-              "candidateRunId": "97dd7bc8-2b1c-48f1-bf5f-38a6ff3b62ec"
+              "baselineRunId": "6fbcb0c3-b989-4b08-87c7-8aef68c65862",
+              "candidateRunId": "b53499fd-2692-4812-be0f-eef45831a0f0"
             },
             "status": "completed",
             "output": {
@@ -842,24 +842,24 @@
               "verdict": "success"
             },
             "reason": null,
-            "startedAt": "2026-10-19T18:43:56.203Z",
-            "finishedAt": "2026-10-19T18:43:56.207Z",
-            "durationMs": 4.113499999999476,
+            "startedAt": "2026-10-22T16:59:52.302Z",
+            "finishedAt": "2026-10-22T16:59:52.304Z",
+            "durationMs": 2.0689999999958673,
             "dispatched": true
           }
         ],
-        "startedAt": "2026-10-19T18:43:54.193Z",
-        "finishedAt": "2026-10-19T18:43:56.215Z",
-        "durationMs": 2022.2253999999994,
+        "startedAt": "2026-10-22T16:59:50.863Z",
+        "finishedAt": "2026-10-22T16:59:52.308Z",
+        "durationMs": 1444.5786999999982,
         "workerThreadId": 3
       },
       "phase": "consumed",
       "consumption": {
         "decision": "committed",
-        "reason": "Committed f0538b462134c246dbc23e0bcd18acdde669cf6c after independent verification and commit hooks.",
-        "timestamp": "2026-10-19T18:44:01.843Z"
+        "reason": "Committed 65aa40770ad887dcd9e7ca7ef7b9e20e524bf36f after independent verification and commit hooks.",
+        "timestamp": "2026-10-22T16:59:56.340Z"
       },
-      "timestamp": "2026-10-19T18:44:01.843Z"
+      "timestamp": "2026-10-22T16:59:56.340Z"
     }
   ],
   "hookConfig": {
@@ -886,8 +886,8 @@
       "event": "pre:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:43.726Z",
-      "durationMs": 0.3039000000003398,
+      "timestamp": "2026-10-22T16:59:30.089Z",
+      "durationMs": 0.2790999999997439,
       "metadata": {
         "warning": false,
         "config": {
@@ -908,8 +908,8 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "diagnostic"
         },
         "workspaceStateHash": null
@@ -921,8 +921,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:43.727Z",
-      "durationMs": 1.3083999999998923,
+      "timestamp": "2026-10-22T16:59:30.090Z",
+      "durationMs": 1.1913000000022294,
       "metadata": {
         "warning": false,
         "config": {
@@ -951,8 +951,8 @@
       "event": "pre:analyze",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:44.245Z",
-      "durationMs": 0.15439999999989595,
+      "timestamp": "2026-10-22T16:59:30.658Z",
+      "durationMs": 0.21900000000096043,
       "metadata": {
         "warning": false,
         "config": {
@@ -981,8 +981,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:44.246Z",
-      "durationMs": 0.5003000000001521,
+      "timestamp": "2026-10-22T16:59:30.659Z",
+      "durationMs": 0.6475999999966007,
       "metadata": {
         "warning": false,
         "config": {
@@ -1011,8 +1011,8 @@
       "event": "post:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:45.469Z",
-      "durationMs": 0.14000000000032742,
+      "timestamp": "2026-10-22T16:59:33.548Z",
+      "durationMs": 0.19110000000000582,
       "metadata": {
         "warning": false,
         "config": {
@@ -1033,10 +1033,10 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "diagnostic",
-          "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207"
+          "subagentId": "3b0f2989-cb29-45f9-8b79-d364ec7bc231"
         },
         "workspaceStateHash": null
       }
@@ -1047,8 +1047,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:45.470Z",
-      "durationMs": 0.2348999999994703,
+      "timestamp": "2026-10-22T16:59:33.548Z",
+      "durationMs": 0.27379999999902793,
       "metadata": {
         "warning": false,
         "config": {
@@ -1077,8 +1077,8 @@
       "event": "pre:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:47.845Z",
-      "durationMs": 0.11560000000008586,
+      "timestamp": "2026-10-22T16:59:35.767Z",
+      "durationMs": 0.13919999999779975,
       "metadata": {
         "warning": false,
         "config": {
@@ -1099,8 +1099,8 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification"
         },
         "workspaceStateHash": null
@@ -1112,8 +1112,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:47.845Z",
-      "durationMs": 0.17669999999998254,
+      "timestamp": "2026-10-22T16:59:35.768Z",
+      "durationMs": 0.21300000000337604,
       "metadata": {
         "warning": false,
         "config": {
@@ -1142,8 +1142,8 @@
       "event": "pre:run_tests",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:48.312Z",
-      "durationMs": 0.14030000000002474,
+      "timestamp": "2026-10-22T16:59:36.197Z",
+      "durationMs": 0.08390000000508735,
       "metadata": {
         "warning": false,
         "config": {
@@ -1172,8 +1172,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:48.312Z",
-      "durationMs": 0.0922999999993408,
+      "timestamp": "2026-10-22T16:59:36.198Z",
+      "durationMs": 0.09070000000065193,
       "metadata": {
         "warning": false,
         "config": {
@@ -1202,8 +1202,8 @@
       "event": "post:test_run",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:49.723Z",
-      "durationMs": 0.1257000000005064,
+      "timestamp": "2026-10-22T16:59:47.146Z",
+      "durationMs": 0.04409999999916181,
       "metadata": {
         "warning": false,
         "config": {
@@ -1223,7 +1223,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+        "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f"
       }
     },
     {
@@ -1232,8 +1232,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:49.723Z",
-      "durationMs": 0.16769999999996799,
+      "timestamp": "2026-10-22T16:59:47.146Z",
+      "durationMs": 0.05279999999766005,
       "metadata": {
         "warning": false,
         "config": {
@@ -1253,7 +1253,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+        "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f"
       }
     },
     {
@@ -1262,8 +1262,8 @@
       "event": "post:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:49.743Z",
-      "durationMs": 0.07380000000011933,
+      "timestamp": "2026-10-22T16:59:47.155Z",
+      "durationMs": 0.03800000000046566,
       "metadata": {
         "warning": false,
         "config": {
@@ -1284,10 +1284,10 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification",
-          "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12"
+          "subagentId": "35d2ffb8-7eec-401c-858a-5198687367d7"
         },
         "workspaceStateHash": null
       }
@@ -1298,8 +1298,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:49.744Z",
-      "durationMs": 0.21680000000014843,
+      "timestamp": "2026-10-22T16:59:47.155Z",
+      "durationMs": 0.09210000000166474,
       "metadata": {
         "warning": false,
         "config": {
@@ -1328,8 +1328,8 @@
       "event": "pre:apply_patch",
       "decision": "allow",
       "reason": "Files and added content satisfy guardrails.",
-      "timestamp": "2026-10-19T18:43:51.643Z",
-      "durationMs": 13.226200000000972,
+      "timestamp": "2026-10-22T16:59:48.119Z",
+      "durationMs": 7.669399999998859,
       "metadata": {
         "warning": false,
         "config": {
@@ -1349,7 +1349,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+        "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f"
       }
     },
     {
@@ -1358,8 +1358,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:51.643Z",
-      "durationMs": 0.22769999999945867,
+      "timestamp": "2026-10-22T16:59:48.120Z",
+      "durationMs": 0.07029999999940628,
       "metadata": {
         "warning": false,
         "config": {
@@ -1379,7 +1379,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+        "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f"
       }
     },
     {
@@ -1388,8 +1388,8 @@
       "event": "pre:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:54.193Z",
-      "durationMs": 0.10249999999905413,
+      "timestamp": "2026-10-22T16:59:50.863Z",
+      "durationMs": 0.04680000000371365,
       "metadata": {
         "warning": false,
         "config": {
@@ -1410,8 +1410,8 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification"
         },
         "workspaceStateHash": null
@@ -1423,8 +1423,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:54.193Z",
-      "durationMs": 0.20420000000012806,
+      "timestamp": "2026-10-22T16:59:50.863Z",
+      "durationMs": 0.10339999999996508,
       "metadata": {
         "warning": false,
         "config": {
@@ -1453,8 +1453,8 @@
       "event": "pre:run_tests",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:54.704Z",
-      "durationMs": 0.11329999999907159,
+      "timestamp": "2026-10-22T16:59:51.055Z",
+      "durationMs": 0.037299999996321276,
       "metadata": {
         "warning": false,
         "config": {
@@ -1483,8 +1483,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:54.704Z",
-      "durationMs": 0.16770000000178698,
+      "timestamp": "2026-10-22T16:59:51.055Z",
+      "durationMs": 0.05129999999917345,
       "metadata": {
         "warning": false,
         "config": {
@@ -1513,8 +1513,8 @@
       "event": "post:test_run",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:56.191Z",
-      "durationMs": 0.14240000000063446,
+      "timestamp": "2026-10-22T16:59:52.296Z",
+      "durationMs": 0.058700000001408625,
       "metadata": {
         "warning": false,
         "config": {
@@ -1534,7 +1534,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -1543,8 +1543,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:56.191Z",
-      "durationMs": 0.1550999999999476,
+      "timestamp": "2026-10-22T16:59:52.296Z",
+      "durationMs": 0.06130000000121072,
       "metadata": {
         "warning": false,
         "config": {
@@ -1564,7 +1564,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -1573,8 +1573,8 @@
       "event": "post:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:56.216Z",
-      "durationMs": 0.07710000000042783,
+      "timestamp": "2026-10-22T16:59:52.308Z",
+      "durationMs": 0.027500000003783498,
       "metadata": {
         "warning": false,
         "config": {
@@ -1595,10 +1595,10 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification",
-          "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e"
+          "subagentId": "4be79cff-237d-4a4d-81ed-ef7b2281e74c"
         },
         "workspaceStateHash": null
       }
@@ -1609,8 +1609,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:56.216Z",
-      "durationMs": 0.2309000000004744,
+      "timestamp": "2026-10-22T16:59:52.308Z",
+      "durationMs": 0.056299999996554106,
       "metadata": {
         "warning": false,
         "config": {
@@ -1639,8 +1639,8 @@
       "event": "pre:git_commit",
       "decision": "allow",
       "reason": "Files and added content satisfy guardrails.",
-      "timestamp": "2026-10-19T18:43:59.777Z",
-      "durationMs": 3.0375999999996566,
+      "timestamp": "2026-10-22T16:59:54.714Z",
+      "durationMs": 1.2335999999995693,
       "metadata": {
         "warning": false,
         "config": {
@@ -1660,7 +1660,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -1669,8 +1669,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:59.777Z",
-      "durationMs": 0.14589999999952852,
+      "timestamp": "2026-10-22T16:59:54.714Z",
+      "durationMs": 0.14110000000073342,
       "metadata": {
         "warning": false,
         "config": {
@@ -1690,7 +1690,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -1699,8 +1699,8 @@
       "event": "pre:git_commit",
       "decision": "allow",
       "reason": "Complete green evidence verified without regressions or skipped tests.",
-      "timestamp": "2026-10-19T18:43:59.779Z",
-      "durationMs": 1.8355000000010477,
+      "timestamp": "2026-10-22T16:59:54.715Z",
+      "durationMs": 0.9913999999989755,
       "metadata": {
         "warning": false,
         "config": {
@@ -1720,7 +1720,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -1729,8 +1729,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:43:59.779Z",
-      "durationMs": 0.08039999999891734,
+      "timestamp": "2026-10-22T16:59:54.715Z",
+      "durationMs": 0.040000000000873115,
       "metadata": {
         "warning": false,
         "config": {
@@ -1750,7 +1750,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -1759,8 +1759,8 @@
       "event": "post:commit",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:44:01.834Z",
-      "durationMs": 0.1555999999982305,
+      "timestamp": "2026-10-22T16:59:56.334Z",
+      "durationMs": 0.14439999999740394,
       "metadata": {
         "warning": false,
         "config": {
@@ -1789,8 +1789,8 @@
       "event": "db:on_hook_decision",
       "decision": "allow",
       "reason": "Decision audit recorded.",
-      "timestamp": "2026-10-19T18:44:01.835Z",
-      "durationMs": 0.17640000000028522,
+      "timestamp": "2026-10-22T16:59:56.334Z",
+      "durationMs": 0.14559999999619322,
       "metadata": {
         "warning": false,
         "config": {
@@ -1821,8 +1821,8 @@
       "event": "pre:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:43.726Z",
-      "durationMs": 0.3039000000003398,
+      "timestamp": "2026-10-22T16:59:30.089Z",
+      "durationMs": 0.2790999999997439,
       "metadata": {
         "warning": false,
         "config": {
@@ -1843,8 +1843,8 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "diagnostic"
         },
         "workspaceStateHash": null
@@ -1856,8 +1856,8 @@
       "event": "pre:analyze",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:44.245Z",
-      "durationMs": 0.15439999999989595,
+      "timestamp": "2026-10-22T16:59:30.658Z",
+      "durationMs": 0.21900000000096043,
       "metadata": {
         "warning": false,
         "config": {
@@ -1886,8 +1886,8 @@
       "event": "post:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:45.469Z",
-      "durationMs": 0.14000000000032742,
+      "timestamp": "2026-10-22T16:59:33.548Z",
+      "durationMs": 0.19110000000000582,
       "metadata": {
         "warning": false,
         "config": {
@@ -1908,10 +1908,10 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "a5b87c68-58da-4d49-9cef-9707b33bb8c1",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "6fe5dbb1-ebe7-4416-9d3c-f27d9069f1d7",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "diagnostic",
-          "subagentId": "dad0fd84-7133-4f6b-be3d-cb1d9f76f207"
+          "subagentId": "3b0f2989-cb29-45f9-8b79-d364ec7bc231"
         },
         "workspaceStateHash": null
       }
@@ -1922,8 +1922,8 @@
       "event": "pre:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:47.845Z",
-      "durationMs": 0.11560000000008586,
+      "timestamp": "2026-10-22T16:59:35.767Z",
+      "durationMs": 0.13919999999779975,
       "metadata": {
         "warning": false,
         "config": {
@@ -1944,8 +1944,8 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification"
         },
         "workspaceStateHash": null
@@ -1957,8 +1957,8 @@
       "event": "pre:run_tests",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:48.312Z",
-      "durationMs": 0.14030000000002474,
+      "timestamp": "2026-10-22T16:59:36.197Z",
+      "durationMs": 0.08390000000508735,
       "metadata": {
         "warning": false,
         "config": {
@@ -1987,8 +1987,8 @@
       "event": "post:test_run",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:49.723Z",
-      "durationMs": 0.1257000000005064,
+      "timestamp": "2026-10-22T16:59:47.146Z",
+      "durationMs": 0.04409999999916181,
       "metadata": {
         "warning": false,
         "config": {
@@ -2008,7 +2008,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+        "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f"
       }
     },
     {
@@ -2017,8 +2017,8 @@
       "event": "post:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:49.743Z",
-      "durationMs": 0.07380000000011933,
+      "timestamp": "2026-10-22T16:59:47.155Z",
+      "durationMs": 0.03800000000046566,
       "metadata": {
         "warning": false,
         "config": {
@@ -2039,10 +2039,10 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "0151bd1f-7c3b-4429-930b-0b4654417080",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "2732347e-ad66-4475-bcc7-e5b128bf0a2d",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification",
-          "subagentId": "0ee18c02-fe66-4ca2-ab10-95c80265ed12"
+          "subagentId": "35d2ffb8-7eec-401c-858a-5198687367d7"
         },
         "workspaceStateHash": null
       }
@@ -2053,8 +2053,8 @@
       "event": "pre:apply_patch",
       "decision": "allow",
       "reason": "Files and added content satisfy guardrails.",
-      "timestamp": "2026-10-19T18:43:51.643Z",
-      "durationMs": 13.226200000000972,
+      "timestamp": "2026-10-22T16:59:48.119Z",
+      "durationMs": 7.669399999998859,
       "metadata": {
         "warning": false,
         "config": {
@@ -2074,7 +2074,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "1673dad70c38ac8f59ac4a51dffa78a544b2b2fcb3ad093172791b03cea6f34c"
+        "workspaceStateHash": "ca3e7375cdcf867d8368cbe7c2f97434aea2629995f28c20f8e6d98aa94ffb1f"
       }
     },
     {
@@ -2083,8 +2083,8 @@
       "event": "pre:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:54.193Z",
-      "durationMs": 0.10249999999905413,
+      "timestamp": "2026-10-22T16:59:50.863Z",
+      "durationMs": 0.04680000000371365,
       "metadata": {
         "warning": false,
         "config": {
@@ -2105,8 +2105,8 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification"
         },
         "workspaceStateHash": null
@@ -2118,8 +2118,8 @@
       "event": "pre:run_tests",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:54.704Z",
-      "durationMs": 0.11329999999907159,
+      "timestamp": "2026-10-22T16:59:51.055Z",
+      "durationMs": 0.037299999996321276,
       "metadata": {
         "warning": false,
         "config": {
@@ -2148,8 +2148,8 @@
       "event": "post:test_run",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:56.191Z",
-      "durationMs": 0.14240000000063446,
+      "timestamp": "2026-10-22T16:59:52.296Z",
+      "durationMs": 0.058700000001408625,
       "metadata": {
         "warning": false,
         "config": {
@@ -2169,7 +2169,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -2178,8 +2178,8 @@
       "event": "post:delegate",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:43:56.216Z",
-      "durationMs": 0.07710000000042783,
+      "timestamp": "2026-10-22T16:59:52.308Z",
+      "durationMs": 0.027500000003783498,
       "metadata": {
         "warning": false,
         "config": {
@@ -2200,10 +2200,10 @@
           "maxFiles": 200
         },
         "delegation": {
-          "taskId": "95896ebe-5271-43b1-ac2a-516bd71cf610",
-          "parentSessionId": "3240c3de-3708-41ac-914f-2663b5694569",
+          "taskId": "8d704739-9885-4502-9342-67db6fe36d34",
+          "parentSessionId": "bf04f905-d293-4145-9f3f-e79ca36216fd",
           "role": "verification",
-          "subagentId": "870fc882-f31c-4058-86f2-18e1cf79eb4e"
+          "subagentId": "4be79cff-237d-4a4d-81ed-ef7b2281e74c"
         },
         "workspaceStateHash": null
       }
@@ -2214,8 +2214,8 @@
       "event": "pre:git_commit",
       "decision": "allow",
       "reason": "Files and added content satisfy guardrails.",
-      "timestamp": "2026-10-19T18:43:59.777Z",
-      "durationMs": 3.0375999999996566,
+      "timestamp": "2026-10-22T16:59:54.714Z",
+      "durationMs": 1.2335999999995693,
       "metadata": {
         "warning": false,
         "config": {
@@ -2235,7 +2235,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -2244,8 +2244,8 @@
       "event": "pre:git_commit",
       "decision": "allow",
       "reason": "Complete green evidence verified without regressions or skipped tests.",
-      "timestamp": "2026-10-19T18:43:59.779Z",
-      "durationMs": 1.8355000000010477,
+      "timestamp": "2026-10-22T16:59:54.715Z",
+      "durationMs": 0.9913999999989755,
       "metadata": {
         "warning": false,
         "config": {
@@ -2265,7 +2265,7 @@
           "maxPatchCharacters": 1000000,
           "maxFiles": 200
         },
-        "workspaceStateHash": "6c32c1ff095460ddbf169ff6d79725aa5fd07ad524be9d86e4412cba50ddd4de"
+        "workspaceStateHash": "70322d59fbbf1c731d06c6b2be74e778481af63f41017b26fb43f1500f9b52e5"
       }
     },
     {
@@ -2274,8 +2274,8 @@
       "event": "post:commit",
       "decision": "allow",
       "reason": "No active rules for event.",
-      "timestamp": "2026-10-19T18:44:01.834Z",
-      "durationMs": 0.1555999999982305,
+      "timestamp": "2026-10-22T16:59:56.334Z",
+      "durationMs": 0.14439999999740394,
       "metadata": {
         "warning": false,
         "config": {
