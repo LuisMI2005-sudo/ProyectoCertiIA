@@ -1,0 +1,10 @@
+
+> devguardian@0.1.0 test
+> npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand
+
+
+> devguardian@0.1.0 build
+> tsc -p tsconfig.json && node scripts/copy-db-schema.mjs
+
+(node:3496) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

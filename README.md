@@ -1,5 +1,25 @@
 # DevGuardian — Sistema de Auditoría y Rectificación Autónoma de Código Asistido por IA
 
+## Arquitectura objetivo: microservicios y microfrontends
+
+Objetivo solicitado: PostgreSQL relacional multitenant por servicio, principios SOLID explícitos, backend con 7 servicios de dominio y Gateway BFF/MCP, y frontend con Shell y 6 microfrontends. [Diseño completo](specs/segundo-cerebro/arquitectura-objetivo/00-Arquitectura-Objetivo.md). Cada módulo tiene nota y relaciones, con frontend azul, backend naranja y datos verde. **Estado actualizado: perfil local multitenant implementado y en validación, con siete servicios, gateway y seis microfrontends.** El despliegue productivo y la migración de datos históricos siguen pendientes; consultar la sección de plataforma local y su evidencia.
+
+## Grafo nativo de Obsidian
+
+Abrir **Graph view** en la bóveda `ProyectoCertiIA`: el filtro `path:"specs/segundo-cerebro"` muestra conceptos y módulos con colores por categoría, sin incluir dependencias ni archivos generados. Ver el [mapa de módulos](specs/segundo-cerebro/arquitectura/00-Arquitectura-modulos.md). GameZone mantiene su grafo separado en `practica`. El Canvas no sustituye esta vista nativa.
+
+## Segundo cerebro y contexto del asistente
+
+`AGENTS.md` contiene instrucciones del repositorio y `CODEX.md` registra contexto documental. [Segundo cerebro de DevGuardian](specs/segundo-cerebro/00-Segundo-cerebro.md). Organiza la lectura crítica del PDF, arquitectura, seguridad, IA y verificación. GameZone se mantiene separado. En Obsidian, seleccionar la bóveda `ProyectoCertiIA` y abrir `specs/segundo-cerebro/00-Segundo-cerebro`. Todo el conocimiento de DevGuardian reside ahora en esa carpeta; GameZone permanece en `practica`. Los grafos distinguen categorías con colores y etiquetas.
+
+## Desarrollo guiado por especificaciones (SDD)
+
+Esta carpeta ya está registrada como bóveda local de Obsidian. Si aparece **Display Mermaid diagrams in this vault?**, pulsa **Allow** tú mismo para permitir el render nativo. Abre `specs/README.md` como índice.
+
+Spec Kit 0.8.9 está inicializado con integración Codex y scripts PowerShell. Ver el [índice SDD para Obsidian](specs/README.md), la [Constitución](specs/constitution.md) y el [Plan técnico](specs/001-sdd-foundation/plan.md). Las plantillas operativas están en `.specify/templates/`; las habilidades instaladas en `.agents/skills/`. Las copias visibles en `specs/` permiten abrir esta raíz como bóveda de Obsidian y renderizar los bloques Mermaid nativamente en Vista de lectura o Live Preview, sin plugins.
+
+Ejecutar `npm run sdd:sync` después de cambiar las fuentes y `npm run sdd:check` para comprobar copias, enlaces y estructura Mermaid. Los futuros diagramas técnicos, de datos y de procesos deben seguir estas plantillas. Esta adopción documental no cambia la aplicación ni sustituye sus pruebas.
+
 La importación por enlace público de GitHub, con progreso SSE, validación de compatibilidad y transición a Auditoría, se documenta en [Importación de proyectos](src/server/PROJECT_IMPORT.md). Esta funcionalidad prepara análisis estático sin instalar dependencias ni ejecutar código de terceros.
 
 ## Integración con el asistente de IA del entorno de desarrollo
@@ -433,3 +453,21 @@ Modelo entidad-relación, límites, seguridad, integración y pasos para Render/
 ## Consolidación de ramas y regresiones
 
 Se integró origin/main en Dev mediante merge conservando hashes y autoría: MCP de compatibilidad, corrección de rutas Git antes de evaluar árbol sucio, aserciones CRLF exactas y validación CI en QA. El workflow conserva Node/Python, los smoke tests reales y ejecución manual. Tras la consolidación había 257 pruebas en nueve suites: 254 de las ocho originales y tres MCP recibidas de main. La Fase 6 añade 28 casos: 285 en diez suites. El servidor principal sigue siendo src/mcp/ (19 herramientas auditadas y API HTTP); [src/mcp-server/](src/mcp-server/README.md) conserva la interfaz de workspace fijo y el recurso de análisis aportados desde main. El cliente de otras ramas remotas no se incorporó en ese merge. La Fase 6 actual se implementa en src/agent-client/ sobre los contratos MCP con projectId.
+
+
+### Colores del grafo de arquitectura
+
+En Graph view de la bóveda ProyectoCertiIA se conservan los grupos del cerebro conceptual y se añaden los de arquitectura objetivo: frontend azul, backend naranja, bases de datos verde, infraestructura gris, arquitectura violeta y seguridad roja. Se comprobó visualmente la vista completa después de reiniciar Obsidian. El preset versionable completo está en `specs/segundo-cerebro/grafo-nativo.json`; las preferencias locales de `.obsidian/` no se publican.
+
+
+## Evaluación integral para la entrega docente
+
+[Informe de auditoría técnica, arquitectura y propuesta comercial](specs/segundo-cerebro/auditoria-integral/00-Informe-Integral.md). Incluye evidencia local, hallazgos abiertos, comparación actual/objetivo, mercado, venta, costos, marketing y protocolo de validación. La documentación no acredita por sí sola comercialización ni migración implementadas.
+
+## Plataforma multitenant local (migración en validación)
+
+Se añadió un perfil ejecutable en `src/platform/`: identidad y membresías, gateway autenticado, siete procesos de dominio con bases privadas, RLS en ejecución y agregados, credenciales de servicio firmadas, comandos idempotentes y proyecciones de eventos mediante outbox/inbox. El motor existente conserva la autoridad de Git, pruebas y guardrails. El Agent Client admite tenant y puede usar `createPlatformAgent` con un planificador remoto; la generación real requiere configurar el proveedor.
+
+Para probarlo: `npm run platform:init` una sola vez y `npm run platform:start`. El gateway utiliza `http://127.0.0.1:4107`; el frontend requiere `npm run build:platform` y `npm run preview:platform`. El arranque `npm start` sigue siendo el modo anterior; no migra automáticamente los datos ni activa la nueva arquitectura en Render.
+
+Consultar [instrucciones locales](specs/002-platform-migration/local-development.md), [arquitectura implementada y límites](specs/002-platform-migration/architecture.md) y [validación de la migración](specs/002-platform-migration/validation.md). Las claves y credenciales generadas están en carpetas ignoradas por Git. La migración productiva de datos y el despliegue distribuido permanecen pendientes.

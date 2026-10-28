@@ -16,12 +16,18 @@ const Fields: Record<Table, readonly string[]> = {
 };
 const column = (field: string): string => field === "summary" || field === "cases" ? `${field}_json`
   : field.replace(/[A-Z]/gu, (letter) => `_${letter.toLowerCase()}`);
-export interface PostgresDatabaseOptions { readonly connectionString?: string; readonly pool?: SqlPool }
+export interface PostgresDatabaseOptions {
+  readonly connectionString?: string; readonly pool?: SqlPool;
+  /** Trusted platform binding; requires an explicitly provisioned tenant schema. */
+  readonly tenantId?: string; readonly externallyMigrated?: boolean;
+}
 
 export class PostgresDatabaseAdapter extends RepositoryBase {
   private closed = false;
-  private constructor(private readonly pool: SqlPool) { super(); }
+  private constructor(private readonly pool: SqlPool, private readonly tenantId?: string) { super(); }
   public static async create(options: PostgresDatabaseOptions): Promise<PostgresDatabaseAdapter> {
+    if (options.tenantId !== undefined && (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu.test(options.tenantId) || options.externallyMigrated !== true))
+      throw new ValidationError("Tenant storage requires a valid tenant and provisioned schema.");
     let pool = options.pool;
     if (!pool) {
       let url: URL;
@@ -42,7 +48,7 @@ export class PostgresDatabaseAdapter extends RepositoryBase {
         }, async end() { await native.end(); }
       };
     }
-    try { await runMigrations(pool); return new PostgresDatabaseAdapter(pool); }
+    try { if (!options.externallyMigrated) await runMigrations(pool); return new PostgresDatabaseAdapter(pool, options.tenantId); }
     catch { try { await pool.end(); } catch { /* Preserve the sanitized initialization error. */ }
       throw new DatabaseError("Cannot initialize PostgreSQL database."); }
   }
@@ -53,7 +59,11 @@ export class PostgresDatabaseAdapter extends RepositoryBase {
       client = await this.pool.connect();
       const connection = client;
       await connection.query(write ? "BEGIN" : "BEGIN READ ONLY");
-      if (write) await connection.query("SELECT pg_advisory_xact_lock(714219871)");
+      if (this.tenantId) await connection.query("SELECT set_config('app.tenant_id', $1, true)", [this.tenantId]);
+      if (write) {
+        if (this.tenantId) await connection.query("SELECT pg_advisory_xact_lock(hashtextextended($1, 714219871))", [this.tenantId]);
+        else await connection.query("SELECT pg_advisory_xact_lock(714219871)");
+      }
       const tx: Transaction = {
         get: async <K extends Table>(table: K, id: string): Promise<Entities[K] | null> => {
           const result = await connection.query(`SELECT record_json FROM ${table} WHERE ${column(EntityId[table])} = $1`, [id]);
@@ -74,6 +84,7 @@ export class PostgresDatabaseAdapter extends RepositoryBase {
             values.push(record[EntityId[table]]);
             await connection.query(`UPDATE ${table} SET ${columns.map((name, i) => `${name} = $${i + 1}`).join(", ")} WHERE ${column(EntityId[table])} = $${values.length}`, values);
           } else {
+            if (this.tenantId) { columns.push("tenant_id"); values.push(this.tenantId); }
             await connection.query(`INSERT INTO ${table} (${columns.join(", ")}) VALUES (${values.map((_, i) => `$${i + 1}`).join(", ")})`, values);
           }
         }

@@ -1,0 +1,37 @@
+{
+	"nodes":[
+		{"id":"group-fuentes","type":"group","x":0,"y":0,"width":500,"height":620,"label":"fuentes","color":"#94a3b8"},
+		{"id":"01-Fuente-y-procedencia","type":"file","file":"specs/segundo-cerebro/01-Fuente-y-procedencia.md","x":25,"y":65,"width":450,"height":230,"color":"#94a3b8"},
+		{"id":"03-ACF-y-DevGuardian","type":"file","file":"specs/segundo-cerebro/03-ACF-y-DevGuardian.md","x":25,"y":325,"width":450,"height":230,"color":"#94a3b8"},
+		{"id":"group-analisis","type":"group","x":540,"y":0,"width":500,"height":360,"label":"analisis","color":"#60a5fa"},
+		{"id":"02-Auditoria-de-codigo","type":"file","file":"specs/segundo-cerebro/02-Auditoria-de-codigo.md","x":565,"y":65,"width":450,"height":230,"color":"#60a5fa"},
+		{"id":"group-investigacion","type":"group","x":1080,"y":0,"width":500,"height":620,"label":"investigacion","color":"#fbbf24"},
+		{"id":"04-Recursos-y-contexto","type":"file","file":"specs/segundo-cerebro/04-Recursos-y-contexto.md","x":1105,"y":65,"width":450,"height":230,"color":"#fbbf24"},
+		{"id":"11-Validacion-pendiente","type":"file","file":"specs/segundo-cerebro/11-Validacion-pendiente.md","x":1105,"y":325,"width":450,"height":230,"color":"#fbbf24"},
+		{"id":"group-arquitectura","type":"group","x":1620,"y":0,"width":500,"height":620,"label":"arquitectura","color":"#22d3ee"},
+		{"id":"05-Arquitectura-y-patrones","type":"file","file":"specs/segundo-cerebro/05-Arquitectura-y-patrones.md","x":1645,"y":65,"width":450,"height":230,"color":"#22d3ee"},
+		{"id":"06-MCP-y-contratos","type":"file","file":"specs/segundo-cerebro/06-MCP-y-contratos.md","x":1645,"y":325,"width":450,"height":230,"color":"#22d3ee"},
+		{"id":"group-seguridad","type":"group","x":0,"y":1100,"width":500,"height":360,"label":"seguridad","color":"#f87171"},
+		{"id":"07-Hooks-y-guardrails","type":"file","file":"specs/segundo-cerebro/07-Hooks-y-guardrails.md","x":25,"y":1165,"width":450,"height":230,"color":"#f87171"},
+		{"id":"group-verificacion","type":"group","x":540,"y":1100,"width":500,"height":620,"label":"verificacion","color":"#34d399"},
+		{"id":"08-Verificacion-y-regresiones","type":"file","file":"specs/segundo-cerebro/08-Verificacion-y-regresiones.md","x":565,"y":1165,"width":450,"height":230,"color":"#34d399"},
+		{"id":"10-Flujo-reparacion","type":"file","file":"specs/segundo-cerebro/10-Flujo-reparacion.md","x":565,"y":1425,"width":450,"height":230,"color":"#34d399"},
+		{"id":"group-ia","type":"group","x":1080,"y":1100,"width":500,"height":360,"label":"ia","color":"#f472b6"},
+		{"id":"09-IA-y-workers","type":"file","file":"specs/segundo-cerebro/09-IA-y-workers.md","x":1105,"y":1165,"width":450,"height":230,"color":"#f472b6"},
+		{"id":"group-direccion","type":"group","x":1620,"y":1100,"width":500,"height":360,"label":"direccion","color":"#a78bfa"},
+		{"id":"00-Segundo-cerebro","type":"file","file":"specs/segundo-cerebro/00-Segundo-cerebro.md","x":1645,"y":1165,"width":450,"height":230,"color":"#a78bfa"}
+	],
+	"edges":[
+		{"id":"edge-0","fromNode":"00-Segundo-cerebro","fromSide":"right","toNode":"01-Fuente-y-procedencia","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#a78bfa"},
+		{"id":"edge-1","fromNode":"01-Fuente-y-procedencia","fromSide":"right","toNode":"03-ACF-y-DevGuardian","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#94a3b8"},
+		{"id":"edge-2","fromNode":"03-ACF-y-DevGuardian","fromSide":"right","toNode":"02-Auditoria-de-codigo","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#94a3b8"},
+		{"id":"edge-3","fromNode":"02-Auditoria-de-codigo","fromSide":"right","toNode":"05-Arquitectura-y-patrones","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#60a5fa"},
+		{"id":"edge-4","fromNode":"05-Arquitectura-y-patrones","fromSide":"right","toNode":"06-MCP-y-contratos","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#22d3ee"},
+		{"id":"edge-5","fromNode":"06-MCP-y-contratos","fromSide":"right","toNode":"07-Hooks-y-guardrails","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#22d3ee"},
+		{"id":"edge-6","fromNode":"09-IA-y-workers","fromSide":"right","toNode":"07-Hooks-y-guardrails","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#f472b6"},
+		{"id":"edge-7","fromNode":"04-Recursos-y-contexto","fromSide":"right","toNode":"09-IA-y-workers","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#fbbf24"},
+		{"id":"edge-8","fromNode":"07-Hooks-y-guardrails","fromSide":"right","toNode":"10-Flujo-reparacion","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#f87171"},
+		{"id":"edge-9","fromNode":"10-Flujo-reparacion","fromSide":"right","toNode":"08-Verificacion-y-regresiones","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#34d399"},
+		{"id":"edge-10","fromNode":"08-Verificacion-y-regresiones","fromSide":"right","toNode":"11-Validacion-pendiente","toSide":"left","toEnd":"arrow","label":"relaciona","color":"#34d399"}
+	]
+}

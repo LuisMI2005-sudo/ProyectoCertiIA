@@ -1,0 +1,37 @@
+[
+  {
+    "id": "01-Alcance-y-metodo",
+    "title": "Alcance, metodología y límites",
+    "group": "direccion"
+  },
+  {
+    "id": "03-Hallazgos-y-plan",
+    "title": "Hallazgos, riesgos y plan de cierre",
+    "group": "seguridad"
+  },
+  {
+    "id": "04-Evaluacion-arquitectonica",
+    "title": "Evaluación arquitectónica y hoja de ruta",
+    "group": "arquitectura"
+  },
+  {
+    "id": "05-Producto-y-mercado",
+    "title": "Producto, clientes y competencia",
+    "group": "investigacion"
+  },
+  {
+    "id": "06-Modelo-comercial",
+    "title": "Modelo de negocio, venta y costos",
+    "group": "investigacion"
+  },
+  {
+    "id": "07-Marketing-y-metricas",
+    "title": "Marketing y métricas de adopción",
+    "group": "investigacion"
+  },
+  {
+    "id": "08-Validacion-y-entrega-docente",
+    "title": "Protocolo de validación y entrega al docente",
+    "group": "direccion"
+  }
+]

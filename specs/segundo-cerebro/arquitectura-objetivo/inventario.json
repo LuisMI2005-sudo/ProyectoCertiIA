@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "status": "design-only",
+  "palette": {
+    "frontend": "#60a5fa",
+    "backend": "#fb923c",
+    "datos": "#34d399",
+    "infraestructura": "#94a3b8",
+    "arquitectura": "#a78bfa",
+    "seguridad": "#f87171"
+  },
+  "notes": [
+    {
+      "id": "BE-Identidad",
+      "title": "Microservicio: Identidad y organizaciones",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Identidad",
+      "title": "Base relacional: Identidad y organizaciones",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Proyectos",
+      "title": "Microservicio: Proyectos y preparación de workspace",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Proyectos",
+      "title": "Base relacional: Proyectos y preparación de workspace",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Auditorias",
+      "title": "Microservicio: Auditorías y orquestación",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Auditorias",
+      "title": "Base relacional: Auditorías y orquestación",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Ejecucion",
+      "title": "Microservicio: Ejecución segura del workspace",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Ejecucion",
+      "title": "Base relacional: Ejecución segura del workspace",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Politicas",
+      "title": "Microservicio: Políticas de seguridad",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Politicas",
+      "title": "Base relacional: Políticas de seguridad",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Telemetria",
+      "title": "Microservicio: Telemetría e historial consultable",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Telemetria",
+      "title": "Base relacional: Telemetría e historial consultable",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Planificador-IA",
+      "title": "Microservicio: Planificación generativa",
+      "cat": "backend"
+    },
+    {
+      "id": "DB-Planificador",
+      "title": "Base relacional: Planificación generativa",
+      "cat": "datos"
+    },
+    {
+      "id": "BE-Gateway",
+      "title": "Gateway BFF y adaptador MCP",
+      "cat": "backend"
+    },
+    {
+      "id": "MF-Proyectos",
+      "title": "Microfrontend: Mis proyectos",
+      "cat": "frontend"
+    },
+    {
+      "id": "MF-Revision",
+      "title": "Microfrontend: Revisar código",
+      "cat": "frontend"
+    },
+    {
+      "id": "MF-Resultados",
+      "title": "Microfrontend: Resultados e historial",
+      "cat": "frontend"
+    },
+    {
+      "id": "MF-Seguridad",
+      "title": "Microfrontend: Seguridad",
+      "cat": "frontend"
+    },
+    {
+      "id": "MF-Subagentes",
+      "title": "Microfrontend: Trazas de subagentes",
+      "cat": "frontend"
+    },
+    {
+      "id": "MF-Sandbox-MCP",
+      "title": "Microfrontend: Sandbox MCP",
+      "cat": "frontend"
+    },
+    {
+      "id": "MF-Shell",
+      "title": "Shell de microfrontends",
+      "cat": "frontend"
+    },
+    {
+      "id": "INF-Broker",
+      "title": "Broker, outbox e inbox",
+      "cat": "infraestructura"
+    },
+    {
+      "id": "INF-Aislamiento",
+      "title": "Aislamiento del código externo",
+      "cat": "infraestructura"
+    },
+    {
+      "id": "INF-Contratos",
+      "title": "Contratos, correlación y compatibilidad",
+      "cat": "infraestructura"
+    },
+    {
+      "id": "INF-Entrega",
+      "title": "CI y entrega independiente",
+      "cat": "infraestructura"
+    },
+    {
+      "id": "AR-Multitenancy",
+      "title": "Datos relacionales multitenant",
+      "cat": "datos"
+    },
+    {
+      "id": "AR-SOLID",
+      "title": "SOLID aplicado a DevGuardian",
+      "cat": "arquitectura"
+    },
+    {
+      "id": "AR-Patrones",
+      "title": "Patrones de diseño e integración",
+      "cat": "arquitectura"
+    },
+    {
+      "id": "AR-Microfrontends",
+      "title": "Composición de microfrontends",
+      "cat": "frontend"
+    },
+    {
+      "id": "AR-Datos-y-migracion",
+      "title": "Propiedad de datos y migración relacional",
+      "cat": "datos"
+    },
+    {
+      "id": "AR-Flujos",
+      "title": "Flujo distribuido de reparación y recuperación",
+      "cat": "backend"
+    },
+    {
+      "id": "AR-Migracion",
+      "title": "Plan por etapas y criterios de aceptación",
+      "cat": "arquitectura"
+    },
+    {
+      "id": "AR-Fuentes",
+      "title": "Fuentes y decisiones pendientes",
+      "cat": "arquitectura"
+    },
+    {
+      "id": "00-Arquitectura-Objetivo",
+      "title": "DevGuardian: arquitectura objetivo",
+      "cat": "arquitectura"
+    },
+    {
+      "id": "AR-Seguridad",
+      "title": "Seguridad transversal y límites de confianza",
+      "cat": "seguridad"
+    }
+  ],
+  "nativeGraph": {
+    "search": "path:\"specs/segundo-cerebro\"",
+    "colorGroups": [
+      {
+        "query": "tag:#dg/capa/frontend",
+        "color": {
+          "a": 1,
+          "rgb": 6333946
+        }
+      },
+      {
+        "query": "tag:#dg/capa/backend",
+        "color": {
+          "a": 1,
+          "rgb": 16486972
+        }
+      },
+      {
+        "query": "tag:#dg/capa/datos",
+        "color": {
+          "a": 1,
+          "rgb": 3462041
+        }
+      },
+      {
+        "query": "tag:#dg/capa/infraestructura",
+        "color": {
+          "a": 1,
+          "rgb": 9741240
+        }
+      },
+      {
+        "query": "tag:#dg/capa/arquitectura",
+        "color": {
+          "a": 1,
+          "rgb": 10980346
+        }
+      },
+      {
+        "query": "tag:#dg/capa/seguridad",
+        "color": {
+          "a": 1,
+          "rgb": 16281969
+        }
+      }
+    ]
+  }
+}

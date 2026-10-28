@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-28",
+  "files": [
+    {
+      "file": "evidencia/check.log",
+      "sha256": "20845eb11cc4914b30bef45118c82ee9708d0a95a91f0bbfe836066576fd55b4"
+    },
+    {
+      "file": "evidencia/frontend/check.log",
+      "sha256": "e8f1e4e46e2e126ee9a30a84d7a3aa5582deb123c2a6ca14a17de64a3c41b932"
+    },
+    {
+      "file": "evidencia/frontend/resultados.json",
+      "sha256": "d659069f8194d5042c3928ebfac3a225e2fde1cc39df760ef4e75d4ef6b801b7"
+    },
+    {
+      "file": "evidencia/frontend/tests.log",
+      "sha256": "935e31096cef4a80aae5d6c5f42fe510b6eadc3adecebbd2b1b8d52ec4616fbc"
+    },
+    {
+      "file": "evidencia/nota-ejecucion.json",
+      "sha256": "f4b99e87d8fce4038068142af70bf2b97432cbc549fe2c4535610ae7034b8dd1"
+    },
+    {
+      "file": "evidencia/resultados-autorizados.json",
+      "sha256": "7cc78646e26561d03eed574437470e0c4617d0c6c32f777d95956f5072e0cf0e"
+    },
+    {
+      "file": "evidencia/resultados.json",
+      "sha256": "2cec88963833ff3020b4f68da8dbb715eeecf9b9a567a87ea998cecb688b2400"
+    },
+    {
+      "file": "evidencia/tests-autorizados.log",
+      "sha256": "02000f8d7787d27dbcf40438bddf88040f7886fbf7965b3245b7f097515d13e6"
+    },
+    {
+      "file": "evidencia/tests.log",
+      "sha256": "e0a11debc48df4b474ea579be450458f5852f339e43a63d0d0f9a112bbcc592e"
+    }
+  ]
+}

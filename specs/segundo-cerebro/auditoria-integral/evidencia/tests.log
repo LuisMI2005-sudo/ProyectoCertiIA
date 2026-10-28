@@ -1,0 +1,335 @@
+
+> devguardian@0.1.0 test
+> npm run build && node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand
+
+
+> devguardian@0.1.0 build
+> tsc -p tsconfig.json && node scripts/copy-db-schema.mjs
+
+(node:17456) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/db/db.test.mjs (107.318 s)
+  ● local durable repository and invariants › creates, lists and reads projects and complete audit sessions
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › keeps run fields and validates baseline/candidate relationships on closing
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects duplicates, orphan records and cross-audit evidence without changing disk
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects invalid runner
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects relative root
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects unknown fields
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects invalid UUID
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › provides defensive copies and immutable runs
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › serializes concurrent writers across separate repository instances
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › serializes independent Node processes writing the same file
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › times out on an abandoned lock without overwriting the file
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › preserves a corrupt database rather than silently replacing it
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects links, metadata directories and unexpected file types
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › persists allowed, blocked and warning hooks idempotently
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects operations after close and reopens the same data
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● local durable repository and invariants › rejects active/terminal timestamp contradictions and new tests after closing
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:33:41)
+
+  ● schema, migrations and parameterized PostgreSQL › factory selects local by default or explicitly even with DATABASE_URL
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:248:18)
+
+  ● schema, migrations and parameterized PostgreSQL › factory selects PostgreSQL by URL and supports the DB_MODE compatibility alias
+
+    DatabaseError: Local database atomic replacement failed (EPERM).
+
+      151 |       const sanitized = sanitizedDatabaseError(error);
+      152 |       if (error instanceof ValidationError || error instanceof DatabaseError) throw sanitized;
+    > 153 |       throw new DatabaseError(`Local database ${stage} failed (${systemCode(error)}).`);
+          |             ^
+      154 |     }
+      155 |     finally { if (lock) { await lock.handle.close(); const file = lock.file; await this.retrySharingConflict(() => rm(file, { force: true })); } }
+      156 |   }
+
+      at LocalFileDatabaseAdapter.performAccess (src/db/local-adapter.ts:153:13)
+      at LocalFileDatabaseAdapter.access (src/db/local-adapter.ts:120:18)
+      at LocalFileDatabaseAdapter.create (src/db/local-adapter.ts:50:5)
+      at Object.<anonymous> (tests/db/db.test.mjs:257:18)
+
+  ● real coordinated repairs and restart durability › persists project, findings, checkpoint, real runs, hooks and delegations across a fresh Node process
+
+    Command failed: git init -b main
+    error: could not write config file C:/Users/HP/AppData/Local/Packages/sandbox.{b2a5d55e-b287-483b-8589-88523bf8bc4d}/AC/Temp/devguardian-db-test-3CziLJ/workspace/.git/config: Permission denied
+    fatal: could not set 'core.repositoryformatversion' to '0'
+
+  ● real coordinated repairs and restart durability › persists a real regression and rollback with unchanged HEAD after reopening
+
+    Command failed: git init -b main
+    error: could not write config file C:/Users/HP/AppData/Local/Packages/sandbox.{b2a5d55e-b287-483b-8589-88523bf8bc4d}/AC/Temp/devguardian-db-test-qM9Qck/workspace/.git/config: Permission denied
+    fatal: could not set 'core.repositoryformatversion' to '0'
+
+  ● real coordinated repairs and restart durability › persists a blocked real patch and baseline, without committing or storing the diff
+
+    Command failed: git init -b main
+    error: could not write config file C:/Users/HP/AppData/Local/Packages/sandbox.{b2a5d55e-b287-483b-8589-88523bf8bc4d}/AC/Temp/devguardian-db-test-0vUqhX/workspace/.git/config: Permission denied
+    fatal: could not set 'core.repositoryformatversion' to '0'
+
