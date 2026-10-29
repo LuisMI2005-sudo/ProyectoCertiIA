@@ -8,11 +8,11 @@ Objetivo solicitado: PostgreSQL relacional multitenant por servicio, principios 
 
 ## Grafo nativo de Obsidian
 
-Abrir **Graph view** en la bóveda `ProyectoCertiIA`: el filtro `path:"specs/segundo-cerebro"` muestra conceptos y módulos con colores por categoría, sin incluir dependencias ni archivos generados. Ver el [mapa de módulos](specs/segundo-cerebro/arquitectura/00-Arquitectura-modulos.md). GameZone mantiene su grafo separado en `practica`. El Canvas no sustituye esta vista nativa.
+Para entrega usar la bóveda independiente **DevGuardian-SDD-Obsidian** y su README. La copia histórica del backend permite abrir **Graph view** en la bóveda `ProyectoCertiIA`: el filtro `path:"specs/segundo-cerebro"` muestra conceptos y módulos con colores por categoría, sin incluir dependencias ni archivos generados. Ver el [mapa de módulos](specs/segundo-cerebro/arquitectura/00-Arquitectura-modulos.md). GameZone mantiene su grafo separado en `practica`. El Canvas no sustituye esta vista nativa.
 
 ## Segundo cerebro y contexto del asistente
 
-`AGENTS.md` contiene instrucciones del repositorio y `CODEX.md` registra contexto documental. [Segundo cerebro de DevGuardian](specs/segundo-cerebro/00-Segundo-cerebro.md). Organiza la lectura crítica del PDF, arquitectura, seguridad, IA y verificación. GameZone se mantiene separado. En Obsidian, seleccionar la bóveda `ProyectoCertiIA` y abrir `specs/segundo-cerebro/00-Segundo-cerebro`. Todo el conocimiento de DevGuardian reside ahora en esa carpeta; GameZone permanece en `practica`. Los grafos distinguen categorías con colores y etiquetas.
+`AGENTS.md` contiene instrucciones del repositorio y `CODEX.md` registra contexto documental. [Segundo cerebro de DevGuardian](specs/segundo-cerebro/00-Segundo-cerebro.md). Organiza la lectura crítica del PDF, arquitectura, seguridad, IA y verificación. GameZone se mantiene separado. En Obsidian, seleccionar la bóveda `ProyectoCertiIA` y abrir `specs/segundo-cerebro/00-Segundo-cerebro`. La entrega documental canónica reside en el repositorio independiente; esta carpeta conserva una copia histórica/operativa; GameZone permanece en `practica`. Los grafos distinguen categorías con colores y etiquetas.
 
 ## Desarrollo guiado por especificaciones (SDD)
 
@@ -26,35 +26,31 @@ La importación por enlace público de GitHub, con progreso SSE, validación de 
 
 ## Integración con el asistente de IA del entorno de desarrollo
 
-La adaptación para Codex se registra en [`.codex/hooks.json`](.codex/hooks.json), con cuatro perfiles en [`.codex/agents/`](.codex/agents/). Protege ediciones y comandos del asistente, verifica cambios TypeScript y audita eventos de herramientas/subagentes mediante [`src/ide-integration/`](src/ide-integration/README.md). Incluye 35 pruebas específicas adicionales al corte publicado de 287 pruebas backend. Las cifras y evidencia CI del despliegue documentado más abajo corresponden a ese corte anterior.
+La adaptación para Codex se registra en [`.codex/hooks.json`](.codex/hooks.json), con cuatro perfiles en [`.codex/agents/`](.codex/agents/). Protege ediciones y comandos del asistente, verifica cambios TypeScript y audita eventos de herramientas/subagentes mediante [`src/ide-integration/`](src/ide-integration/README.md). Su cobertura está en tests/ide-integration/; consultar la cabecera para métricas actuales por SHA, sin sumar conteos históricos al CI vigente.
 
 Esta integración local requiere compilar y revisar las definiciones en `/hooks` antes de activarlas en Codex. Sus perfiles generativos y su auditoría local son distintos de los workers deterministas de `src/subagents/`, de los hooks del motor de `src/hooks/` y del dashboard de Render. Ver [preparación, activación, pruebas y límites](src/ide-integration/README.md).
 
-## 🌐 Entorno de Producción Desplegado (Render)
+## Estado y trazabilidad de la entrega final
 
-- **URL Pública del Frontend (Dashboard):** https://proyecto-certificacion-ai-frontend.onrender.com
-- **URL Pública del Backend (API & Healthcheck):** https://proyecto-certificacion-ai-backend.onrender.com/api/health
-- **Base de Datos Cloud:** PostgreSQL **PCAI**, base lógica `pcai`, modo `postgres`, **5 tablas activas**.
-- **Ramas activas:** `Dev` (Backend), `dev` (Frontend); versión de entrega consolidada también en `main` de ambos repositorios, conservando la autoría.
-- **CI/CD:** GitHub Actions valida cada rama de entrega. Render espera **After CI Checks Pass** antes de redesplegar.
-- **Runner en Render Free:** Node/Jest. **pytest se valida obligatoriamente en Ubuntu de GitHub Actions**, con Python 3.11, pytest-json-report y `DEVGUARDIAN_REQUIRE_PYTEST=1`; el health de la instancia web puede indicar pytest no disponible.
-- **Calidad:** base anterior **285 pruebas Backend + 44 Frontend = 329**. Este cierre añade dos regresiones de backend y tres de frontend: **287 + 47 = 334 pruebas**, en **10 suites Backend + 3 archivos Vitest**.
-- **Alcance:** Fases 1 a 6 implementadas. API, MCP HTTP, workers, Git, análisis, Jest y persistencia se ejecutan en el backend desplegado; el cliente generativo de Fase 6 es una CLI MCP, no un endpoint LLM del dashboard. No se acredita una llamada pagada real a Anthropic.
+**Corte: 29/10/2026.** Consultar el [backlog vigente](backlog.md), la [matriz por HU e issue](reports/TRAZABILIDAD_FINAL.md) y la [especificación documental](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/005-final-traceability/spec.md).
 
-Los secretos se configuran en Environment de Render. Las copias locales `.env` están ignoradas por Git; nunca publicar DATABASE_URL ni claves en variables VITE_*.
+| Entorno | Evidencia del corte | Límite |
+|---|---|---|
+| Integración backend 39cb46a | [CI aprobado](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/40942257149): 19 suites, 375 aprobadas y 5 omitidas en el job general; job Docker con 7 aprobadas | Los 5 casos se cubren en Docker; sus 2 pruebas de configuración también aparecen en el job general. No sumar ambos como pruebas únicas |
+| Integración frontend 3b06f56 | [CI aprobado](https://github.com/SebhastianCampero-Collab/Frontend/actions/runs/40942339109): 125 aprobadas en 14 archivos, tipos, lint y builds normal/plataforma | [PR backend #5](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/pull/5) y [PR frontend #1](https://github.com/SebhastianCampero-Collab/Frontend/pull/1) siguen abiertos; no se acredita su despliegue |
+| Render existente | [Frontend](https://proyecto-certificacion-ai-frontend.onrender.com) y [health](https://proyecto-certificacion-ai-backend.onrender.com/api/health): HTTP 200; PostgreSQL conectado y cinco tablas en comprobación del 29/10 | El health no informa SHA; Jest disponible y pytest no disponible. No acredita plataforma multitenant publicada ni reparación de repositorios externos con sandbox cloud |
 
-### Demo en vivo en tres clics
+### Recorrido de la interfaz actual
 
-1. En Auditoría, **Cargar Demo Reparación / Subagentes**. Se crea y registra un checkout nuevo con fallo real, rama inicial Dev, parche y SHA-256 calculado en el servidor.
-2. **Ejecutar reparación**. Esperar COMMITTED: diagnóstico en worker, baseline con un fallo y un aprobado, candidato con dos aprobados, hooks y commit en fix/… del checkout de demo.
-3. **Subagentes**. Mostrar las delegaciones diagnostic/verification y su consumo committed. El selector conserva el proyecto de demo; F5 recupera auditoría, pruebas y trazas de PCAI.
+1. **Mis proyectos → Registrar proyecto:** importar un enlace de GitHub y observar preparación y compatibilidad. No se instalan dependencias ni scripts externos.
+2. **Revisar código:** seleccionar un archivo real, elegir comprobaciones y pulsar **Revisar código**. **Consultar archivo** lee el intervalo elegido sin modificarlo.
+3. **Resultados e historial:** consultar resumen, hallazgos y evidencia. Un diagnóstico no realiza reparación ni necesariamente registra baseline/candidato; cero hallazgos no garantiza corrección funcional.
+4. Si falta el checkout y existe sourceUrl, **Reclonar Workspace** recupera el mismo proyecto. No habilita reparación sin sandbox.
+5. **Opciones avanzadas:** **Hooks y guardrails** consulta políticas e intercepciones; **Trazas de subagentes** filtra/exporta eventos reales; **MCP y edición JSON** permite peticiones explícitas bajo las políticas del backend.
 
-Para diagnóstico independiente: **Cargar Demo Diagnóstico Real → Ejecutar diagnóstico**. El resultado DIAGNOSED conserva outcome=diagnosed y traza completed; la sesión DB mantiene status=blocked por el contrato histórico, pues diagnosticar no autoriza un commit. No es un error.
+El dashboard de seguridad actual es de lectura: no contiene los antiguos botones de ejemplos ALLOW/BLOCK. Actualizar trazas consulta registros, no los crea. Los endpoints y fixtures de demo se conservan para compatibilidad/pruebas, pero no constituyen el recorrido de navegación actual. Para una reparación segura controlada, consultar [sandbox local/CI](sandbox/README.md); no se acreditó generación real con Anthropic ni ejecutor cloud operativo. El historial persiste en PostgreSQL; los checkouts de Render son efímeros.
 
-En **Hooks & Guardrails**, ejecutar **Probar ALLOW** y **Probar BLOCK · .env**. Son preflights reales: guardan evidencia y no modifican archivos. Recargar para comprobar persistencia. No se borran registros fallidos anteriores.
-
-La preparación usa POST /api/demo/prepare con cuerpo vacío; no acepta rutas ni comandos del navegador. Está habilitada en Render o con DEVGUARDIAN_ENABLE_DEMO=1 y limitada a 20 checkouts por proceso. Cada repetición usa un proyecto distinto: nunca restaura ni elimina trabajo previo. Los checkouts son efímeros al redesplegar; las auditorías permanecen en PCAI. Para repetir tras reinicio, cargar una nueva demo. La plantilla fixtures/cloud-demo queda fuera del build y de la suite principal; sus dos casos Jest se ejecutan contra la fuente real al reparar.
-
+Los secretos se configuran fuera de Git. No publicar DATABASE_URL ni claves en variables VITE_*. Ignorar .env no sustituye la auditoría integral de secretos pendiente en HU-40.
 
 ## Hooks de Backend y Base de Datos
 
@@ -95,23 +91,11 @@ El estado de las **43 historias de usuario**, su evidencia y sus bloqueos se man
 
 ## 2. Estado Actual del Proyecto y Métricas de Calidad
 
-| Fase | Módulo | Estado | Pruebas aprobadas |
-|---|---|---|---:|
-| Fase 1 | `src/shared/` | Completada | 30 |
-| Fase 2 | `src/git-controller/` | Completada | 35 |
-| Fase 3 | `src/analyzer/` | Completada | 44 |
-| Fase 4 | `src/test-runner/` | Completada | 43 |
-| Fase 5 + HTTP | `src/mcp/`, `src/server/` | HTTP/MCP y demo aislada | 30 |
-| MCP de compatibilidad | `src/mcp-server/` | Integrado desde origin/main: recurso de análisis y 10 herramientas de dominio | 3 |
-| Fase 6 | `src/agent-client/` | Generación estructurada + ciclo MCP determinista | 28 |
-| Hooks | `src/hooks/` | Implementado | 20 |
-| Subagentes | `src/subagents/` | Implementado | 22 |
-| Persistencia | `src/db/` | Local durable + adaptador PostgreSQL | 32 |
-| **Total implementado** | **Fases 1–6 + HTTP + Hooks + Subagentes + DB** | **10 suites** | **287** |
+La evidencia de calidad vigente está en la cabecera y en el backlog. Se conserva el changelog de fases como historia, sin atribuir sus conteos antiguos al código actual. Los módulos incluyen shared, Git, analyzer, Test Runner, MCP/HTTP, agente, hooks, workers, persistencia e integración IDE; el perfil platform y los microfrontends se validan localmente/en CI.
 
 **Validación integral del backend:**
 
-- **287 pruebas unitarias y de integración** al instalar también pytest y `pytest-json-report`; sin pytest en el PATH, el smoke test de Python se omite localmente. En CI ambos runners son obligatorios.
+- CI de integración: 375 pruebas aprobadas en el job general y casos Docker en su job separado; ver desglose y SHAs en la cabecera. Pytest real es obligatorio en el job general de CI.
 - Compilación TypeScript estricta correcta y comprobación de tipos mediante `tsc -p tsconfig.json --noEmit` sin errores.
 - ESLint sin errores en el código fuente.
 - Integración Git comprobada con repositorios temporales reales: ramas, parches, diffs, commits verificados, concurrencia y rollback.
@@ -212,19 +196,19 @@ ProyectoCertiIA/
 │       ├── index.ts                  # Factory local/PostgreSQL y exportaciones
 │       └── README.md                 # Modelo ER, integración y evidencia de persistencia
 ├── tests/
-│   ├── shared.test.mjs                # 30 pruebas de seguridad y contratos
+│   ├── shared.test.mjs                # Pruebas de seguridad y contratos
 │   ├── git-controller/
-│   │   └── controller.test.mjs        # 35 pruebas con repositorios Git reales
+│   │   └── controller.test.mjs        # Pruebas con repositorios Git reales
 │   ├── analyzer/
-│   │   └── analyzer.test.mjs          # 44 pruebas del analizador y sus recursos
+│   │   └── analyzer.test.mjs          # Pruebas del analizador y sus recursos
 │   ├── test-runner/
-│   │   └── runner.test.mjs            # 43 pruebas, incluidos Jest/pytest reales
-│   ├── hooks/hooks.test.mjs           # 20 pruebas de hooks y auditoría
-│   ├── subagents/subagents.test.mjs   # 22 pruebas de delegación y reparación real
-│   ├── db/db.test.mjs                 # 32 pruebas de persistencia y reinicio
-│   ├── mcp-server/server.test.mjs     # 3 pruebas de discovery, validación y recurso MCP
-│   ├── agent-client/agent.test.mjs   # 28 pruebas de agente, MCP real y proveedor simulado
-│   └── server/server.test.mjs         # 28 pruebas HTTP/MCP con motores y BD reales
+│   │   └── runner.test.mjs            # Pruebas, incluidos Jest/pytest reales
+│   ├── hooks/hooks.test.mjs           # Pruebas de hooks y auditoría
+│   ├── subagents/subagents.test.mjs   # Pruebas de delegación y reparación real
+│   ├── db/db.test.mjs                 # Pruebas de persistencia y reinicio
+│   ├── mcp-server/server.test.mjs     # Pruebas de discovery, validación y recurso MCP
+│   ├── agent-client/agent.test.mjs   # Pruebas de agente, MCP real y proveedor simulado
+│   └── server/server.test.mjs         # Pruebas HTTP/MCP con motores y BD reales
 └── fixtures/
     ├── typescript/
     │   ├── domain.ts                 # Tipos y funciones importadas por otros casos
@@ -362,7 +346,7 @@ Comandos de compilación y verificación:
 | Verificar tipos sin emitir | `npm run typecheck` | `tsc -p tsconfig.json --noEmit` sin errores. |
 | Verificar estilo y reglas | `npm run lint` | ESLint sin errores en `src/`. |
 | Verificar tipos y lint juntos | `npm run check` | Ejecución secuencial de ambas comprobaciones. |
-| Ejecutar la suite completa | `npm test` | Compilación previa y 287 pruebas en diez suites Jest; el smoke test de pytest requiere Python y su plugin JSON. |
+| Ejecutar la suite completa | `npm test` | Compilación previa y suites descubiertas según el commit; ver métricas actuales en la cabecera. El smoke test de pytest requiere Python y su plugin JSON. |
 | Iniciar HTTP compilado | `npm start` | Backend en `http://127.0.0.1:3001` por defecto. |
 | Compilar e iniciar HTTP | `npm run dev:server` | Compilación inicial y servidor HTTP; reiniciar para incorporar cambios. |
 | Iniciar MCP stdio compilado | `node dist/mcp/index.js` | Transporte stdio con stdout reservado al protocolo. |
@@ -412,7 +396,7 @@ Ejemplos completos de registro, diagnóstico, reparación, hooks bloqueados y ll
 El workflow [CI](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/workflows/ci.yml), definido en [`.github/workflows/ci.yml`](.github/workflows/ci.yml), se ejecuta con cada push a `main`, `Dev` o `QA` y cada pull request dirigido a esas ramas. Utiliza Ubuntu, Node.js 24.x, caché de npm y Python 3.11. Instala Node con `npm ci` y versiones fijadas de pytest y `pytest-json-report`, configura una identidad Git para los repositorios temporales y ejecuta:
 
 1. `npm run check`: TypeScript estricto sin emitir y ESLint.
-2. `npm test`: compilación y las diez suites, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback, la persistencia con reinicio real de Node y el backend HTTP/MCP y el Agent Client. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
+2. `npm test`: compilación y las suites del commit, incluidos los smoke tests con Jest y pytest reales, los flujos delegados de commit/rollback, la persistencia con reinicio real de Node y el backend HTTP/MCP y el Agent Client. Los smoke tests invocan `TestRunner`, procesan el JSON real con `reports.ts` y exigen `complete: true`, `status: passed`, código de salida 0 y un caso aprobado.
 3. Una tabla de resultados en el resumen de Actions, que también informa fallos o pasos no ejecutados.
 
 El workflow solo dispone de `contents: read`, cancela ejecuciones anteriores de la misma rama y tiene un límite de 15 minutos. No incluye despliegues ni requiere secretos o archivos `.env`. `DEVGUARDIAN_REQUIRE_PYTEST=1` hace fallar la suite si falta pytest en CI.
@@ -448,13 +432,13 @@ npm run db:verify
 
 El comando crea datos de demostración, cierra y reabre la conexión y muestra sus IDs y recuperación. Se pueden consultar desde otro proceso con `npm run db:verify -- UUID_DE_LA_AUDITORIA`. Las pruebas de DB comprueban además una reparación real con Jest, auditorías de hooks y delegaciones que permanecen intactas al arrancar otro proceso Node.
 
-**Estado de entrega:** PostgreSQL PCAI, API y frontend están desplegados en Render. El health verifica postgres conectado y cinco tablas. La UI registra proyectos, ejecuta hooks y recupera el historial; la demo aislada añade diagnóstico, baseline/candidato, delegaciones consumidas y commit real. Las pruebas de CI son independientes de credenciales cloud.
+**Estado de entrega:** PostgreSQL PCAI, API y frontend están publicados. El corte de versión, su CI, el recorrido actual y los límites de reparación están en la cabecera y el backlog. Las pruebas de CI son independientes de credenciales cloud; los ejemplos históricos no acreditan la publicación de los últimos PRs.
 
 Modelo entidad-relación, límites, seguridad, integración y pasos para Render/Supabase/Neon: [documentación de persistencia](src/db/README.md).
 
-## Consolidación de ramas y regresiones
+## Historial de consolidación de ramas y regresiones
 
-Se integró origin/main en Dev mediante merge conservando hashes y autoría: MCP de compatibilidad, corrección de rutas Git antes de evaluar árbol sucio, aserciones CRLF exactas y validación CI en QA. El workflow conserva Node/Python, los smoke tests reales y ejecución manual. Tras la consolidación había 257 pruebas en nueve suites: 254 de las ocho originales y tres MCP recibidas de main. La Fase 6 añade 28 casos: 285 en diez suites. El servidor principal sigue siendo src/mcp/ (19 herramientas auditadas y API HTTP); [src/mcp-server/](src/mcp-server/README.md) conserva la interfaz de workspace fijo y el recurso de análisis aportados desde main. El cliente de otras ramas remotas no se incorporó en ese merge. La Fase 6 actual se implementa en src/agent-client/ sobre los contratos MCP con projectId.
+El corte histórico anterior integró origin/main en Dev mediante merge conservando hashes y autoría: MCP de compatibilidad, corrección de rutas Git antes de evaluar árbol sucio, aserciones CRLF exactas y validación CI en QA. El workflow conserva Node/Python, los smoke tests reales y ejecución manual. Tras la consolidación había 257 pruebas en nueve suites: 254 de las ocho originales y tres MCP recibidas de main. La Fase 6 añade 28 casos: 285 en diez suites. El servidor principal sigue siendo src/mcp/ (19 herramientas auditadas y API HTTP); [src/mcp-server/](src/mcp-server/README.md) conserva la interfaz de workspace fijo y el recurso de análisis aportados desde main. El cliente de otras ramas remotas no se incorporó en ese merge. La Fase 6 actual se implementa en src/agent-client/ sobre los contratos MCP con projectId.
 
 
 ### Colores del grafo de arquitectura
