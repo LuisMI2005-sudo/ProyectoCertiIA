@@ -32,6 +32,8 @@ Esta integración local requiere compilar y revisar las definiciones en `/hooks`
 
 ## Estado y trazabilidad de la entrega final
 
+**Coordinación de fixes:** usar la [lista única de bugs y pendientes](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/CONTROL_DE_FIXES.md) y el [índice #57](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/57). Cada arreglo se vincula con caso QA, HU/issue, reproducción, resultado esperado y prueba; acordar responsable antes de editar.
+
 **Incrementos finales definidos:** INC-01 Gestión segura de organizaciones y accesos (HU-44), e INC-02 Espacio de trabajo modular con microfrontends (HU-46). Ver [criterios y diferencia frente al 20/10](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/spec.md) y [guion de demostración local](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/demo.md). La implementación está disponible en el perfil platform; la aceptación del docente y la demo final aún no se acreditan. No se afirma que el despliegue legacy de Render tenga estos incrementos activos.
 
 **Corte: 29/10/2026.** Consultar el [backlog vigente](backlog.md), la [matriz por HU e issue](reports/TRAZABILIDAD_FINAL.md) y la [especificación documental](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/005-final-traceability/spec.md).
