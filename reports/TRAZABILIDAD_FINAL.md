@@ -256,7 +256,7 @@ Mantener especificaciones y trazabilidad SDD. **Parcial.** Configuración y veri
 
 ### HU-48
 
-Navegar el segundo cerebro independiente en Obsidian. **Parcial.** Estructura y enlaces comprobados; falta revisión visual del equipo y ensayo de navegación para defensa. [Issue](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/53). [Evidencia de versión](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/actions/runs/40942257149).
+Navegar el segundo cerebro independiente en Obsidian. **Parcial.** Estructura y enlaces comprobados; falta revisión visual del equipo y ensayo de navegación para defensa. [Issue](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/53). [Evidencia de versión](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/actions/runs/40947798822).
 
 ### HU-49
 
