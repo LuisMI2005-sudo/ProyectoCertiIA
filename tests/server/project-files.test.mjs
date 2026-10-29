@@ -30,7 +30,7 @@ test('lists actual safe text files, excluding dependencies, secrets, symlinks an
   expect(await listProjectFiles(workspace)).toEqual({ files: [{ path: 'README.md', analyzable: false }, { path: 'src/value.ts', analyzable: true }], truncated: false });
 });
 test('explains a lost workspace without returning an empty successful listing', async () => {
-  await expect(listProjectFiles(path.join(root, 'missing'))).rejects.toThrow('Vuelve a importar');
+  await expect(listProjectFiles(path.join(root, 'missing'))).rejects.toMatchObject({ status: 409, code: 'WORKSPACE_UNAVAILABLE' });
 });
 test.each([{ checks: [] }, { checks: ['semantic', 'semantic'] }, { checks: ['unknown'] }])('rejects invalid check selection $checks', ({ checks }) => {
   expect(RunAuditSchema.safeParse({ projectId: randomUUID(), mode: 'diagnose', path: 'src/value.ts', checks }).success).toBe(false);

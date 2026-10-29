@@ -44,7 +44,7 @@ function statusFor(error: unknown): number {
   if (error instanceof HttpError) return error.status;
   if (error instanceof DevGuardianError) {
     if (["VERIFICATION_FAILED", "PATH_OUTSIDE_WORKSPACE", "PATH_PROTECTED", "SYMLINK_FORBIDDEN"].includes(error.code)) return 403;
-    if (["WORKTREE_DIRTY", "STATE_CONFLICT", "PATCH_CONFLICT"].includes(error.code)) return 409;
+    if (["WORKTREE_DIRTY", "STATE_CONFLICT", "PATCH_CONFLICT", "WORKSPACE_UNAVAILABLE"].includes(error.code)) return 409;
     if (["FILE_NOT_FOUND", "SESSION_NOT_FOUND", "ATTEMPT_NOT_FOUND"].includes(error.code)) return 404;
     if (["VALIDATION_ERROR", "PATH_INVALID", "PATCH_INVALID", "REPOSITORY_ERROR"].includes(error.code)) return 422;
   }
@@ -112,6 +112,11 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
           if (url.search) throw new HttpError(422, "El listado de archivos no acepta rutas ni parámetros.");
           json(response, 200, { ok: true, data: await backend.projectFiles(projectFiles[1] ?? "") }); return;
         }
+        const projectReclone = pathname.match(/^\/api\/projects\/([^/]+)\/reclone$/u);
+        if (projectReclone && method === "POST") {
+          if (url.search) throw new HttpError(422, "El reclonado no acepta parámetros.");
+          json(response, 200, { ok: true, data: await backend.recloneProject(projectReclone[1] ?? "") }); return;
+        }
         if (pathname === "/api/projects/import" && method === "POST") { await importer.stream(await readJson(request, maxBodyBytes), response); return; }
         if (pathname === "/api/projects" && method === "POST") { json(response, 201, { ok: true, data: await backend.registerProject(await readJson(request, maxBodyBytes)) }); return; }
         if (pathname === "/api/demo/prepare" && method === "POST") { json(response, 201, { ok: true, data: await backend.prepareDemo(await readJson(request, maxBodyBytes)) }); return; }
@@ -133,9 +138,9 @@ export async function startHttpServer(options: HttpServerOptions = {}): Promise<
           if (!request.headers.accept || request.headers.accept === "*/*") request.headers.accept = "application/json, text/event-stream";
           await handleMcpHttp(backend, request, response, body); return;
         }
-        const known = health || /^\/api\/(?:projects(?:\/import|\/[^/]+\/files)?|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
+        const known = health || /^\/api\/(?:projects(?:\/import|\/[^/]+\/(?:files|reclone))?|demo\/prepare|audits(?:\/run|\/[^/]+)?|hooks\/(?:logs|config|evaluate)|subagents\/delegations|mcp)$/u.test(pathname);
         if (known) response.setHeader("Allow", pathname === "/api/projects" ? "GET, POST, OPTIONS"
-          : ["/api/projects/import", "/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) ? "POST, OPTIONS" : "GET, OPTIONS");
+          : ["/api/projects/import", "/api/mcp", "/api/audits/run", "/api/hooks/evaluate", "/api/demo/prepare"].includes(pathname) || pathname.endsWith("/reclone") ? "POST, OPTIONS" : "GET, OPTIONS");
         throw new HttpError(known ? 405 : 404, known ? "Method not allowed." : "Endpoint not found.");
       } catch (error: unknown) {
         const status = statusFor(error);

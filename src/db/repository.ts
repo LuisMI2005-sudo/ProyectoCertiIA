@@ -44,6 +44,18 @@ export abstract class RepositoryBase implements DevGuardianRepository {
       await tx.put("projects", row, false); return row;
     });
   }
+  public async saveProject(input: ProjectRecord): Promise<ProjectRecord> {
+    const row = parseEntity("projects", input);
+    return this.access(true, async (tx) => {
+      const old = await tx.get("projects", row.id);
+      if (!old) throw new ValidationError("Unknown project.");
+      if (old.createdAt !== row.createdAt || old.repoPath !== row.repoPath || old.name !== row.name ||
+          old.defaultBranch !== row.defaultBranch || old.runnerType !== row.runnerType) {
+        throw new ValidationError("Project identity is immutable.");
+      }
+      await tx.put("projects", row, true); return row;
+    });
+  }
   public getProject(id: string): Promise<ProjectRecord | null> { return this.get("projects", id); }
   public listProjects(): Promise<ProjectRecord[]> { return this.access(false, (tx) => tx.list("projects")); }
   public async createAuditSession(input: AuditSessionRecord): Promise<AuditSessionRecord> {

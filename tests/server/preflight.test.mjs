@@ -18,7 +18,7 @@ test('missing workspace is a definitive rejection before an audit or repair star
       projectId: project.id, mode: 'repair', repair: { path: 'src/value.ts', slug: 'test', message: 'fix', runner: 'jest', targets: ['tests/value.test.cjs'], unifiedDiff: '+fix', expectedFileHashes: { 'src/value.ts': 'a'.repeat(64) } },
     }) });
     expect(response.status).toBe(409);
-    expect(await response.json()).toMatchObject({ ok: false, error: { code: 'FILE_SYSTEM_ERROR', message: 'Cannot initialize the workspace root.' } });
+    expect(await response.json()).toMatchObject({ ok: false, error: { code: 'WORKSPACE_UNAVAILABLE' } });
     expect(await repository.listAuditSessions(project.id)).toEqual([]);
   } finally { await app?.close(); await rm(root, { recursive: true, force: true }); }
 });
