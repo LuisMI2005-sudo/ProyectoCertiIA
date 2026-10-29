@@ -10,7 +10,10 @@ export const JsonObjectSchema = z.record(z.string(), z.json());
 export const AuditStatusSchema = z.enum(["pending", "running", "committed", "rolled_back", "blocked", "failed"]);
 export const ProjectRecordSchema = z.strictObject({
   id: IdentifierSchema, name: Text, repoPath: Text.refine(path.isAbsolute, "Absolute repository path required."),
-  defaultBranch: Text, runnerType: RunnerSchema, createdAt: Timestamp
+  defaultBranch: Text, runnerType: RunnerSchema, createdAt: Timestamp,
+  // Imported and remotely registered projects retain their public Git origin so the
+  // ephemeral workspace can be rebuilt without creating a duplicate project row.
+  sourceUrl: z.string().max(2048).regex(/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\.git$/u).optional()
 });
 export const AuditSessionRecordSchema = z.strictObject({
   id: IdentifierSchema, projectId: IdentifierSchema, status: AuditStatusSchema,
@@ -53,6 +56,7 @@ export type SubagentDelegationRecord = z.infer<typeof SubagentDelegationRecordSc
 /** Domain methods throw sanitized typed errors; tools may wrap them with captureResult. */
 export interface DevGuardianRepository {
   createProject(record: ProjectRecord): Promise<ProjectRecord>;
+  saveProject(record: ProjectRecord): Promise<ProjectRecord>;
   getProject(id: string): Promise<ProjectRecord | null>;
   listProjects(): Promise<ProjectRecord[]>;
   createAuditSession(record: AuditSessionRecord): Promise<AuditSessionRecord>;

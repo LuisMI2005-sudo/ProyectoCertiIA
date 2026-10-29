@@ -1,4 +1,5 @@
 import { opendir, lstat } from "node:fs/promises";
+import { ErrorCode } from "../shared/errors.js";
 import { WorkspacePathGuard } from "../shared/path-security.js";
 import { HttpError } from "./contracts.js";
 
@@ -7,7 +8,7 @@ export interface ProjectFile { readonly path: string; readonly analyzable: boole
 export async function listProjectFiles(root: string): Promise<{ files: ProjectFile[]; truncated: boolean }> {
   let guard: WorkspacePathGuard;
   try { guard = await WorkspacePathGuard.create(root); }
-  catch { throw new HttpError(409, "Los archivos del proyecto no están disponibles en el servidor. Vuelve a importar el repositorio si Render lo reinició."); }
+  catch { throw new HttpError(409, "Los archivos del proyecto no están disponibles en el servidor. Usa Reclonar Workspace para restaurarlos sin crear un proyecto duplicado.", ErrorCode.WORKSPACE_UNAVAILABLE); }
   const files: ProjectFile[] = [];
   const excluded = /^(?:\.git|\.env(?:\..*)?|node_modules|dist|build|coverage|\.venv|venv|__pycache__|\.devguardian.*|\.codex|\.claude|\.opencode|credentials(?:\..*)?|secrets?(?:\..*)?)$/iu;
   const text = /\.(?:[cm]?[jt]s|[jt]sx|json|md|txt|py|ya?ml|html|css|sql|toml)$/iu;

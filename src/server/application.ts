@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -22,9 +22,15 @@ import { EvaluateHookSchema, HttpError, RegisterProjectSchema, RunAuditSchema } 
 import type { HookLogQuery, ListQuery } from "./contracts.js";
 import { createCloudDemo } from "./cloud-demo.js";
 import { listProjectFiles } from "./project-files.js";
+import { ImportProjectSchema } from "./project-import.js";
+import { cloneWorkspace, inspectWorkspace } from "./project-reclone.js";
 
 const execute = promisify(execFile);
 const SYSTEM_NAME = "__devguardian_system__";
+const WORKSPACE_UNAVAILABLE = "El workspace físico de este proyecto no está disponible. Usa Reclonar Workspace para restaurarlo sin duplicar el proyecto.";
+async function isEmptyDirectory(directory: string): Promise<boolean> {
+  try { return (await readdir(directory)).length === 0; } catch { return false; }
+}
 const inside = (root: string, candidate: string): boolean => {
   const relative = path.relative(root, candidate);
   return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
@@ -119,7 +125,47 @@ export class DevGuardianBackend {
       const top = await git.revparse(["--show-toplevel"]);
       if ((await WorkspacePathGuard.create(top.trim())).root !== root) throw new Error("Not a repository root.");
     } catch { throw new HttpError(422, "Project must identify the root of an existing Git repository."); }
-    return this.persistence.registerProject({ ...input, repoPath: root });
+    const sourceUrl = input.sourceUrl ?? await this.originUrl(root);
+    return this.persistence.registerProject({ ...input, repoPath: root, ...(sourceUrl === undefined ? {} : { sourceUrl }) });
+  }
+  private async originUrl(repoPath: string): Promise<string | undefined> {
+    try {
+      const remote = (await simpleGit({ baseDir: repoPath, timeout: { block: 10000 } }).remote(["get-url", "origin"]))?.trim();
+      if (!remote) return undefined;
+      const parsed = ImportProjectSchema.safeParse({ url: remote });
+      return parsed.success ? parsed.data.url : undefined;
+    } catch { return undefined; }
+  }
+  public async recloneProject(id: string) {
+    const project = await this.project(id);
+    return this.serialize(project.repoPath, async () => {
+      const current = await this.project(id);
+      const sourceUrl = current.sourceUrl ?? await this.originUrl(current.repoPath);
+      if (!sourceUrl) throw new HttpError(409, "El proyecto no conserva una URL de Git de origen. Vuelve a registrarlo o impórtalo una sola vez con el enlace del repositorio.",
+        ErrorCode.WORKSPACE_UNAVAILABLE);
+      const stored = current.sourceUrl === sourceUrl ? current : await this.repository.saveProject({ ...current, sourceUrl });
+      const state = await inspectWorkspace(current.repoPath);
+      if (state.exists && state.available) {
+        this.invalidateRuntime(current.id);
+        return { project: stored, status: "available" as const, branch: state.branch ?? current.defaultBranch, headCommit: state.headCommit ?? "", files: null };
+      }
+      const root = this.roots.find((candidate) => inside(candidate, current.repoPath));
+      if (!root) throw new HttpError(403, "El workspace registrado está fuera de las raíces permitidas.");
+      const replaceExisting = state.exists && (this.imported(current) || await isEmptyDirectory(current.repoPath));
+      if (state.exists && !replaceExisting) throw new HttpError(409,
+        "El directorio del proyecto existe pero no es un repositorio Git válido. No se eliminará automáticamente para no borrar trabajo ajeno.",
+        ErrorCode.WORKSPACE_UNAVAILABLE);
+      const cloned = await cloneWorkspace({ workspaceRoot: root, destination: current.repoPath, url: sourceUrl,
+        branch: current.defaultBranch, replaceExisting });
+      this.invalidateRuntime(current.id);
+      return { project: stored, status: "cloned" as const, branch: cloned.branch, headCommit: cloned.headCommit, files: cloned.files };
+    });
+  }
+  private invalidateRuntime(projectId: string): void {
+    const runtime = this.runtimes.get(projectId);
+    if (!runtime) return;
+    runtime.runner.cancel();
+    this.runtimes.delete(projectId);
   }
   public async prepareDemo(raw: unknown) {
     if (!this.demoEnabled) throw new HttpError(404, "Cloud demo is disabled on this server.");
@@ -179,7 +225,7 @@ export class DevGuardianBackend {
       // This preflight runs before any audit/patch: a missing workspace is a
       // definitive rejection, not an ambiguous failure after a Git mutation.
       if (error instanceof Error && "code" in error && error.code === ErrorCode.FILE_SYSTEM_ERROR)
-        throw new HttpError(409, error.message, ErrorCode.FILE_SYSTEM_ERROR);
+        throw new HttpError(409, WORKSPACE_UNAVAILABLE, ErrorCode.WORKSPACE_UNAVAILABLE);
       throw error;
     }
     return this.serialize(project.repoPath, async () => {
@@ -224,7 +270,13 @@ export class DevGuardianBackend {
     }
   }
   private async assertWorkspace(project: ProjectRecord): Promise<void> {
-    const canonical = (await WorkspacePathGuard.create(project.repoPath)).root;
+    let canonical: string;
+    try { canonical = (await WorkspacePathGuard.create(project.repoPath)).root; }
+    catch (error: unknown) {
+      if (error instanceof Error && "code" in error && (error.code === ErrorCode.FILE_SYSTEM_ERROR || error.code === ErrorCode.FILE_NOT_FOUND))
+        throw new HttpError(409, WORKSPACE_UNAVAILABLE, ErrorCode.WORKSPACE_UNAVAILABLE);
+      throw error;
+    }
     if (canonical !== project.repoPath || !this.allowed(canonical)) throw new HttpError(403, "Registered workspace changed.");
   }
   private async systemProject(): Promise<ProjectRecord> {

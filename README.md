@@ -77,7 +77,7 @@ npm test
 
 ```sh
 npm run build
-node scripts/demo-subagents.mjs
+node scripts/demo-subagents.mjs 
 ```
 
 La demo guarda [éxito con commit](artifacts/subagents/success.json) y [regresión con rollback](artifacts/subagents/regression.json): revisar `delegationLogs`, `consumption`, `hookLogs` y los hashes de HEAD. Cada artefacto conserva las tres delegaciones y sus cinco llamadas reales a herramientas.
@@ -469,6 +469,8 @@ En Graph view de la bóveda ProyectoCertiIA se conservan los grupos del cerebro 
 ## Plataforma multitenant local (migración en validación)
 
 ### Reparación con ejecución aislada
+
+La consolidación con la recuperación de proyectos conserva `sourceUrl`, el reclonado sin duplicar registros y la invalidación del runtime anterior. Recuperar un workspace no autoriza por sí solo ejecutar pruebas: en servidores públicos sigue siendo obligatorio un sandbox operativo. Las pruebas de reclonado comprueban esta combinación. La integración se prepara en `validate-isolated-repair`; su presencia en esta rama no acredita despliegue en Render.
 
 Se incorporó un [runner Docker opcional](sandbox/README.md) que ejecuta Jest/pytest sobre un snapshot de solo lectura, sin red ni credenciales del host, con límites y reportes estructurados. La imagen se fija por ID SHA-256. En servidores públicos de Render y en el perfil multitenant se exige aislamiento antes de ejecutar pruebas o iniciar reparaciones; la UI consulta `capabilities.isolatedTests` y `requiresIsolation` y mantiene el bloqueo cuando el entorno no está operativo. La integración incluye un job CI separado para verificar commit, rollback, timeout y aislamiento con contenedores reales. Esto no acredita todavía una reparación generativa con Anthropic ni la disponibilidad de un ejecutor Docker en Render.
 

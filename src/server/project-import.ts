@@ -84,7 +84,7 @@ export class ProjectImporter {
     if (this.busy) throw new HttpError(429, "Ya se está importando un proyecto. Espera a que termine.");
     this.busy = true;
     const abort = new AbortController();
-    let destination: string | undefined, retained = false;
+    let destination: string | undefined, destinationParent: string | undefined, retained = false;
     const disconnect = (): void => { if (!response.writableEnded) abort.abort(); };
     response.once("close", disconnect);
     response.writeHead(200, { "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache, no-transform", "X-Accel-Buffering": "no" });
@@ -119,6 +119,7 @@ export class ProjectImporter {
       await mkdir(folder.absolutePath, { recursive: true });
       // Bound retained storage across restarts, not just per process.
       if ((await readdir(folder.absolutePath)).length >= 10) throw new HttpError(429, "Capacidad de importaciones alcanzada (10). Solicita limpieza al administrador.");
+      destinationParent = folder.absolutePath;
       destination = path.join(folder.absolutePath, randomUUID());
       const env: NodeJS.ProcessEnv = { PATH: process.env["PATH"], SystemRoot: process.env["SystemRoot"], TEMP: process.env["TEMP"],
         HOME: folder.absolutePath, USERPROFILE: folder.absolutePath, GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: process.platform === "win32" ? "NUL" : "/dev/null",
@@ -141,18 +142,18 @@ export class ProjectImporter {
       const branch = (await git(["symbolic-ref", "--short", "HEAD"], destination)).trim();
       if (abort.signal.aborted) return;
       emit("progress", { phase: "registering", message: "Guardando el proyecto para su análisis…" });
-      const project = await this.register({ name: parsed.data.url.split("/").at(-1)?.replace(/\.git$/u, "") ?? "GitHub", repoPath: destination, defaultBranch: branch, runnerType: "jest" });
+      const project = await this.register({ name: parsed.data.url.split("/").at(-1)?.replace(/\.git$/u, "") ?? "GitHub", repoPath: destination,
+        defaultBranch: branch, runnerType: "jest", sourceUrl: parsed.data.url });
       retained = true;
       emit("ready", { project, validation });
     } catch (error: unknown) {
       emit("failed", { message: error instanceof HttpError ? error.message : "No se pudo preparar el repositorio. Comprueba que sea público, accesible y que Git esté disponible. También puede haberse agotado el tiempo de descarga." });
     } finally {
       clearInterval(heartbeat); clearInterval(diskLimit); clearTimeout(deadline); response.off("close", disconnect);
-      if (destination && !retained) {
+      if (destination && destinationParent && !retained) {
         // Only the fresh UUID directory owned by this request may be removed.
-        const expectedParent = path.join(this.root, ".devguardian-imports");
-        if (path.dirname(destination) === expectedParent && /^[a-f0-9-]{36}$/u.test(path.basename(destination))) {
-          await rm(destination, { recursive: true, force: true }).catch(() => undefined);
+        if (path.dirname(destination) === destinationParent && /^[a-f0-9-]{36}$/u.test(path.basename(destination))) {
+          await rm(destination, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }).catch(() => undefined);
         }
       }
       this.busy = false;
