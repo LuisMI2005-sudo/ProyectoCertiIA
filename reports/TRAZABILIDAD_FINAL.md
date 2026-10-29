@@ -340,3 +340,12 @@ Registro del 29/10/2026, comprobado contra archivos y estados de GitHub. Un vín
 | HU-51 | [Seguimiento](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/56) | [documentación retrospectiva](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/pull/5) |
 
 Para historias sin un PR histórico específico comprobado se conserva el commit de código y el PR de regularización documental; no se inventa un PR original. Los PRs históricos integrados permanecen sin editar. La instantánea de archivos/estados está en pull-requests.json.
+
+## Dos incrementos finales seleccionados
+
+| Incremento | HU e issue principal | Aceptación | Estado del corte |
+|---|---|---|---|
+| INC-01 Gestión segura de organizaciones y accesos | [HU-44](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/49) | [INC-01-AC01 a INC-01-AC06](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/spec.md#inc-01-gestión-segura-de-organizaciones-y-accesos) | Implementación local/CI; ensayo final y aceptación docente pendientes |
+| INC-02 Espacio de trabajo modular con microfrontends | [HU-46](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/51) | [INC-02-AC01 a INC-02-AC06](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/spec.md#inc-02-espacio-de-trabajo-modular-con-microfrontends) | Implementación local/CI; ensayo final y aceptación docente pendientes |
+
+[Antes/después](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/evidence.md) y [demostración](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/demo.md). Los vínculos a PRs de la sección anterior mantienen su alcance documental/histórico; esta selección no crea un PR original de implementación ni cambia las 51 historias y sus estados.

@@ -32,6 +32,19 @@ HU-36, HU-37 y HU-38 se mantienen parciales para la entrega final: un despliegue
 
 La [matriz de trazabilidad](reports/TRAZABILIDAD_FINAL.md) enlaza las 51 historias con código, pruebas, issues y límites. El [registro SDD de esta actualización](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/005-final-traceability/spec.md) es retrospectivo para las historias anteriores a Spec Kit. La [bóveda independiente](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian) es el segundo cerebro de entrega.
 
+## Dos incrementos finales seleccionados
+
+La selección para la entrega queda definida el 29/10/2026; no implica aceptación del docente ni publicación en Render.
+
+| Incremento | HU principal | Utilidad y diferencia respecto al 20/10 |
+|---|---|---|
+| INC-01 Gestión segura de organizaciones y accesos | [HU-44 / #49](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/49) | Sesión, membresía, roles y proyectos/auditorías aislados por organización; el modo anterior no tenía el perfil platform con RLS |
+| INC-02 Espacio de trabajo modular con microfrontends | [HU-46 / #51](https://github.com/LuisMI2005-sudo/ProyectoCertiIA/issues/51) | Shell y seis remotos con manifiesto y contrato de montaje; el dashboard anterior no tenía src/microfrontends/ |
+
+HU-45 es infraestructura de soporte de INC-01 y HU-31 aporta los paneles de INC-02; no se cuentan como incrementos adicionales. Los seis remotos tampoco se cuentan como seis módulos extra. [Definición y criterios](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/spec.md), [evidencia de antes/después](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/evidence.md) y [guion de demo local](https://github.com/LuisMI2005-sudo/DevGuardian-SDD-Obsidian/blob/main/specs/006-final-increments/demo.md). La base técnica es backend f9438ef y frontend f83d928, ambos del 20/10; si el docente usa otro corte, revisar el contraste.
+
+La implementación y su CI están disponibles. El ensayo manual final y la conformidad académica siguen pendientes; no se cierran por esta definición HU-37, HU-39 ni la revisión humana de HU-47/HU-48.
+
 ## Recorrido vigente para demostración
 
 1. **Mis proyectos → Registrar proyecto:** pegar un enlace público de GitHub. Observar eventos reales de importación y compatibilidad. No se instalan scripts ni dependencias del repositorio importado.
