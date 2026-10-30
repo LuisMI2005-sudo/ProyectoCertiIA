@@ -12,7 +12,7 @@ import { createHookManager, HookManager } from "../hooks/index.js";
 import type { HookConfig, HookEvent, HookPayload } from "../hooks/types.js";
 import { IdentifierSchema, parseContract } from "../shared/contracts.js";
 import type { RunnerConfiguration } from "../shared/contracts.js";
-import { captureResult, ErrorCode, ValidationError } from "../shared/errors.js";
+import { AnalysisError, captureResult, ErrorCode, ValidationError } from "../shared/errors.js";
 import type { Result } from "../shared/errors.js";
 import { WorkspacePathGuard } from "../shared/path-security.js";
 import { DevGuardianCoordinator } from "../subagents/coordinator.js";
@@ -111,6 +111,22 @@ export class DevGuardianBackend {
     return (await this.repository.listProjects()).filter((project) => project.name !== SYSTEM_NAME && this.allowed(project.repoPath));
   }
   public async projectFiles(id: string) { return listProjectFiles((await this.project(id)).repoPath); }
+  /** Read-only MCP projection; shares the project queue and analysis cache with tools. */
+  public async projectResource(id: string, kind: "configuration" | "structure" | "analysis", analysisId?: string): Promise<unknown> {
+    const project = await this.project(id);
+    return this.serialize(project.repoPath, async () => {
+      await this.assertWorkspace(project);
+      if (kind === "configuration") return {
+        projectId: project.id, name: project.name, defaultBranch: project.defaultBranch,
+        runnerType: project.runnerType, serverVersion: this.version
+      };
+      if (kind === "structure") return { projectId: project.id, ...await listProjectFiles(project.repoPath) };
+      const validatedId = parseContract(IdentifierSchema, analysisId);
+      const result = this.runtimes.get(project.id)?.analyzer.getAnalysis(validatedId);
+      if (!result || !result.ok) throw new AnalysisError("Analysis ID is unknown, expired or evicted.");
+      return { projectId: project.id, ...result.data };
+    });
+  }
   public async project(id: string): Promise<ProjectRecord> {
     const project = await this.repository.getProject(parseContract(IdentifierSchema, id));
     if (!project || !this.allowed(project.repoPath)) throw new HttpError(404, "Project not found.");
