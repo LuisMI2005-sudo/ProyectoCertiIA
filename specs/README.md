@@ -5,6 +5,7 @@ Abrir la raíz de este repositorio como bóveda en Obsidian y entrar a este índ
 - [Segundo cerebro de DevGuardian](segundo-cerebro/00-Segundo-cerebro.md)
 - [Canvas de conocimiento por colores](segundo-cerebro/Grafo-DevGuardian.canvas)
 - [Constitución](constitution.md)
+- [Recursos MCP por proyecto: HU-24](003-mcp-project-resources/spec.md)
 - [Especificación de adopción SDD](001-sdd-foundation/spec.md)
 - [Plan técnico](001-sdd-foundation/plan.md)
 - [Arquitectura actual](001-sdd-foundation/architecture.md)

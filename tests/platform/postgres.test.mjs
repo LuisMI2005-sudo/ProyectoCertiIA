@@ -126,6 +126,7 @@ integration('PostgreSQL platform: real RLS and authenticated HTTP flow', () => {
     expect((await call('/api/projects', undefined, tenantA, credential)).status).toBe(200);
     expect((await call('/api/projects', {}, tenantA, credential)).status).toBe(403);
     expect((await call('/api/mcp', { jsonrpc: '2.0', id: 1, method: 'tools/list' }, tenantA, credential)).status).toBe(403);
+    expect((await call('/api/mcp', { jsonrpc: '2.0', id: 2, method: 'resources/list' }, tenantA, credential)).status).toBe(403);
     expect((await call('/api/organizations/members', { email: viewer, password, role: 'viewer' }, tenantA, credential)).status).toBe(403);
   });
   test('a real MCP client negotiates and lists the tools through the tenant gateway', async () => {
@@ -133,6 +134,16 @@ integration('PostgreSQL platform: real RLS and authenticated HTTP flow', () => {
     try {
       await client.connect(new StreamableHTTPClientTransport(new URL('/api/mcp', gateway), { requestInit: { headers: { Authorization: `Bearer ${token}`, 'X-Tenant-Id': tenantA } } }), { timeout: 10000 });
       const catalog = await client.listTools(); expect(catalog.tools.some(tool => tool.name === 'analyze_code')).toBe(true); expect(catalog.tools.length).toBe(19);
+      const resources = await client.listResources();
+      expect(resources.resources.some(resource => resource.uri === `devguardian://project/${projectId}/configuration`)).toBe(true);
+      const configuration = await client.readResource({ uri: `devguardian://project/${projectId}/configuration` });
+      expect(JSON.parse(configuration.contents[0].text).projectId).toBe(projectId);
+      const foreign = new Client({ name: 'foreign-resources-test', version: '1.0.0' });
+      try {
+        await foreign.connect(new StreamableHTTPClientTransport(new URL('/api/mcp', gateway), { requestInit: { headers: { Authorization: `Bearer ${token}`, 'X-Tenant-Id': tenantB } } }), { timeout: 10000 });
+        expect((await foreign.listResources()).resources.some(resource => resource.uri.includes(projectId))).toBe(false);
+        await expect(foreign.readResource({ uri: `devguardian://project/${projectId}/configuration` })).rejects.toMatchObject({ code: -32002 });
+      } finally { await foreign.close(); }
     } finally { await client.close(); }
   });
   test('revokes sessions and rejects disallowed origins', async () => {

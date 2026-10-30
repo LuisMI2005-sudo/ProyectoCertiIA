@@ -11,6 +11,7 @@ import type { ToolHandler, ToolName, ToolInput } from "../shared/contracts.js";
 import { captureResult, DevGuardianError, ValidationError } from "../shared/errors.js";
 import type { DevGuardianBackend, ToolContext } from "../server/application.js";
 import { ListQuerySchema } from "../server/contracts.js";
+import { registerProjectResources } from "./resources.js";
 
 const Descriptions: Record<ToolName, string> = {
   read_file_context: "Read bounded UTF-8 source and its SHA-256 hash.", analyze_code: "Analyze syntax, semantics and ESLint diagnostics.",
@@ -74,7 +75,8 @@ export function createMcpServer(backend: DevGuardianBackend): Server {
     execute: async (raw) => { const value = parseContract(auditSchema, raw); return backend.audit(value.auditId, value.projectId); } });
 
   // Low-level SDK API is intentional: audit the call before validating tool-specific arguments.
-  const server = new Server({ name: "devguardian", version: backend.version }, { capabilities: { tools: {} } });
+  const server = new Server({ name: "devguardian", version: backend.version }, { capabilities: { tools: {}, resources: {} } });
+  registerProjectResources(server, backend);
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...definitions].map(([name, definition]): Tool => ToolSchema.parse({
     name, description: definition.description, inputSchema: { ...z.toJSONSchema(definition.schema, { io: "input" }), type: "object" }
   })) }));
