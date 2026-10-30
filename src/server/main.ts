@@ -1,8 +1,10 @@
 import path from "node:path";
 import { startHttpServer } from "./http.js";
+import { configuredTestSandbox } from "../test-runner/sandbox-config.js";
 
 try {
-  const server = await startHttpServer({ workspaceRoots: [path.resolve(process.env["DEVGUARDIAN_WORKSPACE_ROOT"] ?? process.cwd())] });
+  const sandbox = configuredTestSandbox();
+  const server = await startHttpServer({ workspaceRoots: [path.resolve(process.env["DEVGUARDIAN_WORKSPACE_ROOT"] ?? process.cwd())], requireSandbox: process.env["RENDER"] === "true", ...(sandbox ? { sandbox } : {}) });
   process.stdout.write(JSON.stringify({ event: "server_started", url: server.url }) + "\n");
   const shutdown = (): void => { void server.close().then(() => { process.exitCode = 0; }, () => { process.exitCode = 1; }); };
   process.once("SIGINT", shutdown); process.once("SIGTERM", shutdown);

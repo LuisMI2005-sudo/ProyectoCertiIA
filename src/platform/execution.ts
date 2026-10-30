@@ -10,10 +10,12 @@ import type { PlatformConfig, TenantContext, ServiceName } from "./contracts.js"
 import { listen, requestService, send } from "./http.js";
 import { verifyServiceToken } from "./security.js";
 import { proxy } from "./proxy.js";
+import { configuredTestSandbox } from "../test-runner/sandbox-config.js";
 
 export async function startExecution(config: PlatformConfig) {
   if (!config.databaseUrl) throw new Error("Execution database required.");
   const databaseUrl = config.databaseUrl;
+  const sandbox = configuredTestSandbox();
   const runtimes = new Map<string, Promise<{ host: RunningHttpServer; token: string }>>();
   async function runtime(context: TenantContext) {
     const existing = runtimes.get(context.tenantId); if (existing) return existing;
@@ -33,7 +35,7 @@ export async function startExecution(config: PlatformConfig) {
         return record;
       };
       const token = randomBytes(32).toString("hex");
-      const host = await startHttpServer({ port: 0, host: "127.0.0.1", repository, workspaceRoots: [root], demoEnabled: false, apiToken: token, logger: () => {} });
+      const host = await startHttpServer({ port: 0, host: "127.0.0.1", repository, workspaceRoots: [root], demoEnabled: false, apiToken: token, logger: () => {}, requireSandbox: true, ...(sandbox ? { sandbox } : {}) });
       return { host, token };
     })();
     runtimes.set(context.tenantId, pending);

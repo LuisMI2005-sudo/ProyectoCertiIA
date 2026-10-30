@@ -12,6 +12,7 @@ import {
 import type { GitCommitFixOutput, RunnerConfiguration, RunTestsOutput } from "../shared/contracts.js";
 import { DevGuardianError, ValidationError } from "../shared/errors.js";
 import { TestRunner } from "../test-runner/index.js";
+import type { TestSandbox } from "../test-runner/types.js";
 import { SubagentRuntime, validateTask } from "./runtime.js";
 import type { ScopedToolHandlers } from "./runtime.js";
 import { DelegationStore } from "./store.js";
@@ -53,6 +54,7 @@ export class AgentCoordinator {
 export interface DevGuardianCoordinatorOptions {
   readonly workspaceRoot: string;
   readonly runners: readonly RunnerConfiguration[];
+  readonly sandbox?: TestSandbox;
   readonly analyzer?: Omit<AnalyzerOptions, "workspaceRoot">;
   readonly hookManager?: HookManager;
   readonly delegationAdapter?: DelegationPersistenceAdapter;
@@ -89,7 +91,7 @@ export class DevGuardianCoordinator {
     const analyzer = await CodeAnalyzer.create({ ...options.analyzer, workspaceRoot: options.workspaceRoot });
     let git: GitController;
     const runner = await TestRunner.create({ workspaceRoot: options.workspaceRoot, runners: options.runners,
-      workspaceStateHash: () => git.workspaceStateHash() });
+      workspaceStateHash: () => git.workspaceStateHash(), ...(options.sandbox ? { sandbox: options.sandbox } : {}) });
     git = await GitController.create({ workspaceRoot: options.workspaceRoot, verificationStore: runner, hookManager: hooks });
     const handlers: ScopedToolHandlers = {
       analyze_code: async (input) => {

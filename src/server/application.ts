@@ -17,6 +17,7 @@ import type { Result } from "../shared/errors.js";
 import { WorkspacePathGuard } from "../shared/path-security.js";
 import { DevGuardianCoordinator } from "../subagents/coordinator.js";
 import { TestRunner } from "../test-runner/index.js";
+import type { TestSandbox } from "../test-runner/types.js";
 import { EvaluateHookSchema, HttpError, RegisterProjectSchema, RunAuditSchema } from "./contracts.js";
 import type { HookLogQuery, ListQuery } from "./contracts.js";
 import { createCloudDemo } from "./cloud-demo.js";
@@ -50,6 +51,8 @@ export interface ToolContext {
   readonly runtime: () => Promise<DomainRuntime>;
 }
 export interface BackendOptions {
+  readonly sandbox?: TestSandbox;
+  readonly requireSandbox?: boolean;
   readonly repository: DevGuardianRepository;
   readonly workspaceRoots?: readonly string[];
   readonly runners?: readonly RunnerConfiguration[];
@@ -72,7 +75,7 @@ export class DevGuardianBackend {
   private demoCount = 0;
   private constructor(public readonly repository: DevGuardianRepository, private readonly roots: readonly string[],
     runners: readonly RunnerConfiguration[], private readonly hookConfig: Partial<HookConfig>, version: string, private readonly maxRuntimes: number,
-    private readonly demoEnabled: boolean) {
+    private readonly demoEnabled: boolean, private readonly sandbox?: TestSandbox, private readonly requireSandbox = false) {
     this.persistence = new AuditPersistenceService(repository); this.runners = structuredClone(runners); this.version = version;
     this.availability = Promise.all(runners.map(async (runner) => {
       try { await execute(runner.executable, [...runner.args, "--version"], { timeout: 5000, maxBuffer: 100000, windowsHide: true });
@@ -91,13 +94,15 @@ export class DevGuardianBackend {
     const metadata: unknown = JSON.parse(await readFile(new URL("../../package.json", import.meta.url), "utf8"));
     const version = typeof metadata === "object" && metadata !== null && "version" in metadata && typeof metadata.version === "string" ? metadata.version : "0.1.0";
     return new DevGuardianBackend(options.repository, roots, options.runners ?? defaults, structuredClone(options.hookConfig ?? {}), version, options.maxRuntimes ?? 16,
-      options.demoEnabled ?? (process.env["RENDER"] === "true" || process.env["DEVGUARDIAN_ENABLE_DEMO"] === "1"));
+      options.demoEnabled ?? (process.env["RENDER"] === "true" || process.env["DEVGUARDIAN_ENABLE_DEMO"] === "1"), options.sandbox, options.requireSandbox === true);
   }
   public async health() {
     let connected = true;
     try { await this.repository.listProjects(); } catch { connected = false; }
+    const isolatedTests = this.sandbox ? await this.sandbox.ready() : false;
     return { status: connected ? "ok" : "degraded", database: { connected, mode: this.repository instanceof PostgresDatabaseAdapter ? "postgres" : "local", tables: 5 },
-      version: this.version, uptimeSeconds: process.uptime(), runners: await this.availability };
+      version: this.version, uptimeSeconds: process.uptime(), runners: (await this.availability).map(item => ({ ...item, available: item.available || isolatedTests })),
+      capabilities: { isolatedTests, requiresIsolation: this.requireSandbox } };
   }
   private allowed(candidate: string): boolean {
     return this.roots.some((root) => inside(root, candidate)) && !candidate.split(/[\\/]/u).some((part) => part.toLowerCase() === ".git");
@@ -214,7 +219,7 @@ export class DevGuardianBackend {
   }
   public async runAudit(raw: unknown) {
     const input = parseContract(RunAuditSchema, raw); const project = await this.project(input.projectId);
-    if (input.mode === "repair" && this.imported(project)) throw new HttpError(403, "Los repositorios importados solo permiten análisis estático hasta disponer de un sandbox de ejecución.");
+    if (input.mode === "repair" && (this.imported(project) || this.requireSandbox) && !(this.sandbox && await this.sandbox.ready())) throw new HttpError(403, "La reparación requiere un sandbox de ejecución operativo; por ahora solo está disponible el análisis estático.");
     try { await this.assertWorkspace(project); }
     catch (error: unknown) {
       // This preflight runs before any audit/patch: a missing workspace is a
@@ -225,7 +230,7 @@ export class DevGuardianBackend {
     }
     return this.serialize(project.repoPath, async () => {
       if (input.mode === "repair") {
-        const result = await this.persistence.repairProject(project.id, input.repair, { runners: this.runners, hookConfig: this.hookConfig });
+        const result = await this.persistence.repairProject(project.id, input.repair, { runners: this.runners, hookConfig: this.hookConfig, ...(this.sandbox ? { sandbox: this.sandbox } : {}) });
         const details = await this.persistence.getAuditDetails(result.audit.id);
         const blocked = details.hookLogs.some((log) => log.decision === "block");
         return { ...details, mode: input.mode, status: blocked ? "blocked" : result.audit.status, result: result.result };
@@ -291,9 +296,10 @@ export class DevGuardianBackend {
         onAudit?.(audit.id);
         const loggedName = name.slice(0, 128);
         const hooks = createHookManager(this.hookConfig, new DatabaseHookPersistenceAdapter(this.repository, audit.id));
-        hooks.register({ id: "mcp-context-policy", name: "MCP context policy", events: ["pre:tool_call"], execute: () => {
+        hooks.register({ id: "mcp-context-policy", name: "MCP context policy", events: ["pre:tool_call"], execute: async () => {
           if (projectId !== undefined && !resolved?.ok) return { decision: "block", reason: "Project is unavailable or outside the allowed roots." };
-          if (this.imported(project) && name === "run_tests") return { decision: "block", reason: "Las pruebas de repositorios importados requieren un sandbox de ejecución; solo está habilitado el análisis estático." };
+          if (this.requireSandbox && ["run_tests", "git_create_fix_branch", "git_begin_attempt", "git_apply_patch", "git_commit_fix"].includes(name) && !(this.sandbox && await this.sandbox.ready())) return { decision: "block", reason: "El servidor público requiere aislamiento operativo antes de iniciar una reparación o ejecutar código." };
+          if (this.imported(project) && name === "run_tests" && !(this.sandbox && await this.sandbox.ready())) return { decision: "block", reason: "Las pruebas de repositorios importados requieren un sandbox de ejecución; solo está habilitado el análisis estático." };
           const args = typeof raw === "object" && raw !== null ? raw as Record<string, unknown> : {};
           const paths = [args["path"], ...(Array.isArray(args["paths"]) ? args["paths"] : [])];
           if (paths.some((value) => typeof value === "string" && /^\.env(?:\.|$)/iu.test(path.basename(value.replaceAll("\\", "/"))))) {
@@ -329,7 +335,7 @@ export class DevGuardianBackend {
     const existing = this.runtimes.get(project.id); if (existing) return existing;
     if (this.runtimes.size >= this.maxRuntimes) throw new HttpError(503, "MCP runtime capacity reached; existing sessions are retained.");
     const router = new RoutedHookManager(this.hookConfig); let git: GitController;
-    const runner = await TestRunner.create({ workspaceRoot: project.repoPath, runners: this.runners, workspaceStateHash: () => git.workspaceStateHash() });
+    const runner = await TestRunner.create({ workspaceRoot: project.repoPath, runners: this.runners, workspaceStateHash: () => git.workspaceStateHash(), ...(this.sandbox ? { sandbox: this.sandbox } : {}) });
     git = await GitController.create({ workspaceRoot: project.repoPath, verificationStore: runner, hookManager: router });
     const runtime = { router, runner, git, analyzer: await CodeAnalyzer.create({ workspaceRoot: project.repoPath }) };
     this.runtimes.set(project.id, runtime); return runtime;

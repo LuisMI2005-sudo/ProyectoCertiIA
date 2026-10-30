@@ -62,6 +62,19 @@ beforeEach(async () => {
 afterEach(async () => { await app?.close(); app = undefined; await rm(root, { recursive: true, force: true }); });
 
 describe('HTTP contracts, controls and health', () => {
+  test('public isolation policy blocks host execution before a repair begins', async () => {
+    await app.close(); app = await start({ requireSandbox: true });
+    await register();
+    const health = await request('/api/health');
+    expect(health.body.data.capabilities).toEqual({ isolatedTests: false, requiresIsolation: true });
+    const denied = await request('/api/audits/run', repair());
+    expect(denied.response.status).toBe(403);
+    expect((await request('/api/audits')).body.data).toEqual([]);
+    const blocked = await tool('run_tests', { projectId, runner: 'jest', targets: ['tests/bug.test.cjs'] });
+    expect(blocked.body.result.isError).toBe(true);
+    expect(await git('branch', '--show-current')).toBe('main');
+    expect(await readFile(path.join(workspace, 'src/bug.ts'), 'utf8')).toBe(original);
+  });
   test('cloud demo is opt-in and rejects caller-controlled paths and commands', async () => {
     expect((await request('/api/demo/prepare', {})).response.status).toBe(404);
     await app.close(); app = await start({ demoEnabled: true });

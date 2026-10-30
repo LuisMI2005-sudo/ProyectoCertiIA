@@ -1,0 +1,6 @@
+{
+  "name": "devguardian-isolated-test-image",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": { "jest": "30.5.2", "typescript": "6.0.3" }
+}

@@ -16,7 +16,7 @@ beforeEach(async () => {
   root = await mkdtemp(path.join(tmpdir(), 'devguardian-reclone-test-'));
   execute.mockReset();
   repository = await LocalFileDatabaseAdapter.create({ filePath: path.join(root, 'db.json') });
-  app = await startHttpServer({ repository, workspaceRoots: [root], runners: [], apiToken: 'reclone-token', port: 0, host: '127.0.0.1', logger: () => {} });
+  app = await startHttpServer({ repository, workspaceRoots: [root], runners: [], requireSandbox: true, apiToken: 'reclone-token', port: 0, host: '127.0.0.1', logger: () => {} });
 });
 afterEach(async () => {
   if (app) { await app.close(); app = undefined; }
@@ -57,6 +57,15 @@ test('restores a missing workspace from its stored source URL without duplicatin
   const files = await fetch(`${app.url}/api/projects/${project.id}/files`, { headers });
   expect(files.status).toBe(200);
   expect((await files.json()).data.files).toContainEqual({ path: 'src/app.js', analyzable: true });
+  const health = await fetch(`${app.url}/api/health`, { headers });
+  expect((await health.json()).data.capabilities).toEqual({ isolatedTests: false, requiresIsolation: true });
+  const denied = await fetch(`${app.url}/api/audits/run`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ projectId: project.id, mode: 'repair', repair: { path: 'src/app.js', slug: 'restored-fix', message: 'fix: restored workspace',
+      runner: 'jest', targets: ['tests/app.test.cjs'], expectedFileHashes: { 'src/app.js': 'a'.repeat(64) },
+      unifiedDiff: '--- a/src/app.js\n+++ b/src/app.js\n@@ -1 +1 @@\n-export const value = 1;\n+export const value = 2;\n' } }) });
+  expect(denied.status).toBe(403);
+  expect(await readFile(path.join(workspace, 'src/app.js'), 'utf8')).toBe('export const value = 1;');
+  expect(await repository.listAuditSessions(project.id)).toHaveLength(0);
 });
 
 test('refuses to guess a repository when no source URL was stored', async () => {

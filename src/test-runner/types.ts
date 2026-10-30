@@ -10,9 +10,26 @@ export interface TestRunnerOptions {
   readonly workspaceStateHash: () => Promise<string>;
   /** Trusted environment additions for child processes. */
   readonly environment?: Readonly<Record<string, string>>;
+  /** Host-provided OS isolation. Never selected or configured by an MCP caller. */
+  readonly sandbox?: TestSandbox;
   readonly maxStoredRuns?: number;
   readonly maxStoredBytes?: number;
   readonly runTtlMs?: number;
+}
+export interface SandboxRun {
+  readonly runner: Runner;
+  readonly targets: readonly string[];
+  readonly workspaceRoot: string;
+  readonly reportPath: string;
+  readonly timeoutMs: number;
+  readonly maxOutputBytes: number;
+  readonly signal: AbortSignal;
+}
+export interface TestSandbox {
+  /** Immutable image identity, incorporated into verification configuration hashes. */
+  readonly fingerprint: string;
+  ready(): Promise<boolean>;
+  run(options: SandboxRun): Promise<ProcessOutcome>;
 }
 
 export interface TestRunnerLimits {
