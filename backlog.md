@@ -304,8 +304,6 @@ No utilizar las instrucciones antiguas «Cargar Demo» o «Probar ALLOW/BLOCK» 
 
 **Límite actual:** Recurso de análisis en compatibilidad; faltan recursos completos con ámbito de proyecto en src/mcp/.
 
-**Seguimiento 30/10/2026:** implementación del catálogo principal, configuración, estructura y análisis con proyecto explícito en la rama `feat/mcp-project-resources`. Ver [contrato](src/mcp/README.md) y [validación](specs/003-mcp-project-resources/validation.md). El estado del corte anterior se conserva; integración y despliegue de este cambio todavía no acreditados.
-
 ### HU-25 Diagnosticar y proponer un parche con IA
 
 **Como** desarrollador, **quiero** que el agente use diagnóstico y contexto acotado **para** proponer una reparación coherente con el error.
