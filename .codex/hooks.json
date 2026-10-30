@@ -6,7 +6,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" session",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" session",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" session; exit $LASTEXITCODE",
         "timeout": 15,
         "statusMessage": "DevGuardian: comprobar entorno y presentar especialistas"
       }]
@@ -16,7 +16,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" files",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" files",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" files; exit $LASTEXITCODE",
         "timeout": 15,
         "statusMessage": "DevGuardian: proteger archivos, pruebas y secretos"
       }]
@@ -25,7 +25,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" commands",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" commands",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" commands; exit $LASTEXITCODE",
         "timeout": 15,
         "statusMessage": "DevGuardian: revisar comandos del asistente"
       }]
@@ -35,7 +35,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" verify",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" verify",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" verify; exit $LASTEXITCODE",
         "timeout": 360,
         "statusMessage": "DevGuardian: compilar, revisar lint y ejecutar pruebas afectadas"
       }]
@@ -44,7 +44,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit; exit $LASTEXITCODE",
         "timeout": 15
       }]
     }],
@@ -52,7 +52,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit; exit $LASTEXITCODE",
         "timeout": 15
       }]
     }],
@@ -60,7 +60,7 @@
       "hooks": [{
         "type": "command",
         "command": "node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
-        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit",
+        "commandWindows": "& node \"$(git rev-parse --show-toplevel)/scripts/ide-hooks.mjs\" audit; exit $LASTEXITCODE",
         "timeout": 15
       }]
     }]
